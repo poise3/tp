@@ -274,7 +274,8 @@ _{Explain here how the data archiving feature will be implemented}_
 
 **Target user profile**:
 
-* has a need to manage a significant number of contacts
+* has a need to manage a significant number of trips and travel records
+* wants a way to log trips, destinations and activities in an organized and structured manner
 * prefer desktop apps over other types
 * can type fast
 * prefers typing to mouse interactions
