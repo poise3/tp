@@ -370,8 +370,12 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 
 ### Glossary
 
-* **Mainstream OS**: Windows, Linux, Unix, MacOS
-* **Private contact detail**: A contact detail that is not meant to be shared with others
+- **Mainstream OS**: Windows, Linux, Unix, MacOS
+- **Private contact detail**: A contact detail that is not meant to be shared with others
+- **Trip**: Travel entry defined by destination, start date, and end date
+- **Destination**: Primary location of a trip (e.g "Mount Fuji"), mapped to the Name field
+- **Experience Log**: Descriptive note added to a trip to record activities or reminders
+- **Category Tag**: Label for grouping trips by purpose (e.g work) or region (e.g Japan)
 
 --------------------------------------------------------------------------------------------------------------------
 
