@@ -362,11 +362,16 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 
 ### Non-Functional Requirements
 
-1.  Should work on any _mainstream OS_ as long as it has Java `17` or above installed.
-2.  Should be able to hold up to 1000 persons without a noticeable sluggishness in performance for typical usage.
-3.  A user with above average typing speed for regular English text (i.e. not code, not system admin commands) should be able to accomplish most of the tasks faster using commands than using the mouse.
-
-*{More to be added}*
+1. TripLog should work on Windows, Linux, and macOS systems with Java `17` installed.
+2. TripLog should run without requiring an installer and should be distributed as a single JAR file, or as a single ZIP file only if additional required files cannot be packaged into the JAR.
+3. TripLog should allow users to perform all core operations, including adding, listing, deleting, and tagging trips, through typed commands without requiring mouse-based input.
+4. TripLog should be designed for use by one user only and should not support concurrent access to the same data during normal operation.
+5. TripLog should store all application data locally in a human-editable text file and should not use a DBMS for storage.
+6. TripLog should allow all core features to function without requiring an Internet connection or a remote server.
+7. TripLog should support at least 1000 trip records, with typical commands such as `add`, `delete`, `tag`, and `list` completing within 2 seconds on a standard personal computer.
+8. TripLog should display error messages for invalid commands and invalid input that state the cause of the error and the expected command format.
+9. TripLog should work well at screen resolutions of 1920×1080 and above with 100% and 125% display scaling, and remain usable at 1280×720 and above with 150% display scaling.
+10. TripLog should be implemented using a modular object-oriented design so that new commands or trip fields can be added with changes localized to a small number of components.
 
 ### Glossary
 
