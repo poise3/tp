@@ -20,11 +20,15 @@ public class TripBuilder {
     public static final String DEFAULT_PHONE = "85355255";
     public static final String DEFAULT_EMAIL = "amy@gmail.com";
     public static final String DEFAULT_ADDRESS = "123, Jurong West Ave 6, #08-111";
+    public static final String DEFAULT_START_DATE = "2026-01-01";
+    public static final String DEFAULT_END_DATE = "2026-01-10";
 
     private Name name;
     private Phone phone;
     private Email email;
     private Address address;
+    private String startDate;
+    private String endDate;
     private Set<Tag> tags;
 
     /**
@@ -35,6 +39,8 @@ public class TripBuilder {
         phone = new Phone(DEFAULT_PHONE);
         email = new Email(DEFAULT_EMAIL);
         address = new Address(DEFAULT_ADDRESS);
+        startDate = DEFAULT_START_DATE;
+        endDate = DEFAULT_END_DATE;
         tags = new HashSet<>();
     }
 
@@ -46,6 +52,8 @@ public class TripBuilder {
         phone = tripToCopy.getPhone();
         email = tripToCopy.getEmail();
         address = tripToCopy.getAddress();
+        startDate = tripToCopy.getStartDate().toString();
+        endDate = tripToCopy.getEndDate().toString();
         tags = new HashSet<>(tripToCopy.getTags());
     }
 
@@ -89,8 +97,23 @@ public class TripBuilder {
         return this;
     }
 
+    /**
+     * Sets the {@code startDate} of the {@code Trip} being built.
+     */
+    public TripBuilder withStartDate(String startDate) {
+        this.startDate = startDate;
+        return this;
+    }
+
+    /**
+     * Sets the {@code endDate} of the {@code Trip} being built.
+     */
+    public TripBuilder withEndDate(String endDate) {
+        this.endDate = endDate;
+        return this;
+    }
+
     public Trip build() {
         return new Trip(name, phone, email, address, tags);
     }
-
 }

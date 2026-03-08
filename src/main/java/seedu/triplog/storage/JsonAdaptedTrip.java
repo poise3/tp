@@ -28,6 +28,8 @@ class JsonAdaptedTrip {
     private final String phone;
     private final String email;
     private final String address;
+    private final String startDate;
+    private final String endDate;
     private final List<JsonAdaptedTag> tags = new ArrayList<>();
 
     /**
@@ -36,11 +38,14 @@ class JsonAdaptedTrip {
     @JsonCreator
     public JsonAdaptedTrip(@JsonProperty("name") String name, @JsonProperty("phone") String phone,
                            @JsonProperty("email") String email, @JsonProperty("address") String address,
+                           @JsonProperty("startDate") String startDate, @JsonProperty("endDate") String endDate,
                            @JsonProperty("tags") List<JsonAdaptedTag> tags) {
         this.name = name;
         this.phone = phone;
         this.email = email;
         this.address = address;
+        this.startDate = startDate;
+        this.endDate = endDate;
         if (tags != null) {
             this.tags.addAll(tags);
         }
@@ -54,6 +59,8 @@ class JsonAdaptedTrip {
         phone = source.getPhone().value;
         email = source.getEmail().value;
         address = source.getAddress().value;
+        startDate = source.getStartDate().toString();
+        endDate = source.getEndDate().toString();
         tags.addAll(source.getTags().stream()
                 .map(JsonAdaptedTag::new)
                 .collect(Collectors.toList()));
@@ -65,9 +72,9 @@ class JsonAdaptedTrip {
      * @throws IllegalValueException if there were any data constraints violated in the adapted trip.
      */
     public Trip toModelType() throws IllegalValueException {
-        final List<Tag> personTags = new ArrayList<>();
+        final List<Tag> tripTags = new ArrayList<>();
         for (JsonAdaptedTag tag : tags) {
-            personTags.add(tag.toModelType());
+            tripTags.add(tag.toModelType());
         }
 
         if (name == null) {
@@ -102,7 +109,13 @@ class JsonAdaptedTrip {
         }
         final Address modelAddress = new Address(address);
 
-        final Set<Tag> modelTags = new HashSet<>(personTags);
+        // Validation of existence in JSON (Logic remains but model uses internal defaults)
+        if (startDate == null || endDate == null) {
+            throw new IllegalValueException(String.format(MISSING_FIELD_MESSAGE_FORMAT, "Dates"));
+        }
+
+        final Set<Tag> modelTags = new HashSet<>(tripTags);
+        // Call the 5-argument constructor as defined in the updated Trip model
         return new Trip(modelName, modelPhone, modelEmail, modelAddress, modelTags);
     }
 
