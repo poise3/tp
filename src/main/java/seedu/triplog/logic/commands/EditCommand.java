@@ -104,7 +104,8 @@ public class EditCommand extends Command {
         TripDate updatedStartDate = editTripDescriptor.getStartDate().orElse(tripToEdit.getStartDate());
         TripDate updatedEndDate = editTripDescriptor.getEndDate().orElse(tripToEdit.getStartDate());
 
-        return new Trip(updatedName, updatedPhone, updatedEmail, updatedAddress, updatedTags, updatedStartDate, updatedEndDate);
+        return new Trip(updatedName, updatedPhone, updatedEmail, updatedAddress,
+                        updatedTags, updatedStartDate, updatedEndDate);
     }
 
     @Override
