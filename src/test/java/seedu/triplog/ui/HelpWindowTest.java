@@ -30,6 +30,7 @@ public class HelpWindowTest {
             return;
         }
         assertTrue(latch.await(10, TimeUnit.SECONDS), "JavaFX toolkit did not start");
+        Platform.setImplicitExit(false);
     }
 
     /**
