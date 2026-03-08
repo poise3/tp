@@ -57,3 +57,4 @@ public class HelpWindowTest {
         assertTrue(HelpWindow.EXIT_NOTE.contains("ESCAPE"));
     }
 }
+
