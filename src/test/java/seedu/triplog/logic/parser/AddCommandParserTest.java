@@ -47,18 +47,26 @@ public class AddCommandParserTest {
 
     @Test
     public void parse_allFieldsPresent_success() {
-        Trip expectedTrip = new TripBuilder(BOB).withTags(VALID_TAG_FRIEND).build();
-
-        // whitespace only preamble
-        assertParseSuccess(parser, PREAMBLE_WHITESPACE + NAME_DESC_BOB + PHONE_DESC_BOB + EMAIL_DESC_BOB
-                + ADDRESS_DESC_BOB + TAG_DESC_FRIEND, new AddCommand(expectedTrip));
-
-
-        // multiple tags - all accepted
-        Trip expectedTripMultipleTags = new TripBuilder(BOB).withTags(VALID_TAG_FRIEND, VALID_TAG_HUSBAND)
+        Trip expectedTrip = new TripBuilder(BOB)
+                .withTags(VALID_TAG_FRIEND)
+                .withStartDate(VALID_START_DATE_BOB) 
+                .withEndDate(VALID_END_DATE_BOB)
                 .build();
+
+        assertParseSuccess(parser, PREAMBLE_WHITESPACE + NAME_DESC_BOB + PHONE_DESC_BOB + EMAIL_DESC_BOB
+                + ADDRESS_DESC_BOB + START_DATE_DESC_BOB + END_DATE_DESC_BOB + TAG_DESC_FRIEND, 
+                new AddCommand(expectedTrip));
+    
+        Trip expectedTripMultipleTags = new TripBuilder(BOB)
+                .withTags(VALID_TAG_FRIEND, VALID_TAG_HUSBAND)
+                .withStartDate(VALID_START_DATE_BOB)
+                .withEndDate(VALID_END_DATE_BOB)
+                .build();
+
         assertParseSuccess(parser,
-                NAME_DESC_BOB + PHONE_DESC_BOB + EMAIL_DESC_BOB + ADDRESS_DESC_BOB + TAG_DESC_HUSBAND + TAG_DESC_FRIEND,
+                NAME_DESC_BOB + PHONE_DESC_BOB + EMAIL_DESC_BOB + ADDRESS_DESC_BOB 
+                + START_DATE_DESC_BOB + END_DATE_DESC_BOB 
+                + TAG_DESC_HUSBAND + TAG_DESC_FRIEND,
                 new AddCommand(expectedTripMultipleTags));
     }
 
@@ -129,8 +137,9 @@ public class AddCommandParserTest {
     @Test
     public void parse_optionalFieldsMissing_success() {
         // zero tags
-        Trip expectedTrip = new TripBuilder(AMY).withTags().build();
-        assertParseSuccess(parser, NAME_DESC_AMY + PHONE_DESC_AMY + EMAIL_DESC_AMY + ADDRESS_DESC_AMY,
+        Trip expectedTrip = new TripBuilder(AMY).withPhone(null).withEmail(null).withAddress(null)
+                                                .withStart(null).withEnd(null).withTags().build();
+        assertParseSuccess(parser, NAME_DESC_AMY,
                 new AddCommand(expectedTrip));
     }
 
