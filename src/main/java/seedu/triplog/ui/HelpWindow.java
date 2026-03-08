@@ -89,17 +89,17 @@ public class HelpWindow extends UiPart<Stage> {
     }
 
     /**
-     * Returns true if the given key code should close the help window.
-     */
-    static boolean isCloseKey(KeyCode code) {
-        return code == KeyCode.Q || code == KeyCode.ESCAPE;
-    }
-
-    /**
      * Creates a new HelpWindow.
      */
     public HelpWindow() {
         this(new Stage());
+    }
+
+    /**
+     * Returns true if the given key code should close the help window.
+     */
+    static boolean isCloseKey(KeyCode code) {
+        return code == KeyCode.Q || code == KeyCode.ESCAPE;
     }
 
     /**
