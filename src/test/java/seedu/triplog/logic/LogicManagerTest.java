@@ -5,8 +5,10 @@ import static seedu.triplog.logic.Messages.MESSAGE_INVALID_TRIP_DISPLAYED_INDEX;
 import static seedu.triplog.logic.Messages.MESSAGE_UNKNOWN_COMMAND;
 import static seedu.triplog.logic.commands.CommandTestUtil.ADDRESS_DESC_AMY;
 import static seedu.triplog.logic.commands.CommandTestUtil.EMAIL_DESC_AMY;
+import static seedu.triplog.logic.commands.CommandTestUtil.END_DATE_DESC_AMY;
 import static seedu.triplog.logic.commands.CommandTestUtil.NAME_DESC_AMY;
 import static seedu.triplog.logic.commands.CommandTestUtil.PHONE_DESC_AMY;
+import static seedu.triplog.logic.commands.CommandTestUtil.START_DATE_DESC_AMY;
 import static seedu.triplog.testutil.Assert.assertThrows;
 import static seedu.triplog.testutil.TypicalTrips.AMY;
 
@@ -149,11 +151,9 @@ public class LogicManagerTest {
     private void assertCommandFailureForExceptionFromStorage(IOException e, String expectedMessage) {
         Path prefPath = temporaryFolder.resolve("ExceptionUserPrefs.json");
 
-        // Inject LogicManager with an TripLogStorage that throws the IOException e when saving
         JsonTripLogStorage tripLogStorage = new JsonTripLogStorage(prefPath) {
             @Override
-            public void saveTripLog(ReadOnlyTripLog tripLog, Path filePath)
-                    throws IOException {
+            public void saveTripLog(ReadOnlyTripLog tripLog, Path filePath) throws IOException {
                 throw e;
             }
         };
@@ -164,12 +164,13 @@ public class LogicManagerTest {
 
         logic = new LogicManager(model, storage);
 
-        // Triggers the saveTripLog method by executing an add command
         String addCommand = AddCommand.COMMAND_WORD + NAME_DESC_AMY + PHONE_DESC_AMY
-                + EMAIL_DESC_AMY + ADDRESS_DESC_AMY;
+                + EMAIL_DESC_AMY + ADDRESS_DESC_AMY + START_DATE_DESC_AMY + END_DATE_DESC_AMY;
+
         Trip expectedTrip = new TripBuilder(AMY).withTags().build();
         ModelManager expectedModel = new ModelManager();
-        expectedModel.addTrip(expectedTrip);
+        expectedModel.addTrip(expectedTrip); //
+
         assertCommandFailure(addCommand, CommandException.class, expectedMessage, expectedModel);
     }
 }

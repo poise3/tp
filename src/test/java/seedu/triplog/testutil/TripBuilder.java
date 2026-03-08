@@ -78,7 +78,7 @@ public class TripBuilder {
      * Sets the {@code Address} of the {@code Trip} that we are building.
      */
     public TripBuilder withAddress(String address) {
-        this.address = new Address(address);
+        this.address = (address == null) ? null : new Address(address);
         return this;
     }
 
@@ -86,7 +86,7 @@ public class TripBuilder {
      * Sets the {@code Phone} of the {@code Trip} that we are building.
      */
     public TripBuilder withPhone(String phone) {
-        this.phone = new Phone(phone);
+        this.phone = (phone == null) ? null : new Phone(phone);
         return this;
     }
 
@@ -94,7 +94,7 @@ public class TripBuilder {
      * Sets the {@code Email} of the {@code Trip} that we are building.
      */
     public TripBuilder withEmail(String email) {
-        this.email = new Email(email);
+        this.email = (email == null) ? null : new Email(email);
         return this;
     }
 
@@ -102,7 +102,7 @@ public class TripBuilder {
      * Sets the {@code TripDate} of the {@code Trip} that we are building.
      */
     public TripBuilder withStart(String date) {
-        this.startDate = new TripDate(date);
+        this.startDate = (date == null) ? null : new TripDate(date);
         return this;
     }
 
@@ -110,7 +110,7 @@ public class TripBuilder {
      * Sets the {@code TripDate} of the {@code Trip} that we are building.
      */
     public TripBuilder withEnd(String date) {
-        this.endDate = new TripDate(date);
+        this.endDate = (date == null) ? null : new TripDate(date);
         return this;
     }
 

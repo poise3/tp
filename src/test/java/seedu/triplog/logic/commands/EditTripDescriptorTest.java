@@ -58,6 +58,14 @@ public class EditTripDescriptorTest {
         // different tags -> returns false
         editedAmy = new EditTripDescriptorBuilder(DESC_AMY).withTags(VALID_TAG_HUSBAND).build();
         assertFalse(DESC_AMY.equals(editedAmy));
+
+        // different startDate -> returns false
+        editedAmy = new EditTripDescriptorBuilder(DESC_AMY).withStart("2024-11-11").build();
+        assertFalse(DESC_AMY.equals(editedAmy));
+
+        // different endDate -> returns false
+        editedAmy = new EditTripDescriptorBuilder(DESC_AMY).withEnd("2024-11-12").build();
+        assertFalse(DESC_AMY.equals(editedAmy));
     }
 
     @Test
@@ -68,7 +76,9 @@ public class EditTripDescriptorTest {
                 + editTripDescriptor.getPhone().orElse(null) + ", email="
                 + editTripDescriptor.getEmail().orElse(null) + ", address="
                 + editTripDescriptor.getAddress().orElse(null) + ", tags="
-                + editTripDescriptor.getTags().orElse(null) + "}";
+                + editTripDescriptor.getTags().orElse(null) + ", startDate="
+                + editTripDescriptor.getStartDate().orElse(null) + ", endDate="
+                + editTripDescriptor.getEndDate().orElse(null) + "}";
         assertEquals(expected, editTripDescriptor.toString());
     }
 }
