@@ -63,8 +63,8 @@ public class AddCommandParserTest {
 
         Trip expectedTripMultipleTags = new TripBuilder(BOB)
                 .withTags(VALID_TAG_FRIEND, VALID_TAG_HUSBAND)
-                .withStartDate(VALID_START_DATE_BOB)
-                .withEndDate(VALID_END_DATE_BOB)
+                .withStart(VALID_START_DATE_BOB)
+                .withEnd(VALID_END_DATE_BOB)
                 .build();
 
         assertParseSuccess(parser,
