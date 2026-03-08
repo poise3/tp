@@ -8,7 +8,6 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
-import seedu.triplog.logic.parser.ParserUtil;
 import seedu.triplog.model.person.Trip;
 
 /**
