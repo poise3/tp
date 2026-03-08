@@ -39,8 +39,6 @@ public class Trip {
         this.phone = phone;
         this.email = email;
         this.address = address;
-        this.startDate = LocalDate.parse(DEFAULT_START_DATE);
-        this.endDate = LocalDate.parse(DEFAULT_END_DATE);
         this.tags.addAll(tags);
         this.startDate = startDate;
         this.endDate = endDate;
