@@ -13,6 +13,8 @@ import org.junit.jupiter.api.Test;
 
 import javafx.application.Platform;
 import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
+import javafx.stage.Stage;
 
 public class HelpWindowTest {
 
@@ -56,6 +58,9 @@ public class HelpWindowTest {
         }
     }
 
+    /**
+     * Tests that the HelpWindow can be shown without throwing exceptions, and that it can be hidden
+     */
     @Test
     public void constructor_createsHelpWindow() throws Exception {
         Assumptions.assumeFalse(isHeadless, "Skipping UI test in headless environment");
@@ -76,6 +81,37 @@ public class HelpWindowTest {
             hw.focus();
             hw.hide();
             assertFalse(hw.isShowing());
+        });
+    }
+
+    @Test
+    public void keyFilter_closeKey_hidesWindow() throws Exception {
+        Assumptions.assumeFalse(isHeadless, "Skipping UI test in headless environment");
+        runOnFxThreadAndWait(() -> {
+            HelpWindow hw = new HelpWindow();
+            hw.show();
+            assertTrue(hw.isShowing());
+            Stage root = hw.getRoot();
+            KeyEvent event = new KeyEvent(KeyEvent.KEY_PRESSED, "", "", KeyCode.Q,
+                    false, false, false, false);
+            root.fireEvent(event);
+            assertFalse(hw.isShowing());
+        });
+    }
+
+    @Test
+    public void keyFilter_nonCloseKey_doesNotHideWindow() throws Exception {
+        Assumptions.assumeFalse(isHeadless, "Skipping UI test in headless environment");
+        runOnFxThreadAndWait(() -> {
+            HelpWindow hw = new HelpWindow();
+            hw.show();
+            assertTrue(hw.isShowing());
+            Stage root = hw.getRoot();
+            KeyEvent event = new KeyEvent(KeyEvent.KEY_PRESSED, "", "", KeyCode.A,
+                    false, false, false, false);
+            root.fireEvent(event);
+            assertTrue(hw.isShowing());
+            hw.hide();
         });
     }
 
