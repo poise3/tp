@@ -3,10 +3,7 @@ package seedu.triplog.ui;
 import java.util.logging.Logger;
 
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.input.Clipboard;
-import javafx.scene.input.ClipboardContent;
 import javafx.stage.Stage;
 import seedu.triplog.commons.core.LogsCenter;
 
@@ -16,16 +13,54 @@ import seedu.triplog.commons.core.LogsCenter;
 public class HelpWindow extends UiPart<Stage> {
 
     public static final String USERGUIDE_URL = "https://se-education.org/addressbook-level3/UserGuide.html";
-    public static final String HELP_MESSAGE = "Refer to the user guide: " + USERGUIDE_URL;
 
     private static final Logger logger = LogsCenter.getLogger(HelpWindow.class);
     private static final String FXML = "HelpWindow.fxml";
 
-    @FXML
-    private Button copyButton;
+    public static final String PREFIX_NOTE =
+        "Options use the /key:value format — the / must be followed immediately by the option name and a colon.\n"
+        + "e.g.  /start:2024-03-01   /end:2024-03-10\n"
+        + "Omitting the colon will cause an Invalid Option Format error.";
+
+    public static final String ADD_USAGE =
+        "add <destination> [/start:<start-date>] [/end:<end-date>]\n"
+        + "  Records a new trip. Dates must be YYYY-MM-DD.\n"
+        + "  e.g.  add Tokyo /start:2024-03-01 /end:2024-03-10";
+
+    public static final String DELETE_USAGE =
+        "delete <INDEX>\n"
+        + "  Removes the trip at the given list position.\n"
+        + "  INDEX must be a positive integer (1, 2, 3, …)\n"
+        + "  e.g.  delete 2";
+    
+    public static final String TAG_USAGE =
+        "tag <index> <tag-name>\n"
+        + "  Adds a keyword tag to an existing trip.\n"
+        + "  tag-name must be alphanumeric. Use quotes for tags with spaces.\n"
+        + "  e.g.  tag 1 nature    or    tag 1 \"night market\"";
+    
+    public static final String LIST_USAGE =
+        "list\n"
+        + "  Displays all trip entries.\n"
+        + "  e.g.  list";
+
+    
+
 
     @FXML
-    private Label helpMessage;
+    private Label prefixNote;
+
+    @FXML
+    private Label addUsage;
+
+    @FXML
+    private Label deleteUsage;
+
+    @FXML
+    private Label tagUsage;
+
+    @FXML
+    private Label listUsage;
 
     /**
      * Creates a new HelpWindow.
@@ -34,7 +69,11 @@ public class HelpWindow extends UiPart<Stage> {
      */
     public HelpWindow(Stage root) {
         super(FXML, root);
-        helpMessage.setText(HELP_MESSAGE);
+        prefixNote.setText(PREFIX_NOTE);
+        addUsage.setText(ADD_USAGE);
+        deleteUsage.setText(DELETE_USAGE);
+        tagUsage.setText(TAG_USAGE);
+        listUsage.setText(LIST_USAGE);
     }
 
     /**
@@ -89,14 +128,4 @@ public class HelpWindow extends UiPart<Stage> {
         getRoot().requestFocus();
     }
 
-    /**
-     * Copies the URL to the user guide to the clipboard.
-     */
-    @FXML
-    private void copyUrl() {
-        final Clipboard clipboard = Clipboard.getSystemClipboard();
-        final ClipboardContent url = new ClipboardContent();
-        url.putString(USERGUIDE_URL);
-        clipboard.setContent(url);
-    }
 }
