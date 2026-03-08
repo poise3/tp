@@ -5,7 +5,12 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import seedu.triplog.logic.commands.EditCommand.EditTripDescriptor;
-import seedu.triplog.model.person.*;
+import seedu.triplog.model.person.Address;
+import seedu.triplog.model.person.Email;
+import seedu.triplog.model.person.Name;
+import seedu.triplog.model.person.Phone;
+import seedu.triplog.model.person.Trip;
+import seedu.triplog.model.person.TripDate;
 import seedu.triplog.model.tag.Tag;
 
 /**
@@ -83,11 +88,17 @@ public class EditTripDescriptorBuilder {
         return descriptor;
     }
 
+    /**
+     * Sets the {@code TripDate} of the {@code EditTripDescriptor} that we are building.
+     */
     public EditTripDescriptorBuilder withStart(String date) {
         descriptor.setStartDate(new TripDate(date));
         return this;
     }
 
+    /**
+     * Sets the {@code TripDate} of the {@code EditTripDescriptor} that we are building.
+     */
     public EditTripDescriptorBuilder withEnd(String date) {
         descriptor.setEndDate(new TripDate(date));
         return this;
