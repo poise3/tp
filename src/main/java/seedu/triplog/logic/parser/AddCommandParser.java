@@ -15,7 +15,12 @@ import java.util.stream.Stream;
 
 import seedu.triplog.logic.commands.AddCommand;
 import seedu.triplog.logic.parser.exceptions.ParseException;
-import seedu.triplog.model.person.*;
+import seedu.triplog.model.person.Address;
+import seedu.triplog.model.person.Email;
+import seedu.triplog.model.person.Name;
+import seedu.triplog.model.person.Phone;
+import seedu.triplog.model.person.Trip;
+import seedu.triplog.model.person.TripDate;
 import seedu.triplog.model.tag.Tag;
 
 /**
