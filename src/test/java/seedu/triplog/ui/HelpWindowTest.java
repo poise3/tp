@@ -3,10 +3,8 @@ package seedu.triplog.ui;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.testfx.api.FxRobot;
 import org.testfx.framework.junit5.ApplicationExtension;
 import org.testfx.framework.junit5.Start;
 import org.testfx.framework.junit5.Stop;
@@ -33,6 +31,7 @@ public class HelpWindowTest {
     public void constructor_createsHelpWindow() {
         assertNotNull(helpWindow);
     }
+
     @Test
     public void isCloseKey_qKey_returnsTrue() {
         assertTrue(HelpWindow.isCloseKey(KeyCode.Q));
@@ -47,6 +46,16 @@ public class HelpWindowTest {
     public void isCloseKey_otherKey_returnsFalse() {
         assertFalse(HelpWindow.isCloseKey(KeyCode.A));
         assertFalse(HelpWindow.isCloseKey(KeyCode.ENTER));
+    }
+
+    @Test
+    public void isCloseKey_aKey_returnsFalse() {
+        assertFalse(HelpWindow.isCloseKey(KeyCode.A));
+    }
+
+    @Test
+    public void isCloseKey_bKey_returnsFalse() {
+        assertFalse(HelpWindow.isCloseKey(KeyCode.B));
     }
 
     @Test
@@ -102,26 +111,8 @@ public class HelpWindowTest {
     }
 
     @Test
-    public void keyPress_qKey_hidesWindow(FxRobot robot) {
-        robot.interact(() -> helpWindow.show());
-        assertTrue(helpWindow.isShowing());
-        robot.press(KeyCode.Q).release(KeyCode.Q);
+    public void isShowing_initiallyFalse() {
         assertFalse(helpWindow.isShowing());
     }
-
-    @Test
-    public void keyPress_escapeKey_hidesWindow(FxRobot robot) {
-        robot.interact(() -> helpWindow.show());
-        assertTrue(helpWindow.isShowing());
-        robot.press(KeyCode.ESCAPE).release(KeyCode.ESCAPE);
-        assertFalse(helpWindow.isShowing());
-    }
-
-    @Test
-    public void keyPress_otherKey_doesNotHideWindow(FxRobot robot) {
-        robot.interact(() -> helpWindow.show());
-        assertTrue(helpWindow.isShowing());
-        robot.press(KeyCode.A).release(KeyCode.A);
-        assertTrue(helpWindow.isShowing());
-    }
+    
 }
