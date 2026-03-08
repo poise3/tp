@@ -98,7 +98,7 @@ public class Trip {
         }
         if (!(other instanceof Trip)) {
             return false;
-        } 
+        }
         Trip otherTrip = (Trip) other;
 
         return name.equals(otherTrip.name)
