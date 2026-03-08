@@ -61,8 +61,6 @@ public class TagCommand extends Command {
             throw new CommandException(MESSAGE_DUPLICATE_TRIP);
         }
 
-        // Exception handling for duplicate tags
-
         return new CommandResult(String.format(MESSAGE_TAG_TRIP_SUCCESS, this.tag, Messages.format(tripWithUpdatedTag)));
     }
 
