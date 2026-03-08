@@ -1,11 +1,11 @@
 package seedu.triplog.model.person;
 
+import static java.util.Objects.requireNonNull;
+import static seedu.triplog.commons.util.AppUtil.checkArgument;
+
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
-
-import static java.util.Objects.requireNonNull;
-import static seedu.triplog.commons.util.AppUtil.checkArgument;
 
 public class TripDate {
     public static final String MESSAGE_CONSTRAINTS =
