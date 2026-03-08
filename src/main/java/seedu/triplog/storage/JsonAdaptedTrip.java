@@ -92,8 +92,6 @@ class JsonAdaptedTrip {
         final Phone modelPhone;
         if (phone == null) {
             modelPhone = null;
-            //throw new IllegalValueException(String.format(MISSING_FIELD_MESSAGE_FORMAT,
-                                                            Phone.class.getSimpleName()));
         } else if (!Phone.isValidPhone(phone)) {
             throw new IllegalValueException(Phone.MESSAGE_CONSTRAINTS);
         } else {
@@ -103,8 +101,6 @@ class JsonAdaptedTrip {
         final Email modelEmail;
         if (email == null) {
             modelEmail = null;
-            //throw new IllegalValueException(String.format(MISSING_FIELD_MESSAGE_FORMAT,
-                                                            Email.class.getSimpleName()));
         } else if (!Email.isValidEmail(email)) {
             throw new IllegalValueException(Email.MESSAGE_CONSTRAINTS);
         } else {
@@ -114,8 +110,6 @@ class JsonAdaptedTrip {
         final Address modelAddress;
         if (address == null) {
             modelAddress = null;
-            //throw new IllegalValueException(String.format(MISSING_FIELD_MESSAGE_FORMAT,
-                                                            Address.class.getSimpleName()));
         } else if (!Address.isValidAddress(address)) {
             throw new IllegalValueException(Address.MESSAGE_CONSTRAINTS);
         } else {
@@ -125,8 +119,6 @@ class JsonAdaptedTrip {
         final TripDate modelStartDate;
         if (startDate == null) {
             modelStartDate = null;
-            //throw new IllegalValueException(String.format(MISSING_FIELD_MESSAGE_FORMAT,
-                                                            TripDate.class.getSimpleName()));
         } else if (!TripDate.isValidDate(startDate)) {
             throw new IllegalValueException(Address.MESSAGE_CONSTRAINTS);
         } else {
@@ -136,8 +128,6 @@ class JsonAdaptedTrip {
         final TripDate modelEndDate;
         if (endDate == null) {
             modelEndDate = null;
-            //throw new IllegalValueException(String.format(MISSING_FIELD_MESSAGE_FORMAT,
-                                                            TripDate.class.getSimpleName()));
         } else if (!TripDate.isValidDate(endDate)) {
             throw new IllegalValueException(Address.MESSAGE_CONSTRAINTS);
         } else {
