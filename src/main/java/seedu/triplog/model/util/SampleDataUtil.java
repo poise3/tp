@@ -6,7 +6,12 @@ import java.util.stream.Collectors;
 
 import seedu.triplog.model.ReadOnlyTripLog;
 import seedu.triplog.model.TripLog;
-import seedu.triplog.model.person.*;
+import seedu.triplog.model.person.Address;
+import seedu.triplog.model.person.Email;
+import seedu.triplog.model.person.Name;
+import seedu.triplog.model.person.Phone;
+import seedu.triplog.model.person.Trip;
+import seedu.triplog.model.person.TripDate;
 import seedu.triplog.model.tag.Tag;
 
 /**
