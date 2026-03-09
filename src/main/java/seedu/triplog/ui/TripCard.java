@@ -1,6 +1,7 @@
 package seedu.triplog.ui;
 
 import java.util.Comparator;
+import java.util.Objects;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
@@ -15,14 +16,6 @@ import seedu.triplog.model.person.Trip;
 public class TripCard extends UiPart<Region> {
 
     private static final String FXML = "TripListCard.fxml";
-
-    /**
-     * Note: Certain keywords such as "location" and "resources" are reserved keywords in JavaFX.
-     * As a consequence, UI elements' variable names cannot be set to such keywords
-     * or an exception will be thrown by JavaFX during runtime.
-     *
-     * @see <a href="https://github.com/se-edu/addressbook-level4/issues/336">The issue on TripLog level 4</a>
-     */
 
     public final Trip trip;
 
@@ -40,18 +33,50 @@ public class TripCard extends UiPart<Region> {
     private Label email;
     @FXML
     private FlowPane tags;
+    @FXML
+    private Label startDate;
+    @FXML
+    private Label endDate;
 
     /**
-     * Creates a {@code PersonCode} with the given {@code Trip} and index to display.
+     * Creates a {@code TripCard} with the given {@code Trip} and index to display.
      */
     public TripCard(Trip trip, int displayedIndex) {
         super(FXML);
         this.trip = trip;
         id.setText(displayedIndex + ". ");
         name.setText(trip.getName().fullName);
-        phone.setText(trip.getPhone().value);
-        address.setText(trip.getAddress().value);
-        email.setText(trip.getEmail().value);
+
+        if (!Objects.isNull(trip.getPhone())) {
+            phone.setText(trip.getPhone().value);
+        } else {
+            phone.setManaged(false);
+        }
+
+        if (!Objects.isNull(trip.getAddress())) {
+            address.setText(trip.getAddress().value);
+        } else {
+            address.setManaged(false);
+        }
+
+        if (!Objects.isNull(trip.getEmail())) {
+            email.setText(trip.getEmail().value);
+        } else {
+            email.setManaged(false);
+        }
+
+        if (!Objects.isNull(trip.getStartDate())) {
+            startDate.setText(trip.getStartDate().toString());
+        } else {
+            startDate.setManaged(false);
+        }
+
+        if (!Objects.isNull(trip.getEndDate())) {
+            endDate.setText(trip.getEndDate().toString());
+        } else {
+            endDate.setManaged(false);
+        }
+
         trip.getTags().stream()
                 .sorted(Comparator.comparing(tag -> tag.tagName))
                 .forEach(tag -> tags.getChildren().add(new Label(tag.tagName)));

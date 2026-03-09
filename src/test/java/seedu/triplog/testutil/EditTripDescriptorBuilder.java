@@ -10,6 +10,7 @@ import seedu.triplog.model.person.Email;
 import seedu.triplog.model.person.Name;
 import seedu.triplog.model.person.Phone;
 import seedu.triplog.model.person.Trip;
+import seedu.triplog.model.person.TripDate;
 import seedu.triplog.model.tag.Tag;
 
 /**
@@ -37,6 +38,8 @@ public class EditTripDescriptorBuilder {
         descriptor.setEmail(trip.getEmail());
         descriptor.setAddress(trip.getAddress());
         descriptor.setTags(trip.getTags());
+        descriptor.setStartDate(trip.getStartDate());
+        descriptor.setEndDate(trip.getEndDate());
     }
 
     /**
@@ -83,5 +86,21 @@ public class EditTripDescriptorBuilder {
 
     public EditTripDescriptor build() {
         return descriptor;
+    }
+
+    /**
+     * Sets the {@code TripDate} of the {@code EditTripDescriptor} that we are building.
+     */
+    public EditTripDescriptorBuilder withStart(String date) {
+        descriptor.setStartDate(new TripDate(date));
+        return this;
+    }
+
+    /**
+     * Sets the {@code TripDate} of the {@code EditTripDescriptor} that we are building.
+     */
+    public EditTripDescriptorBuilder withEnd(String date) {
+        descriptor.setEndDate(new TripDate(date));
+        return this;
     }
 }

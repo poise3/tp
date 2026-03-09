@@ -36,15 +36,28 @@ public class Messages {
      */
     public static String format(Trip trip) {
         final StringBuilder builder = new StringBuilder();
-        builder.append(trip.getName())
-                .append("; Phone: ")
-                .append(trip.getPhone())
-                .append("; Email: ")
-                .append(trip.getEmail())
-                .append("; Address: ")
-                .append(trip.getAddress())
-                .append("; Tags: ");
-        trip.getTags().forEach(builder::append);
+        builder.append(trip.getName());
+
+        if (trip.getPhone() != null) {
+            builder.append("; Phone: ").append(trip.getPhone());
+        }
+        if (trip.getEmail() != null) {
+            builder.append("; Email: ").append(trip.getEmail());
+        }
+        if (trip.getAddress() != null) {
+            builder.append("; Address: ").append(trip.getAddress());
+        }
+        if (trip.getStartDate() != null) {
+            builder.append("; Start Date: ").append(trip.getStartDate());
+        }
+        if (trip.getEndDate() != null) {
+            builder.append("; End Date: ").append(trip.getEndDate());
+        }
+
+        if (!trip.getTags().isEmpty()) {
+            builder.append("; Tags: ");
+            trip.getTags().forEach(builder::append);
+        }
         return builder.toString();
     }
 

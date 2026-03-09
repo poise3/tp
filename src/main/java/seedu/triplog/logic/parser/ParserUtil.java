@@ -13,6 +13,7 @@ import seedu.triplog.model.person.Address;
 import seedu.triplog.model.person.Email;
 import seedu.triplog.model.person.Name;
 import seedu.triplog.model.person.Phone;
+import seedu.triplog.model.person.TripDate;
 import seedu.triplog.model.tag.Tag;
 
 /**
@@ -121,4 +122,20 @@ public class ParserUtil {
         }
         return tagSet;
     }
+
+    /**
+     * Parses a {@code String date} into a {@code TripDate}.
+     * Leading and trailing whitespaces will be trimmed.
+     *
+     * @throws ParseException if the given {@code date} is invalid.
+     */
+    public static TripDate parseTripDate(String date) throws ParseException {
+        requireNonNull(date);
+        String trimmedDate = date.trim();
+        if (!TripDate.isValidDate(trimmedDate)) {
+            throw new ParseException(TripDate.MESSAGE_CONSTRAINTS);
+        }
+        return new TripDate(trimmedDate);
+    }
+
 }

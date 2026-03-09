@@ -4,12 +4,16 @@
     "phone" : "9482424",
     "email" : "valid@example.com",
     "address" : "4th street",
+    "startDate" : "2026-01-01",
+    "endDate" : "2026-01-10",
     "tags" : [ ]
   }, {
     "name" : "Inv@lid Person",
     "phone" : "9482424",
     "email" : "valid@example.com",
     "address" : "4th street",
+    "startDate" : "2026-01-01",
+    "endDate" : "2026-01-10",
     "tags" : [ ]
   } ]
 }

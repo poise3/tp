@@ -2,8 +2,10 @@ package seedu.triplog.testutil;
 
 import static seedu.triplog.logic.parser.CliSyntax.PREFIX_ADDRESS;
 import static seedu.triplog.logic.parser.CliSyntax.PREFIX_EMAIL;
+import static seedu.triplog.logic.parser.CliSyntax.PREFIX_END_DATE;
 import static seedu.triplog.logic.parser.CliSyntax.PREFIX_NAME;
 import static seedu.triplog.logic.parser.CliSyntax.PREFIX_PHONE;
+import static seedu.triplog.logic.parser.CliSyntax.PREFIX_START_DATE;
 import static seedu.triplog.logic.parser.CliSyntax.PREFIX_TAG;
 
 import java.util.Set;
@@ -34,6 +36,14 @@ public class TripUtil {
         sb.append(PREFIX_PHONE + trip.getPhone().value + " ");
         sb.append(PREFIX_EMAIL + trip.getEmail().value + " ");
         sb.append(PREFIX_ADDRESS + trip.getAddress().value + " ");
+
+        if (trip.getStartDate() != null) {
+            sb.append(PREFIX_START_DATE + trip.getStartDate().toString() + " ");
+        }
+        if (trip.getEndDate() != null) {
+            sb.append(PREFIX_END_DATE + trip.getEndDate().toString() + " ");
+        }
+
         trip.getTags().stream().forEach(
                 s -> sb.append(PREFIX_TAG + s.tagName + " ")
         );
@@ -49,6 +59,8 @@ public class TripUtil {
         descriptor.getPhone().ifPresent(phone -> sb.append(PREFIX_PHONE).append(phone.value).append(" "));
         descriptor.getEmail().ifPresent(email -> sb.append(PREFIX_EMAIL).append(email.value).append(" "));
         descriptor.getAddress().ifPresent(address -> sb.append(PREFIX_ADDRESS).append(address.value).append(" "));
+        descriptor.getStartDate().ifPresent(date -> sb.append(PREFIX_START_DATE).append(date.value).append(" "));
+        descriptor.getEndDate().ifPresent(date -> sb.append(PREFIX_END_DATE).append(date.value).append(" "));
         if (descriptor.getTags().isPresent()) {
             Set<Tag> tags = descriptor.getTags().get();
             if (tags.isEmpty()) {

@@ -2,6 +2,7 @@ package seedu.triplog.model.person;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static seedu.triplog.logic.commands.CommandTestUtil.VALID_ADDRESS_BOB;
 import static seedu.triplog.logic.commands.CommandTestUtil.VALID_EMAIL_BOB;
@@ -91,9 +92,18 @@ public class TripTest {
     }
 
     @Test
+    public void hashCode_test() {
+        Trip aliceCopy = new TripBuilder(ALICE).build();
+        assertEquals(ALICE.hashCode(), aliceCopy.hashCode());
+        assertNotEquals(ALICE.hashCode(), BOB.hashCode());
+    }
+
+    @Test
     public void toStringMethod() {
         String expected = Trip.class.getCanonicalName() + "{name=" + ALICE.getName() + ", phone=" + ALICE.getPhone()
-                + ", email=" + ALICE.getEmail() + ", address=" + ALICE.getAddress() + ", tags=" + ALICE.getTags() + "}";
+                + ", email=" + ALICE.getEmail() + ", address=" + ALICE.getAddress()
+                + ", startDate=" + ALICE.getStartDate() + ", endDate=" + ALICE.getEndDate()
+                + ", tags=" + ALICE.getTags() + "}";
         assertEquals(expected, ALICE.toString());
     }
 }
