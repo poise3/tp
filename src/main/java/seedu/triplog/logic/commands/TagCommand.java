@@ -34,7 +34,7 @@ public class TagCommand extends Command {
     private final Tag tag;
 
     /**
-     * Creates a TagCommand to add the specified {@code Person}
+     * Creates a TagCommand to add the specified {@code Tag}
      */
     public TagCommand(Index index, Tag tag) {
         requireNonNull(index);
@@ -47,25 +47,23 @@ public class TagCommand extends Command {
     public CommandResult execute(Model model) throws CommandException {
         requireNonNull(model);
         List<Trip> lastShownList = model.getFilteredTripList();
-
         if (index.getZeroBased() >= lastShownList.size()) {
             throw new CommandException(Messages.MESSAGE_INVALID_TRIP_DISPLAYED_INDEX);
         }
 
         Trip tripToTag = lastShownList.get(index.getZeroBased());
-        Trip tripWithUpdatedTag = new Trip(tripToTag, this.tag);
 
         if (tripToTag.getTags().contains(this.tag)) {
             throw new CommandException(MESSAGE_DUPLICATE_TAG);
         }
 
+        Trip tripWithUpdatedTag = new Trip(tripToTag, this.tag);
         if (!tripToTag.isSameTrip(tripWithUpdatedTag) && model.hasTrip(tripWithUpdatedTag)) {
             throw new CommandException(MESSAGE_DUPLICATE_TRIP);
         }
 
         model.setTrip(tripToTag, tripWithUpdatedTag);
         model.updateFilteredTripList(PREDICATE_SHOW_ALL_TRIPS);
-
         return new CommandResult(
                 String.format(
                         MESSAGE_TAG_TRIP_SUCCESS,

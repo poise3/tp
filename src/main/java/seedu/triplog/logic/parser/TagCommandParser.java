@@ -8,9 +8,9 @@ import seedu.triplog.logic.parser.exceptions.ParseException;
 import seedu.triplog.model.tag.Tag;
 
 /**
- * Parses input arguments and creates a new FindCommand object
+ * Parses input arguments and creates a new TagCommand object
  */
-public class TagCommandParser {
+public class TagCommandParser implements Parser<TagCommand> {
     /**
      * Parses the given {@code String} of arguments in the context of the TagCommand
      * and returns a TagCommand object for execution.

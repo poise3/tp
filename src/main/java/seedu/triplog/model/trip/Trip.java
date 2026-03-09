@@ -53,8 +53,8 @@ public class Trip {
         this.phone = trip.phone;
         this.email = trip.email;
         this.address = trip.address;
-        this.startDate = LocalDate.parse(DEFAULT_START_DATE);
-        this.endDate = LocalDate.parse(DEFAULT_END_DATE);
+        this.startDate = trip.startDate;
+        this.endDate = trip.endDate;
         this.tags.addAll(trip.tags);
         this.tags.add(tag);
     }
