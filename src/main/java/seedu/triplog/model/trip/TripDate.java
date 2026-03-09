@@ -1,4 +1,4 @@
-package seedu.triplog.model.person;
+package seedu.triplog.model.trip;
 
 import static java.util.Objects.requireNonNull;
 import static seedu.triplog.commons.util.AppUtil.checkArgument;
