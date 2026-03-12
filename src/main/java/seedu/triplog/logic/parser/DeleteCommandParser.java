@@ -1,8 +1,9 @@
 package seedu.triplog.logic.parser;
 
 import static seedu.triplog.logic.Messages.MESSAGE_INVALID_COMMAND_FORMAT;
-import static seedu.triplog.logic.Messages.MESSAGE_MISSING_INDEX;
 import static seedu.triplog.logic.Messages.MESSAGE_INVALID_INDEX_FORMAT;
+import static seedu.triplog.logic.Messages.MESSAGE_MISSING_INDEX;
+
 
 import seedu.triplog.commons.core.index.Index;
 import seedu.triplog.logic.commands.DeleteCommand;
