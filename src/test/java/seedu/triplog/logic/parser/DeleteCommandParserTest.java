@@ -1,6 +1,8 @@
 package seedu.triplog.logic.parser;
 
 import static seedu.triplog.logic.Messages.MESSAGE_INVALID_COMMAND_FORMAT;
+import static seedu.triplog.logic.Messages.MESSAGE_INVALID_INDEX_FORMAT;
+import static seedu.triplog.logic.Messages.MESSAGE_MISSING_INDEX;
 import static seedu.triplog.logic.parser.CommandParserTestUtil.assertParseFailure;
 import static seedu.triplog.logic.parser.CommandParserTestUtil.assertParseSuccess;
 import static seedu.triplog.testutil.TypicalIndexes.INDEX_FIRST_PERSON;
@@ -23,10 +25,27 @@ public class DeleteCommandParserTest {
     @Test
     public void parse_validArgs_returnsDeleteCommand() {
         assertParseSuccess(parser, "1", new DeleteCommand(INDEX_FIRST_PERSON));
+        assertParseSuccess(parser, "   1   ", new DeleteCommand(INDEX_FIRST_PERSON));
     }
 
     @Test
-    public void parse_invalidArgs_throwsParseException() {
-        assertParseFailure(parser, "a", String.format(MESSAGE_INVALID_COMMAND_FORMAT, DeleteCommand.MESSAGE_USAGE));
+    public void parse_missingIndex_throwsParseException() {
+        assertParseFailure(parser, "", MESSAGE_MISSING_INDEX);
+        assertParseFailure(parser, "   ", MESSAGE_MISSING_INDEX);
+    }
+
+    @Test
+    public void parse_invalidIndexFormat_throwsParseException() {
+        assertParseFailure(parser, "a", MESSAGE_INVALID_INDEX_FORMAT);
+        assertParseFailure(parser, "-1", MESSAGE_INVALID_INDEX_FORMAT);
+        assertParseFailure(parser, "0", MESSAGE_INVALID_INDEX_FORMAT);
+    }
+
+    @Test
+    public void parse_extraArguments_throwsParseException() {
+        assertParseFailure(parser, "1 abc",
+                String.format(MESSAGE_INVALID_COMMAND_FORMAT, DeleteCommand.MESSAGE_USAGE));
+        assertParseFailure(parser, "2 extra",
+                String.format(MESSAGE_INVALID_COMMAND_FORMAT, DeleteCommand.MESSAGE_USAGE));
     }
 }
