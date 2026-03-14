@@ -58,7 +58,7 @@ public class MainWindow extends UiPart<Stage> {
      * Fills up all the placeholders of this window.
      */
     void fillInnerParts() {
-        tripListPanel = new TripListPanel(logic.getFilteredTripList());
+        tripListPanel = new TripListPanel(logic.getSortedTripList());
         tripListPanelPlaceholder.getChildren().add(tripListPanel.getRoot());
 
         resultDisplay = new ResultDisplay();
