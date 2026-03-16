@@ -4,11 +4,10 @@
   pageNav: 3
 ---
 
-# AB-3 User Guide
+# TripLog User Guide
 
-AddressBook Level 3 (AB3) is a **desktop app for managing contacts, optimized for use via a  Line Interface** (CLI) while still having the benefits of a Graphical User Interface (GUI). If you can type fast, AB3 can get your contact management tasks done faster than traditional GUI apps.
+TripLog is a **desktop app for managing trips, optimized for use via a Command Line Interface** (CLI) while still having the benefits of a Graphical User Interface (GUI). If you can type fast, TripLog can get your travel management tasks done faster than traditional GUI apps.
 
-<!-- * Table of Contents -->
 <page-nav-print />
 
 --------------------------------------------------------------------------------------------------------------------
@@ -18,24 +17,24 @@ AddressBook Level 3 (AB3) is a **desktop app for managing contacts, optimized fo
 1. Ensure you have Java `17` or above installed in your Computer.<br>
    **Mac users:** Ensure you have the precise JDK version prescribed [here](https://se-education.org/guides/tutorials/javaInstallationMac.html).
 
-1. Download the latest `.jar` file from [here](https://github.com/se-edu/addressbook-level3/releases).
+1. Download the latest `.jar` file from [here](https://github.com/se-edu/triplog/releases).
 
-1. Copy the file to the folder you want to use as the _home folder_ for your AddressBook.
+1. Copy the file to the folder you want to use as the _home folder_ for your TripLog.
 
-1. Open a command terminal, `cd` into the folder you put the jar file in, and use the `java -jar addressbook.jar` command to run the application.<br>
+1. Open a command terminal, `cd` into the folder you put the jar file in, and use the `java -jar triplog.jar` command to run the application.<br>
    A GUI similar to the below should appear in a few seconds. Note how the app contains some sample data.<br>
    ![Ui](images/Ui.png)
 
 1. Type the command in the command box and press Enter to execute it. e.g. typing **`help`** and pressing Enter will open the help window.<br>
    Some example commands you can try:
 
-   * `list` : Lists all contacts.
+   * `list` : Lists all trips.
 
-   * `add n/John Doe p/98765432 e/johnd@example.com a/John street, block 123, #01-01` : Adds a contact named `John Doe` to the Address Book.
+   * `add /name:"Tokyo, Japan" /start:2026-03-10 /end:2026-03-20` : Adds a trip to Tokyo.
 
-   * `delete 3` : Deletes the 3rd contact shown in the current list.
+   * `delete 3` : Deletes the 3rd trip shown in the current list.
 
-   * `clear` : Deletes all contacts.
+   * `clear` : Deletes all entries.
 
    * `exit` : Exits the app.
 
@@ -50,46 +49,47 @@ AddressBook Level 3 (AB3) is a **desktop app for managing contacts, optimized fo
 **Notes about the command format:**<br>
 
 * Words in `UPPER_CASE` are the parameters to be supplied by the user.<br>
-  e.g. in `add n/NAME`, `NAME` is a parameter which can be used as `add n/John Doe`.
+  e.g. in `add /name:NAME`, `NAME` is a parameter which can be used as `add /name:"John Doe"`.
+
+* **Mandatory Quotes:** Any parameter value that contains spaces (e.g., a city name or multi-word tag) **must** be wrapped in double quotes.<br>
+  e.g. `/name:"New York"` or `/tag:"night market"`.
 
 * Items in square brackets are optional.<br>
-  e.g `n/NAME [t/TAG]` can be used as `n/John Doe t/friend` or as `n/John Doe`.
+  e.g `/name:NAME [/start:DATE]` can be used as `/name:Tokyo /start:2026-01-01` or as `/name:Tokyo`.
 
 * Items with `…`​ after them can be used multiple times including zero times.<br>
-  e.g. `[t/TAG]…​` can be used as ` ` (i.e. 0 times), `t/friend`, `t/friend t/family` etc.
+  e.g. `[/tag:TAG]…​` can be used as ` ` (i.e. 0 times), `/tag:nature`, `/tag:nature /tag:photo` etc.
 
 * Parameters can be in any order.<br>
-  e.g. if the command specifies `n/NAME p/PHONE_NUMBER`, `p/PHONE_NUMBER n/NAME` is also acceptable.
+  e.g. if the command specifies `/name:NAME /phone:PHONE`, `/phone:PHONE /name:NAME` is also acceptable.
 
-* Extraneous parameters for commands that do not take in parameters (such as `help`, `list`, `exit` and `clear`) will be ignored.<br>
-  e.g. if the command specifies `help 123`, it will be interpreted as `help`.
-
-* If you are using a PDF version of this document, be careful when copying and pasting commands that span multiple lines as space characters surrounding line-breaks may be omitted when copied over to the application.
+* Extraneous parameters for commands that do not take in parameters (such as `help`, `list`, `exit` and `clear`) will be ignored.
 </box>
 
 ### Viewing help : `help`
 
-Shows a message explaining how to access the help page.
+Shows a help window explaining the command syntax and parameter requirements.
 
 ![help message](images/helpMessage.png)
 
 Format: `help`
 
+* The help window can be closed by clicking the 'x' button, or by pressing **Q** or **ESCAPE** while the window is focused.
 
 ### Adding a trip: `add`
 
-Adds a trip to the address book.
+Adds a trip to the log.
 
-Format: `add n/NAME p/PHONE_NUMBER e/EMAIL a/ADDRESS [t/TAG]…​`
+Format: `add /name:NAME [/phone:PHONE] [/email:EMAIL] [/addr:ADDRESS] [/start:START_DATE] [/end:END_DATE] [/tag:TAG]…​`
 
 <box type="tip" seamless>
 
-**Tip:** A trip can have any number of tags (including 0)
+**Tip:** A trip can have any number of tags (including 0). Use quotes for addresses or names with spaces.
 </box>
 
 Examples:
-* `add n/John Doe p/98765432 e/johnd@example.com a/John street, block 123, #01-01`
-* `add n/Betsy Crowe t/friend e/betsycrowe@example.com a/Newgate Prison p/1234567 t/criminal`
+* `add /name:Tokyo /start:2026-03-10 /end:2026-03-20`
+* `add /name:"New York" /addr:"123 5th Ave" /tag:business /tag:"high priority"`
 
 ### Listing all trips : `list`
 
@@ -101,18 +101,17 @@ Format: `list`
 
 Edits an existing trip in the address book.
 
-Format: `edit INDEX [n/NAME] [p/PHONE] [e/EMAIL] [a/ADDRESS] [t/TAG]…​`
+Format: `edit INDEX [/name:NAME] [/phone:PHONE] [/email:EMAIL] [/addr:ADDRESS] [/start:DATE] [/end:DATE] [/tag:TAG]…​`
 
 * Edits the trip at the specified `INDEX`. The index refers to the index number shown in the displayed trip list. The index **must be a positive integer** 1, 2, 3, …​
 * At least one of the optional fields must be provided.
 * Existing values will be updated to the input values.
 * When editing tags, the existing tags of the trip will be removed i.e adding of tags is not cumulative.
-* You can remove all the trip’s tags by typing `t/` without
-    specifying any tags after it.
+* You can remove all the trip’s tags by typing `/tag:` without specifying any tags after it.
 
 Examples:
-*  `edit 1 p/91234567 e/johndoe@example.com` Edits the phone number and email address of the 1st trip to be `91234567` and `johndoe@example.com` respectively.
-*  `edit 2 n/Betsy Crower t/` Edits the name of the 2nd trip to be `Betsy Crower` and clears all existing tags.
+* `edit 1 /phone:91234567 /email:johndoe@example.com` Edits the phone and email of the 1st trip.
+* `edit 2 /name:"Betsy Crower" /tag:` Edits the name of the 2nd trip and clears all tags.
 
 ### Locating trips by name: `find`
 
@@ -160,17 +159,17 @@ Format: `exit`
 
 ### Saving the data
 
-AddressBook data are saved in the hard disk automatically after any command that changes the data. There is no need to save manually.
+TripLog data are saved in the hard disk automatically after any command that changes the data. There is no need to save manually.
 
 ### Editing the data file
 
-AddressBook data are saved automatically as a JSON file `[JAR file location]/data/addressbook.json`. Advanced users are welcome to update data directly by editing that data file.
+TripLog data are saved automatically as a JSON file `[JAR file location]/data/triplog.json`. Advanced users are welcome to update data directly by editing that data file.
 
 <box type="warning" seamless>
 
 **Caution:**
-If your changes to the data file makes its format invalid, AddressBook will discard all data and start with an empty data file at the next run.  Hence, it is recommended to take a backup of the file before editing it.<br>
-Furthermore, certain edits can cause the AddressBook to behave in unexpected ways (e.g., if a value entered is outside the acceptable range). Therefore, edit the data file only if you are confident that you can update it correctly.
+If your changes to the data file makes its format invalid, TripLog will discard all data and start with an empty data file at the next run. Hence, it is recommended to take a backup of the file before editing it.<br>
+Furthermore, certain edits can cause the TripLog to behave in unexpected ways (e.g., if a value entered is outside the acceptable range). Therefore, edit the data file only if you are confident that you can update it correctly.
 </box>
 
 ### Archiving data files `[coming in v2.0]`
@@ -182,7 +181,7 @@ _Details coming soon ..._
 ## FAQ
 
 **Q**: How do I transfer my data to another Computer?<br>
-**A**: Install the app in the other computer and overwrite the empty data file it creates with the file that contains the data of your previous AddressBook home folder.
+**A**: Install the app in the other computer and overwrite the empty data file it creates with the file that contains the data of your previous TripLog home folder.
 
 --------------------------------------------------------------------------------------------------------------------
 
@@ -195,12 +194,12 @@ _Details coming soon ..._
 
 ## Command summary
 
-Action     | Format, Examples
------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------
-**Add**    | `add n/NAME p/PHONE_NUMBER e/EMAIL a/ADDRESS [t/TAG]…​` <br> e.g., `add n/James Ho p/22224444 e/jamesho@example.com a/123, Clementi Rd, 1234665 t/friend t/colleague`
-**Clear**  | `clear`
+Action    | Format, Examples
+----------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+**Add** | `add /name:NAME [/phone:PHONE] [/email:EMAIL] [/addr:ADDRESS] [/start:DATE] [/end:DATE] [/tag:TAG]…​` <br> e.g., `add /name:"James Ho" /phone:22224444 /start:2026-01-01 /tag:friend`
+**Clear** | `clear`
 **Delete** | `delete INDEX`<br> e.g., `delete 3`
-**Edit**   | `edit INDEX [n/NAME] [p/PHONE_NUMBER] [e/EMAIL] [a/ADDRESS] [t/TAG]…​`<br> e.g.,`edit 2 n/James Lee e/jameslee@example.com`
-**Find**   | `find KEYWORD [MORE_KEYWORDS]`<br> e.g., `find James Jake`
-**List**   | `list`
-**Help**   | `help`
+**Edit** | `edit INDEX [/name:NAME] [/phone:PHONE] [/email:EMAIL] [/addr:ADDRESS] [/start:DATE] [/end:DATE] [/tag:TAG]…​`<br> e.g.,`edit 2 /name:"James Lee" /email:jameslee@example.com`
+**Find** | `find KEYWORD [MORE_KEYWORDS]`<br> e.g., `find Tokyo Osaka`
+**List** | `list`
+**Help** | `help`

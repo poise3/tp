@@ -17,34 +17,35 @@ public class HelpWindow extends UiPart<Stage> {
     public static final String USERGUIDE_URL = "https://se-education.org/addressbook-level3/UserGuide.html";
 
     public static final String PREFIX_NOTE =
-        "Options use the /key:value format — the / must be followed immediately by the option name and a colon.\n"
-        + "e.g.  /start:2024-03-01   /end:2024-03-10\n"
-        + "Omitting the colon will cause an Invalid Option Format error.";
+            "Options use the /key:value format — the / must be followed immediately by the key and a colon.\n"
+                    + "Fields with spaces must be wrapped in double quotes (e.g., \"New York\").\n"
+                    + "e.g.  /start:2026-03-01   /end:2026-03-10";
 
     public static final String ADD_USAGE =
-        "add <destination> [/start:<start-date>] [/end:<end-date>]\n"
-        + "  Records a new trip. Dates must be YYYY-MM-DD.\n"
-        + "  e.g.  add Tokyo /start:2024-03-01 /end:2024-03-10";
+            "add /name:<destination> [/phone:<phone>] [/email:<email>] [/addr:<address>] "
+                    + "[/start:<start-date>] [/end:<end-date>] [/tag:<tag>]...\n"
+                    + "  Records a new trip. Items in [square brackets] are optional. Dates must be YYYY-MM-DD.\n"
+                    + "  e.g. add /name:\"Tokyo, Japan\" /start:2026-03-01 /tag:food";
 
     public static final String DELETE_USAGE =
-        "delete <INDEX>\n"
-        + "  Removes the trip at the given list position.\n"
-        + "  INDEX must be a positive integer (1, 2, 3, …)\n"
-        + "  e.g.  delete 2";
+            "delete <INDEX>\n"
+                    + "  Removes the trip at the given list position.\n"
+                    + "  INDEX must be a positive integer (1, 2, 3, …)\n"
+                    + "  e.g.  delete 2";
 
     public static final String TAG_USAGE =
-        "tag <index> <tag-name>\n"
-        + "  Adds a keyword tag to an existing trip.\n"
-        + "  tag-name must be alphanumeric. Use quotes for tags with spaces.\n"
-        + "  e.g.  tag 1 nature    or    tag 1 \"night market\"";
+            "tag <index> /tag:<tag-name>\n"
+                    + "  Adds a keyword tag to an existing trip.\n"
+                    + "  tag-name must be alphanumeric. Use quotes for tags with spaces.\n"
+                    + "  e.g.  tag 1 /tag:adventure    or    tag 1 /tag:\"night market\"";
 
     public static final String LIST_USAGE =
-        "list\n"
-        + "  Displays all trip entries.\n"
-        + "  e.g.  list";
+            "list\n"
+                    + "  Displays all trip entries.\n"
+                    + "  e.g.  list";
 
     public static final String EXIT_NOTE =
-        "To exit the help window, press Q or ESCAPE, or click the close button.";
+            "To exit the help window, press Q or ESCAPE, or click the close button.";
 
     private static final Logger logger = LogsCenter.getLogger(HelpWindow.class);
     private static final String FXML = "HelpWindow.fxml";
@@ -65,6 +66,9 @@ public class HelpWindow extends UiPart<Stage> {
     private Label listUsage;
 
     @FXML
+    private Label helpMessage;
+
+    @FXML
     private Label exitNote;
 
     /**
@@ -79,6 +83,7 @@ public class HelpWindow extends UiPart<Stage> {
         deleteUsage.setText(DELETE_USAGE);
         tagUsage.setText(TAG_USAGE);
         listUsage.setText(LIST_USAGE);
+        helpMessage.setText("");
         exitNote.setText(EXIT_NOTE);
         root.addEventFilter(KeyEvent.KEY_PRESSED, event -> {
             if (isCloseKey(event.getCode())) {
@@ -104,21 +109,6 @@ public class HelpWindow extends UiPart<Stage> {
 
     /**
      * Shows the help window.
-     * @throws IllegalStateException
-     *     <ul>
-     *         <li>
-     *             if this method is called on a thread other than the JavaFX Application Thread.
-     *         </li>
-     *         <li>
-     *             if this method is called during animation or layout processing.
-     *         </li>
-     *         <li>
-     *             if this method is called on the primary stage.
-     *         </li>
-     *         <li>
-     *             if {@code dialogStage} is already showing.
-     *         </li>
-     *     </ul>
      */
     public void show() {
         logger.fine("Showing help page about the application.");
