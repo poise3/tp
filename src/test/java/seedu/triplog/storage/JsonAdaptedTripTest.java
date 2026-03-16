@@ -1,6 +1,7 @@
 package seedu.triplog.storage;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static seedu.triplog.storage.JsonAdaptedTrip.MISSING_FIELD_MESSAGE_FORMAT;
 import static seedu.triplog.testutil.Assert.assertThrows;
 import static seedu.triplog.testutil.TypicalTrips.BENSON;
@@ -12,10 +13,7 @@ import java.util.stream.Collectors;
 import org.junit.jupiter.api.Test;
 
 import seedu.triplog.commons.exceptions.IllegalValueException;
-import seedu.triplog.model.trip.Address;
-import seedu.triplog.model.trip.Email;
-import seedu.triplog.model.trip.Name;
-import seedu.triplog.model.trip.Phone;
+import seedu.triplog.model.trip.*;
 
 public class JsonAdaptedTripTest {
     private static final String INVALID_NAME = "R@chel";
@@ -94,5 +92,21 @@ public class JsonAdaptedTripTest {
                                     invalidTags, VALID_START_DATE, VALID_END_DATE);
         assertThrows(IllegalValueException.class, person::toModelType);
     }
+
+    @Test
+    public void toModelType_nullOptionalFields_modelSetsNull() throws Exception {
+        JsonAdaptedTrip tripWithNulls =
+                new JsonAdaptedTrip(VALID_NAME, null, null, null, VALID_TAGS,
+                        null, null);
+        Trip modelTrip = tripWithNulls.toModelType();
+
+        // optional fields should be null
+        assertNull(modelTrip.getPhone());
+        assertNull(modelTrip.getEmail());
+        assertNull(modelTrip.getAddress());
+        assertNull(modelTrip.getStartDate());
+        assertNull(modelTrip.getEndDate());
+    }
+
 
 }
