@@ -50,7 +50,7 @@ public class TripCardTest {
     }
 
     @Test
-    void tripCard_tagsDisplayedCorrectly() {
+    public void tripCard_tagsDisplayedCorrectly() {
         Set<Tag> tags = Set.of(new Tag("beach"), new Tag("mountain"));
 
         // test trip with tags
@@ -65,7 +65,7 @@ public class TripCardTest {
         );
 
         TripCard tripCard = new TripCard(tripWithTags, 1);
-        var displayedTagNames = tripCard.getTags().getChildren()
+        Set<String> displayedTagNames = tripCard.getTags().getChildren()
                 .stream()
                 .map(node -> ((Label) node).getText())
                 .collect(Collectors.toSet());

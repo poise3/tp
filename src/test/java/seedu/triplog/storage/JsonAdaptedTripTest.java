@@ -111,6 +111,4 @@ public class JsonAdaptedTripTest {
         assertNull(modelTrip.getStartDate());
         assertNull(modelTrip.getEndDate());
     }
-
-
 }
