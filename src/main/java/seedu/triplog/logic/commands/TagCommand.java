@@ -58,9 +58,6 @@ public class TagCommand extends Command {
         }
 
         Trip tripWithUpdatedTag = new Trip(tripToTag, this.tag);
-        if (!tripToTag.isSameTrip(tripWithUpdatedTag) && model.hasTrip(tripWithUpdatedTag)) {
-            throw new CommandException(MESSAGE_DUPLICATE_TRIP);
-        }
 
         model.setTrip(tripToTag, tripWithUpdatedTag);
         model.updateFilteredTripList(PREDICATE_SHOW_ALL_TRIPS);
