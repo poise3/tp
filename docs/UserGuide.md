@@ -148,6 +148,20 @@ Examples:
 * `list` followed by `delete 2` deletes the 2nd trip in the address book.
 * `find Betsy` followed by `delete 1` deletes the 1st trip in the results of the `find` command.
 
+### Filtering by date range : `filter`
+
+Filter trips by a given date range.
+
+Format: `filter sd/START_DATE ed/END_DATE`
+
+* Update the displayed list with trips satisfying this criteria: 
+START_DATE <= trip start date <= trip end date <= END_DATE
+* START_DATE and END_DATE must be provided in YYYY-MM-DD format.
+* Ignores existing trip logs without starting date and end date present 
+
+Examples:
+* `filter sd/2026-01-01 ed/2026-03-01` will filter all trips within this period
+
 ### Clearing all entries : `clear`
 
 Clears all entries from the address book.

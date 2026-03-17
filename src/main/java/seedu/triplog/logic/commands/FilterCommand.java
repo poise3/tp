@@ -12,6 +12,7 @@ import seedu.triplog.model.trip.TripDate;
 /**
  * Filter trips by date range.
  * Criteria: query start date <= trip start date <= trip end date <= query end date
+ * Ignores trips in the log with null date field
  */
 public class FilterCommand extends Command {
 
@@ -33,7 +34,7 @@ public class FilterCommand extends Command {
     private final TripDate endDate;
 
     /**
-     * Creates an FilterCommand to add the specified {@code Trip}
+     * Creates an FilterCommand with date range params
      */
     public FilterCommand(TripDate startDate, TripDate endDate) {
         this.startDate = startDate;
@@ -44,9 +45,10 @@ public class FilterCommand extends Command {
     public CommandResult execute(Model model) throws CommandException {
         requireNonNull(model);
         if (startDate.value.isAfter(endDate.value)) {
-            return new CommandResult(MESSAGE_START_AFTER_END);
+            throw new CommandException(MESSAGE_START_AFTER_END);
         }
-        model.updateFilteredTripList(trip -> trip.getStartDate().value.isAfter(startDate.value.minusDays(1))
+        model.updateFilteredTripList(trip -> trip.getStartDate() != null && trip.getEndDate() != null
+                && trip.getStartDate().value.isAfter(startDate.value.minusDays(1))
                 && trip.getEndDate().value.isBefore(endDate.value.plusDays(1)));
 
         return new CommandResult(model.getFilteredTripList().isEmpty() ? MESSAGE_NO_TRIPS_FOUND : MESSAGE_SUCCESS);
