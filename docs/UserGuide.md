@@ -10,7 +10,7 @@ TripLog is a **desktop app for managing trips, optimized for use via a Command L
 
 <page-nav-print />
 
---------------------------------------------------------------------------------------------------------------------
+---
 
 ## Quick start
 
@@ -27,20 +27,17 @@ TripLog is a **desktop app for managing trips, optimized for use via a Command L
 
 1. Type the command in the command box and press Enter to execute it. e.g. typing **`help`** and pressing Enter will open the help window.<br>
    Some example commands you can try:
-
-   * `list` : Lists all trips.
-
+   - `list` : Lists all trips.
    * `add name:"Tokyo, Japan" start:2026-03-10 end:2026-03-20` : Adds a trip to Tokyo.
 
    * `delete 3` : Deletes the 3rd trip shown in the current list.
 
    * `clear` : Deletes all entries.
-
-   * `exit` : Exits the app.
+   - `exit` : Exits the app.
 
 1. Refer to the [Features](#features) below for details of each command.
 
---------------------------------------------------------------------------------------------------------------------
+---
 
 ## Features
 
@@ -48,23 +45,23 @@ TripLog is a **desktop app for managing trips, optimized for use via a Command L
 
 **Notes about the command format:**<br>
 
-* Words in `UPPER_CASE` are the parameters to be supplied by the user.<br>
+- Words in `UPPER_CASE` are the parameters to be supplied by the user.<br>
   e.g. in `add name:NAME`, `NAME` is a parameter which can be used as `add name:John Doe`.
 
-* Values with spaces do not need quotes — the parser reads up to the next prefix.<br>
+- Values with spaces do not need quotes — the parser reads up to the next prefix.<br>
   e.g. `name:New York` and `addr:123 Main St` are both valid.
 
-* Items in square brackets are optional.<br>
+- Items in square brackets are optional.<br>
   e.g `name:NAME [start:DATE]` can be used as `name:Tokyo start:2026-01-01` or as `name:Tokyo`.
 
-* Items with `…`​ after them can be used multiple times including zero times.<br>
+- Items with `…`​ after them can be used multiple times including zero times.<br>
   e.g. `[tag:TAG]…​` can be used as ` ` (i.e. 0 times), `tag:nature`, `tag:nature tag:photo` etc.
 
-* Parameters can be in any order.<br>
+- Parameters can be in any order.<br>
   e.g. if the command specifies `name:NAME phone:PHONE`, `phone:PHONE name:NAME` is also acceptable.
 
-* Extraneous parameters for commands that do not take in parameters (such as `help`, `list`, `exit` and `clear`) will be ignored.
-</box>
+- Extraneous parameters for commands that do not take in parameters (such as `help`, `list`, `exit` and `clear`) will be ignored.
+  </box>
 
 ### Viewing help : `help`
 
@@ -74,7 +71,7 @@ Shows a help window explaining the command syntax and parameter requirements.
 
 Format: `help`
 
-* The help window can be closed by clicking the 'x' button, or by pressing **Q** or **ESCAPE** while the window is focused.
+- The help window can be closed by clicking the 'x' button, or by pressing **Q** or **ESCAPE** while the window is focused.
 
 ### Adding a trip: `add`
 
@@ -88,8 +85,9 @@ Format: `add name:NAME [phone:PHONE] [email:EMAIL] [addr:ADDRESS] [start:START_D
 </box>
 
 Examples:
-* `add name:Tokyo start:2026-03-10 end:2026-03-20`
-* `add name:New York addr:123 5th Ave tag:business tag:high priority`
+
+- `add name:Tokyo start:2026-03-10 end:2026-03-20`
+- `add name:New York addr:123 5th Ave tag:business tag:high priority`
 
 ### Listing all trips : `list`
 
@@ -98,7 +96,8 @@ Shows a list of all trips sorted by start date in ascending order (earliest firs
 Format: `list`
 
 Example:
-* `list` — displays all trips ordered from earliest to latest start date
+
+- `list` — displays all trips ordered from earliest to latest start date
 
 ### Editing a trip : `edit`
 
@@ -106,15 +105,16 @@ Edits an existing trip in the trip log.
 
 Format: `edit INDEX [name:NAME] [phone:PHONE] [email:EMAIL] [addr:ADDRESS] [start:DATE] [end:DATE] [tag:TAG]…​`
 
-* Edits the trip at the specified `INDEX`. The index refers to the index number shown in the displayed trip list. The index **must be a positive integer** 1, 2, 3, …​
-* At least one of the optional fields must be provided.
-* Existing values will be updated to the input values.
-* When editing tags, the existing tags of the trip will be removed i.e adding of tags is not cumulative.
-* You can remove all the trip’s tags by typing `tag:` without specifying any tags after it.
+- Edits the trip at the specified `INDEX`. The index refers to the index number shown in the displayed trip list. The index **must be a positive integer** 1, 2, 3, …​
+- At least one of the optional fields must be provided.
+- Existing values will be updated to the input values.
+- When editing tags, the existing tags of the trip will be removed i.e adding of tags is not cumulative.
+- You can remove all the trip’s tags by typing `tag:` without specifying any tags after it.
 
 Examples:
-* `edit 1 phone:91234567 email:johndoe@example.com` Edits the phone and email of the 1st trip.
-* `edit 2 name:Betsy Crower tag:` Edits the name of the 2nd trip and clears all tags.
+
+- `edit 1 phone:91234567 email:johndoe@example.com` Edits the phone and email of the 1st trip.
+- `edit 2 name:Betsy Crower tag:` Edits the name of the 2nd trip and clears all tags.
 
 ### Locating trips by name: `find`
 
@@ -122,16 +122,17 @@ Finds trips whose names contain any of the given keywords.
 
 Format: `find KEYWORD [MORE_KEYWORDS]`
 
-* The search is case-insensitive. e.g `hans` will match `Hans`
-* The order of the keywords does not matter. e.g. `Hans Bo` will match `Bo Hans`
-* Only the name is searched.
-* Only full words will be matched e.g. `Han` will not match `Hans`
-* Trips matching at least one keyword will be returned (i.e. `OR` search).
+- The search is case-insensitive. e.g `hans` will match `Hans`
+- The order of the keywords does not matter. e.g. `Hans Bo` will match `Bo Hans`
+- Only the name is searched.
+- Only full words will be matched e.g. `Han` will not match `Hans`
+- Trips matching at least one keyword will be returned (i.e. `OR` search).
   e.g. `Hans Bo` will return `Hans Gruber`, `Bo Yang`
 
 Examples:
-* `find John` returns `john` and `John Doe`
-* `find alex david` returns `Alex Yeoh`, `David Li`<br>
+
+- `find John` returns `john` and `John Doe`
+- `find alex david` returns `Alex Yeoh`, `David Li`<br>
   ![result for 'find alex david'](images/findAlexDavidResult.png)
 
 ### Deleting a trip : `delete`
@@ -140,13 +141,14 @@ Deletes the specified trip from the trip log.
 
 Format: `delete INDEX`
 
-* Deletes the trip at the specified `INDEX`.
-* The index refers to the index number shown in the displayed trip list.
-* The index **must be a positive integer** 1, 2, 3, …​
+- Deletes the trip at the specified `INDEX`.
+- The index refers to the index number shown in the displayed trip list.
+- The index **must be a positive integer** 1, 2, 3, …​
 
 Examples:
-* `list` followed by `delete 2` deletes the 2nd trip in the trip log.
-* `find Betsy` followed by `delete 1` deletes the 1st trip in the results of the `find` command.
+
+- `list` followed by `delete 2` deletes the 2nd trip in the trip log.
+- `find Betsy` followed by `delete 1` deletes the 1st trip in the results of the `find` command.
 
 ### Filtering by date range : `filter`
 
@@ -154,13 +156,14 @@ Filter trips by a given date range.
 
 Format: `filter start:START_DATE end:END_DATE`
 
-* Update the displayed list with trips satisfying this criteria:
-START_DATE <= trip start date <= trip end date <= END_DATE
-* START_DATE and END_DATE must be provided in YYYY-MM-DD format.
-* Ignores existing trip logs without starting date and end date present
+- Update the displayed list with trips satisfying this criteria:
+  START_DATE <= trip start date <= trip end date <= END_DATE
+- START_DATE and END_DATE must be provided in YYYY-MM-DD format.
+- Ignores existing trip logs without starting date and end date present
 
 Examples:
-* `filter start:2026-01-01 end:2026-03-01` will filter all trips within this period
+
+- `filter start:2026-01-01 end:2026-03-01` will filter all trips within this period
 
 ### Clearing all entries : `clear`
 
@@ -193,30 +196,30 @@ Furthermore, certain edits can cause the TripLog to behave in unexpected ways (e
 
 _Details coming soon ..._
 
---------------------------------------------------------------------------------------------------------------------
+---
 
 ## FAQ
 
 **Q**: How do I transfer my data to another Computer?<br>
 **A**: Install the app in the other computer and overwrite the empty data file it creates with the file that contains the data of your previous TripLog home folder.
 
---------------------------------------------------------------------------------------------------------------------
+---
 
 ## Known issues
 
 1. **When using multiple screens**, if you move the application to a secondary screen, and later switch to using only the primary screen, the GUI will open off-screen. The remedy is to delete the `preferences.json` file created by the application before running the application again.
 2. **If you minimize the Help Window** and then run the `help` command (or use the `Help` menu, or the keyboard shortcut `F1`) again, the original Help Window will remain minimized, and no new Help Window will appear. The remedy is to manually restore the minimized Help Window.
 
---------------------------------------------------------------------------------------------------------------------
+---
 
 ## Command summary
 
-Action    | Format, Examples
-----------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------
-**Add** | `add name:NAME [phone:PHONE] [email:EMAIL] [addr:ADDRESS] [start:DATE] [end:DATE] [tag:TAG]…​` <br> e.g., `add name:James Ho phone:22224444 start:2026-01-01 tag:friend`
-**Clear** | `clear`
-**Delete** | `delete INDEX`<br> e.g., `delete 3`
-**Edit** | `edit INDEX [name:NAME] [phone:PHONE] [email:EMAIL] [addr:ADDRESS] [start:DATE] [end:DATE] [tag:TAG]…​`<br> e.g.,`edit 2 name:James Lee email:jameslee@example.com`
-**Find** | `find KEYWORD [MORE_KEYWORDS]`<br> e.g., `find Tokyo Osaka`
-**List** | `list`
-**Help** | `help`
+| Action     | Format, Examples                                                                                                                                                         |
+| ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| **Add**    | `add name:NAME [phone:PHONE] [email:EMAIL] [addr:ADDRESS] [start:DATE] [end:DATE] [tag:TAG]…​` <br> e.g., `add name:James Ho phone:22224444 start:2026-01-01 tag:friend` |
+| **Clear**  | `clear`                                                                                                                                                                  |
+| **Delete** | `delete INDEX`<br> e.g., `delete 3`                                                                                                                                      |
+| **Edit**   | `edit INDEX [name:NAME] [phone:PHONE] [email:EMAIL] [addr:ADDRESS] [start:DATE] [end:DATE] [tag:TAG]…​`<br> e.g.,`edit 2 name:James Lee email:jameslee@example.com`      |
+| **Find**   | `find KEYWORD [MORE_KEYWORDS]`<br> e.g., `find Tokyo Osaka`                                                                                                              |
+| **List**   | `list`                                                                                                                                                                   |
+| **Help**   | `help`                                                                                                                                                                   |
