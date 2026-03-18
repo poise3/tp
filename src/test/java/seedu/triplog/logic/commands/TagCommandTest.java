@@ -10,6 +10,7 @@ import static seedu.triplog.testutil.TypicalIndexes.INDEX_SECOND_TRIP;
 
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.function.Predicate;
 
 import org.junit.jupiter.api.Test;
@@ -76,7 +77,11 @@ public class TagCommandTest {
         TagCommand command = new TagCommand(INDEX_FIRST_TRIP, tag);
 
         assertThrows(CommandException.class,
-                TagCommand.MESSAGE_DUPLICATE_TAG, () -> command.execute(modelStub));
+                    String.format(
+                            TagCommand.MESSAGE_DUPLICATE_TAG,
+                            tag,
+                            Messages.format(trip)
+                    ), () -> command.execute(modelStub));
     }
 
     @Test
@@ -114,7 +119,8 @@ public class TagCommandTest {
         TagCommand tagCommand = new TagCommand(INDEX_FIRST_TRIP, tag);
 
         // ToStringBuilder uses the labels you defined in the method: "targetIndex" and "tag"
-        String expected = TagCommand.class.getCanonicalName() + "{targetIndex=" + INDEX_FIRST_TRIP + ", tag=" + tag + "}";
+        String expected = TagCommand.class.getCanonicalName()
+                + "{targetIndex=" + INDEX_FIRST_TRIP + ", tag=" + tag + "}";
 
         assertEquals(expected, tagCommand.toString());
     }
@@ -188,6 +194,16 @@ public class TagCommandTest {
 
         @Override
         public void updateFilteredTripList(Predicate<Trip> predicate) {
+            throw new AssertionError("This method should not be called.");
+        }
+
+        @Override
+        public ObservableList<Trip> getSortedTripList() {
+            throw new AssertionError("This method should not be called.");
+        }
+
+        @Override
+        public void updateSortedTripList(Comparator<Trip> comparator) {
             throw new AssertionError("This method should not be called.");
         }
     }

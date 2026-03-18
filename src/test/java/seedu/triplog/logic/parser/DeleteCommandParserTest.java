@@ -26,9 +26,6 @@ public class DeleteCommandParserTest {
     public void parse_validSingleIndex_returnsDeleteCommand() {
         assertParseSuccess(parser, "1", new DeleteCommand(INDEX_FIRST_TRIP));
         assertParseSuccess(parser, "   1   ", new DeleteCommand(INDEX_FIRST_TRIP));
-    public void parse_validArgs_returnsDeleteCommand() {
-        assertParseSuccess(parser, "1", new DeleteCommand(INDEX_FIRST_TRIP));
-        assertParseSuccess(parser, "   1   ", new DeleteCommand(INDEX_FIRST_TRIP));
     }
 
     @Test

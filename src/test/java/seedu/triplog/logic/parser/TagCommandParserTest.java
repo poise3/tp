@@ -35,8 +35,8 @@ public class TagCommandParserTest {
         assertParseFailure(parser, "1", expectedMessage);
 
         // Path 3: parts.length == 2 but parts[1] is just whitespace
-        assertParseFailure(parser, "1 ", expectedMessage);   // One space
-        assertParseFailure(parser, "1  ", expectedMessage);  // Multiple spaces
+        assertParseFailure(parser, "1 ", expectedMessage); // One space
+        assertParseFailure(parser, "1  ", expectedMessage); // Multiple spaces
         assertParseFailure(parser, "1 \t", expectedMessage); // Tab
         assertParseFailure(parser, "1 \n", expectedMessage); // Newline
     }
