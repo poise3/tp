@@ -15,7 +15,6 @@ import java.util.Set;
 import org.junit.jupiter.api.Test;
 
 import seedu.triplog.commons.core.index.Index;
-import seedu.triplog.logic.Messages;
 import seedu.triplog.model.Model;
 import seedu.triplog.model.ModelManager;
 import seedu.triplog.model.UserPrefs;
