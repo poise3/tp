@@ -28,7 +28,7 @@ public class TripDate {
     public TripDate(String date) {
         requireNonNull(date);
         checkArgument(isValidDate(date), MESSAGE_CONSTRAINTS);
-        this.value = LocalDate.parse(date, FORMATTER);;
+        this.value = LocalDate.parse(date, FORMATTER);
     }
 
     /**
