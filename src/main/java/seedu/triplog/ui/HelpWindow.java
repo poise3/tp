@@ -28,10 +28,15 @@ public class HelpWindow extends UiPart<Stage> {
                     + "  e.g. add n/Tokyo sd/2026-03-01 t/food";
 
     public static final String DELETE_USAGE =
-            "delete <INDEX>\n"
-                    + "  Removes the trip at the given list position.\n"
-                    + "  INDEX must be a positive integer (1, 2, 3, …)\n"
-                    + "  e.g.  delete 2";
+            "delete <INDEX> | <START-END> | <PREFIX/VALUE>\n"
+                    + "  Removes trip(s) from the currently displayed list.\n"
+                    + "  INDEX must be a positive integer (1, 2, 3, …).\n"
+                    + "  START must be <= END for range deletion.\n"
+                    + "  Only one PREFIX can be used for field deletion.\n"
+                    + "  e.g.  delete 2\n"
+                    + "        delete 1-3\n"
+                    + "        delete n/Tokyo\n"
+                    + "        delete t/family";
 
     public static final String TAG_USAGE =
             "tag <index> <tag-name>\n"

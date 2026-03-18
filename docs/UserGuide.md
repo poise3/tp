@@ -135,11 +135,17 @@ Examples:
 - `find alex david` returns `Alex Yeoh`, `David Li`<br>
   ![result for 'find alex david'](images/findAlexDavidResult.png)
 
-### Deleting a trip : `delete`
+### Deleting trip(s) : `delete`
 
-Deletes the specified trip from the trip log.
+Deletes trip(s) from the currently displayed trip list.
 
-Format: `delete INDEX`
+Format: `delete INDEX`  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`delete START-END`  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`delete PREFIX/VALUE`
+
+- The command operates on the currently displayed trip list.
+
+#### Delete by index
 
 - Deletes the trip at the specified `INDEX`.
 - The index refers to the index number shown in the displayed trip list.
@@ -147,8 +153,41 @@ Format: `delete INDEX`
 
 Examples:
 
-- `list` followed by `delete 2` deletes the 2nd trip in the trip log.
-- `find Betsy` followed by `delete 1` deletes the 1st trip in the results of the `find` command.
+- `delete 2` deletes the 2nd trip in the current list.
+- `find Tokyo` followed by `delete 1` deletes the 1st trip in the filtered results.
+
+#### Delete by range
+
+- Deletes trips from `START` to `END` (inclusive).
+- Both `START` and `END` must be positive integers.
+- `START` must be less than or equal to `END`.
+- The range must be within the currently displayed list.
+
+Examples:
+
+- `delete 1-3` deletes the 1st to 3rd trips.
+- `delete 2-2` deletes only the 2nd trip.
+
+#### Delete by field
+
+- Deletes all trips that match a specified field.
+- Only **one field** can be used at a time.
+
+Supported prefixes:
+
+- `n/NAME`
+- `p/PHONE`
+- `e/EMAIL`
+- `a/ADDRESS`
+- `sd/START_DATE`
+- `ed/END_DATE`
+- `t/TAG`
+
+Examples:
+
+- `delete n/Tokyo` deletes all trips named "Tokyo".
+- `delete t/family` deletes all trips with the tag "family".
+- `delete sd/2026-03-01` deletes all trips with this start date.
 
 ### Filtering by date range : `filter`
 
