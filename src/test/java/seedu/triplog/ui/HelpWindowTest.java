@@ -65,6 +65,11 @@ public class HelpWindowTest {
     }
 
     @Test
+    public void editUsage_containsCommandName() {
+        assertTrue(HelpWindow.EDIT_USAGE.startsWith("edit "));
+    }
+
+    @Test
     public void addUsage_containsDateOptions() {
         assertTrue(HelpWindow.ADD_USAGE.contains("sd/"));
         assertTrue(HelpWindow.ADD_USAGE.contains("ed/"));
@@ -83,6 +88,16 @@ public class HelpWindowTest {
     @Test
     public void tagUsage_containsCommandName() {
         assertTrue(HelpWindow.TAG_USAGE.startsWith("tag "));
+    }
+
+    @Test
+    public void findUsage_containsCommandName() {
+        assertTrue(HelpWindow.FIND_USAGE.startsWith("find "));
+    }
+
+    @Test
+    public void filterUsage_containsCommandName() {
+        assertTrue(HelpWindow.FILTER_USAGE.startsWith("filter "));
     }
 
     @Test

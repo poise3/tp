@@ -12,45 +12,48 @@
 <?import javafx.stage.Stage?>
 
 <fx:root resizable="false" title="TripLog - Command Syntax Guide" type="javafx.stage.Stage" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1">
-  <icons>
-    <Image url="@/images/help_icon.png" />
-  </icons>
-  <scene>
-    <Scene>
-      <stylesheets>
-        <URL value="@HelpWindow.css" />
-      </stylesheets>
+    <icons>
+        <Image url="@/images/help_icon.png" />
+    </icons>
+    <scene>
+        <Scene>
+            <stylesheets>
+                <URL value="@HelpWindow.css" />
+            </stylesheets>
 
-      <VBox spacing="8.0">
-          <padding>
-            <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
-          </padding>
+            <VBox spacing="8.0">
+                <padding>
+                    <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
+                </padding>
 
-          <!-- Title -->
-          <Label text="TripLog – Command Syntax Guide"
-                 style="-fx-font-weight: bold; -fx-font-size: 14;" />
+                <Label text="TripLog – Command Syntax Guide"
+                       style="-fx-font-weight: bold; -fx-font-size: 14;" />
 
-          <!-- /: prefix note -->
-          <Label fx:id="prefixNote"
-                 wrapText="true"
-                 style="-fx-font-style: italic;" />
+                <Label fx:id="prefixNote"
+                       wrapText="true"
+                       style="-fx-font-style: italic;" />
 
-          <Separator />
+                <Separator />
 
-          <!-- Grammar rows: one per command -->
-          <Label fx:id="addUsage"    wrapText="true" />
-          <Separator />
-          <Label fx:id="deleteUsage" wrapText="true" />
-          <Separator />
-          <Label fx:id="tagUsage"    wrapText="true" />
-          <Separator />
-          <Label fx:id="listUsage"   wrapText="true" />
-          <Separator />
+                <Label fx:id="addUsage"    wrapText="true" />
+                <Separator />
+                <Label fx:id="editUsage"   wrapText="true" />
+                <Separator />
+                <Label fx:id="deleteUsage" wrapText="true" />
+                <Separator />
+                <Label fx:id="tagUsage"    wrapText="true" />
+                <Separator />
+                <Label fx:id="findUsage"   wrapText="true" />
+                <Separator />
+                <Label fx:id="filterUsage" wrapText="true" />
+                <Separator />
+                <Label fx:id="listUsage"   wrapText="true" />
+                <Separator />
 
-          <Label fx:id="helpMessage" wrapText="true" />
+                <Label fx:id="helpMessage" wrapText="true" />
 
-          <Label fx:id="exitNote" wrapText="true" style="-fx-font-style: italic;" />
-        </VBox>
-    </Scene>
-  </scene>
+                <Label fx:id="exitNote" wrapText="true" style="-fx-font-style: italic;" />
+            </VBox>
+        </Scene>
+    </scene>
 </fx:root>

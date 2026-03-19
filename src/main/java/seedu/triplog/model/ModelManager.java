@@ -38,6 +38,8 @@ public class ModelManager implements Model {
         this.userPrefs = new UserPrefs(userPrefs);
         filteredTrips = new FilteredList<>(this.tripLog.getTripList());
         sortedTrips = new SortedList<>(filteredTrips);
+
+        sortedTrips.setComparator(Trip.CHRONOLOGICAL_COMPARATOR);
     }
 
     public ModelManager() {
@@ -122,7 +124,7 @@ public class ModelManager implements Model {
      */
     @Override
     public ObservableList<Trip> getFilteredTripList() {
-        return filteredTrips;
+        return sortedTrips;
     }
 
     @Override

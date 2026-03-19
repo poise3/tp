@@ -11,11 +11,15 @@ import static seedu.triplog.testutil.TypicalTrips.BENSON;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
+import java.util.Collections;
 
 import org.junit.jupiter.api.Test;
 
 import seedu.triplog.commons.core.GuiSettings;
+import seedu.triplog.model.trip.Name;
 import seedu.triplog.model.trip.NameContainsKeywordsPredicate;
+import seedu.triplog.model.trip.Trip;
+import seedu.triplog.model.trip.TripDate;
 
 public class ModelManagerTest {
 
@@ -90,6 +94,19 @@ public class ModelManagerTest {
     @Test
     public void getFilteredTripList_modifyList_throwsUnsupportedOperationException() {
         assertThrows(UnsupportedOperationException.class, () -> modelManager.getFilteredTripList().remove(0));
+    }
+
+    @Test
+    public void getFilteredTripList_isSortedChronologically() {
+        Trip laterTrip = new Trip(new Name("Later"), null, null, null, Collections.emptySet(),
+                new TripDate("2026-12-01"), null);
+        Trip earlierTrip = new Trip(new Name("Earlier"), null, null, null, Collections.emptySet(),
+                new TripDate("2026-01-01"), null);
+
+        modelManager.addTrip(laterTrip);
+        modelManager.addTrip(earlierTrip);
+        assertEquals(earlierTrip, modelManager.getFilteredTripList().get(0));
+        assertEquals(laterTrip, modelManager.getFilteredTripList().get(1));
     }
 
     @Test

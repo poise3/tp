@@ -12,6 +12,9 @@ import static seedu.triplog.testutil.TypicalTrips.getTypicalTripLog;
 
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.junit.jupiter.api.Test;
 
@@ -19,6 +22,7 @@ import seedu.triplog.model.Model;
 import seedu.triplog.model.ModelManager;
 import seedu.triplog.model.UserPrefs;
 import seedu.triplog.model.trip.NameContainsKeywordsPredicate;
+import seedu.triplog.model.trip.Trip;
 
 /**
  * Contains integration tests (interaction with the Model) for {@code FindCommand}.
@@ -71,7 +75,12 @@ public class FindCommandTest {
         FindCommand command = new FindCommand(predicate);
         expectedModel.updateFilteredTripList(predicate);
         assertCommandSuccess(command, model, expectedMessage, expectedModel);
-        assertEquals(Arrays.asList(CARL, ELLE, FIONA), model.getFilteredTripList());
+
+        List<Trip> expectedList = Stream.of(CARL, ELLE, FIONA)
+                .sorted(Trip.CHRONOLOGICAL_COMPARATOR)
+                .collect(Collectors.toList());
+
+        assertEquals(expectedList, model.getFilteredTripList());
     }
 
     @Test

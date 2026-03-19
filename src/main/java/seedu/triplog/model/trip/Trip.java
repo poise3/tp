@@ -4,6 +4,7 @@ import static seedu.triplog.commons.util.AppUtil.checkArgument;
 import static seedu.triplog.commons.util.CollectionUtil.requireAllNonNull;
 
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -19,6 +20,31 @@ public class Trip {
 
     public static final String DATE_CONSTRAINTS =
             "Start date cannot be after end date.";
+
+    /**
+     * Comparison logic for trips:
+     * 1. Sort by start date (earliest first).
+     * 2. Trips with no start date are pushed to the end.
+     * 3. If dates are equal (or both missing), sort alphabetically by name (case-insensitive).
+     */
+    public static final Comparator<Trip> CHRONOLOGICAL_COMPARATOR = (trip1, trip2) -> {
+        if (trip1.getStartDate() == null && trip2.getStartDate() == null) {
+            return trip1.getName().toString().compareToIgnoreCase(trip2.getName().toString());
+        }
+        if (trip1.getStartDate() == null) {
+            return 1;
+        }
+        if (trip2.getStartDate() == null) {
+            return -1;
+        }
+        int dateComparison = trip1.getStartDate().toString().compareTo(trip2.getStartDate().toString());
+
+        if (dateComparison == 0) {
+            return trip1.getName().toString().compareToIgnoreCase(trip2.getName().toString());
+        }
+
+        return dateComparison;
+    };
 
     // Identity fields
     private final Name name;
@@ -83,7 +109,7 @@ public class Trip {
     }
 
     /**
-     * Returns an immutable tag set, which throws {@code UnsupportedOperationException}
+     * Returns an unmodifiable tag set, which throws {@code UnsupportedOperationException}
      * if modification is attempted.
      */
     public Set<Tag> getTags() {
