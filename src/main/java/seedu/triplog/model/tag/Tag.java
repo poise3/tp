@@ -1,7 +1,6 @@
 package seedu.triplog.model.tag;
 
 import static java.util.Objects.requireNonNull;
-
 import static seedu.triplog.commons.util.AppUtil.checkArgument;
 
 /**
