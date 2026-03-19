@@ -210,10 +210,10 @@ Filter trips by a given date range.
 
 Format: `filter sd/START_DATE ed/END_DATE`
 
-- Update the displayed list with trips satisfying this criteria:
-  START_DATE <= trip start date <= trip end date <= END_DATE
-- START_DATE and END_DATE must be provided in YYYY-MM-DD format.
-- Ignores existing trip logs without starting date and end date present
+* Update the displayed list with trips satisfying this criteria: 
+START_DATE <= trip start date (required) <= trip end date (optional) <= END_DATE
+* START_DATE and END_DATE must be provided in YYYY-MM-DD format.
+* Ignores existing trip logs without starting date present 
 
 Examples:
 
