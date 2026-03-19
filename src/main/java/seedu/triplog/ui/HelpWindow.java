@@ -27,6 +27,12 @@ public class HelpWindow extends UiPart<Stage> {
                     + "  Records a new trip. Items in [square brackets] are optional. Dates must be YYYY-MM-DD.\n"
                     + "  e.g. add n/Tokyo sd/2026-03-01 t/food";
 
+    public static final String EDIT_USAGE =
+            "edit INDEX [n/<destination>] [p/<phone>] [e/<email>] [a/<address>] "
+                    + "[sd/<start-date>] [ed/<end-date>] [t/<tag>]...\n"
+                    + "  Edits the trip at the specified index. At least one field must be provided.\n"
+                    + "  e.g. edit 1 n/Paris sd/2026-05-01";
+
     public static final String DELETE_USAGE =
             "delete <INDEX> | <START-END> | <PREFIX/VALUE>\n"
                     + "  Removes trip(s) from the currently displayed list.\n"
@@ -43,6 +49,16 @@ public class HelpWindow extends UiPart<Stage> {
                     + "  Adds a keyword tag to an existing trip.\n"
                     + "  tag-name must be alphanumeric and may contain spaces.\n"
                     + "  e.g.  tag 1 adventure    or    tag 1 night market";
+
+    public static final String FIND_USAGE =
+            "find <KEYWORD> [MORE_KEYWORDS]...\n"
+                    + "  Finds trips whose names contain any of the given keywords.\n"
+                    + "  e.g. find Tokyo Osaka";
+
+    public static final String FILTER_USAGE =
+            "filter sd/<start-date> ed/<end-date>\n"
+                    + "  Filters trips occurring within the specified date range.\n"
+                    + "  e.g. filter sd/2026-01-01 ed/2026-03-31";
 
     public static final String LIST_USAGE =
             "list\n"
@@ -84,9 +100,9 @@ public class HelpWindow extends UiPart<Stage> {
     public HelpWindow(Stage root) {
         super(FXML, root);
         prefixNote.setText(PREFIX_NOTE);
-        addUsage.setText(ADD_USAGE);
+        addUsage.setText(ADD_USAGE + "\n\n" + EDIT_USAGE);
         deleteUsage.setText(DELETE_USAGE);
-        tagUsage.setText(TAG_USAGE);
+        tagUsage.setText(TAG_USAGE + "\n\n" + FIND_USAGE + "\n\n" + FILTER_USAGE);
         listUsage.setText(LIST_USAGE);
         helpMessage.setText("");
         exitNote.setText(EXIT_NOTE);
