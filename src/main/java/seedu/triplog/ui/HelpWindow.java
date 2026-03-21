@@ -130,6 +130,7 @@ public class HelpWindow extends UiPart<Stage> {
      * Creates a new HelpWindow.
      */
     public HelpWindow() {
+        logger.fine("Initializing help page about the application.");
         this(new Stage());
     }
 
@@ -160,6 +161,7 @@ public class HelpWindow extends UiPart<Stage> {
      * Hides the help window.
      */
     public void hide() {
+        logger.fine("Hiding help page about the application.");
         getRoot().hide();
     }
 
@@ -167,6 +169,7 @@ public class HelpWindow extends UiPart<Stage> {
      * Focuses on the help window.
      */
     public void focus() {
+        logger.fine("Focusing on help page about the application.");
         getRoot().requestFocus();
     }
 
