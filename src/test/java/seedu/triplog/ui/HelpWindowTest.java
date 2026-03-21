@@ -7,6 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.testfx.api.FxRobot;
 import org.testfx.framework.junit5.ApplicationExtension;
 import org.testfx.framework.junit5.Start;
 import org.testfx.framework.junit5.Stop;
@@ -143,30 +144,31 @@ public class HelpWindowTest {
     }
 
     @Test
-    public void constructor_noArguments_createsHelpWindow() {
-        HelpWindow noArgumentWindow = new HelpWindow();
-        assertNotNull(noArgumentWindow);
-        noArgumentWindow.hide();
+    public void constructor_noArguments_createsHelpWindow(FxRobot robot) {
+        HelpWindow[] noArgumentWindow = {null};
+        robot.interact(() -> noArgumentWindow[0] = new HelpWindow());
+        assertNotNull(noArgumentWindow[0]);
+        robot.interact(() -> noArgumentWindow[0].hide());
     }
 
     @Test
-    public void show_makesWindowVisible() {
-        helpWindow.show();
+    public void show_makesWindowVisible(FxRobot robot) {
+        robot.interact(() -> helpWindow.show());
         assertTrue(helpWindow.isShowing());
     }
 
     @Test
-    public void hide_afterShow_makesWindowHidden() {
-        helpWindow.show();
-        helpWindow.hide();
+    public void hide_afterShow_makesWindowHidden(FxRobot robot) {
+        robot.interact(() -> helpWindow.show());
+        robot.interact(() -> helpWindow.hide());
         assertFalse(helpWindow.isShowing());
     }
 
     @Test
-    public void focus_doesNotThrow() {
-        helpWindow.show();
-        helpWindow.focus();
-        helpWindow.hide();
+    public void focus_doesNotThrow(FxRobot robot) {
+        robot.interact(() -> helpWindow.show());
+        robot.interact(() -> helpWindow.focus());
+        robot.interact(() -> helpWindow.hide());
     }
 
 }
