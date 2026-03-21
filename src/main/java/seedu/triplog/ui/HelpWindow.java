@@ -106,13 +106,6 @@ public class HelpWindow extends UiPart<Stage> {
      *
      * @param root Stage to use as the root of the HelpWindow.
      */
-    private static Stage requireNonNullRoot(Stage root) {
-        if (root == null) {
-            throw new IllegalArgumentException("Root stage cannot be null");
-        }
-        return root;
-    }
-
     public HelpWindow(Stage root) {
         super(FXML, requireNonNullRoot(root));
         logger.fine("Creating a new HelpWindow with provided root stage.");
@@ -140,6 +133,13 @@ public class HelpWindow extends UiPart<Stage> {
     public HelpWindow() {
         this(new Stage());
         logger.fine("Initializing help page about the application.");
+    }
+
+    private static Stage requireNonNullRoot(Stage root) {
+        if (root == null) {
+            throw new IllegalArgumentException("Root stage cannot be null");
+        }
+        return root;
     }
 
     /**
