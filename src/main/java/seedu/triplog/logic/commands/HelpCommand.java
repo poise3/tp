@@ -74,6 +74,30 @@ public class HelpCommand extends Command {
 
     @Override
     public CommandResult execute(Model model) {
-        return new CommandResult(SHOWING_HELP_MESSAGE, true, false);
+        if (argument.isEmpty()) {
+            return new CommandResult(SHOWING_HELP_MESSAGE, true, false);
+        }
+        return new CommandResult(getUsageForCommand(argument), false, false);
+    }
+
+    private static String getUsageForCommand(String commandWord) {
+        switch (commandWord) {
+        case AddCommand.COMMAND_WORD:
+            return ADD_USAGE;
+        case EditCommand.COMMAND_WORD:
+            return EDIT_USAGE;
+        case DeleteCommand.COMMAND_WORD:
+            return DELETE_USAGE;
+        case TagCommand.COMMAND_WORD:
+            return TAG_USAGE;
+        case FindCommand.COMMAND_WORD:
+            return FIND_USAGE;
+        case FilterCommand.COMMAND_WORD:
+            return FILTER_USAGE;
+        case ListCommand.COMMAND_WORD:
+            return LIST_USAGE;
+        default:
+            return String.format(MESSAGE_UNKNOWN_HELP_COMMAND, commandWord);
+        }
     }
 }
