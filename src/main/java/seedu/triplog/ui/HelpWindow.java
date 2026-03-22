@@ -62,7 +62,8 @@ public class HelpWindow extends UiPart<Stage> {
 
     public static final String LIST_USAGE =
             "list\n"
-                    + "  Displays all trip entries.\n"
+                    + "  Displays all trip entries sorted chronologically.\n"
+                    + "  Includes a summary of Upcoming, Ongoing, Completed, and Planning trips.\n"
                     + "  e.g.  list";
 
     public static final String EXIT_NOTE =
