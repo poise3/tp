@@ -26,8 +26,8 @@ public class DeleteCommand extends Command {
             + "Usage: delete INDEX | START-END | "
             + "n/NAME | p/PHONE | e/EMAIL | a/ADDRESS | sd/START_DATE | ed/END_DATE | t/TAG";
 
-    public static final String MESSAGE_DELETE_TRIP_SUCCESS = "Deleted %1$d trip.";
-    public static final String MESSAGE_DELETE_TRIPS_SUCCESS = "Deleted %1$d trips.";
+    public static final String MESSAGE_DELETE_TRIP_SUCCESS = "Deleted %1$d trip.\n%2$s";
+    public static final String MESSAGE_DELETE_TRIPS_SUCCESS = "Deleted %1$d trips.\n%2$s";
     public static final String MESSAGE_INVALID_INDEX =
             "Index must be a positive integer.";
     public static final String MESSAGE_INDEX_OUT_OF_RANGE =
@@ -116,7 +116,9 @@ public class DeleteCommand extends Command {
 
         Trip tripToDelete = lastShownList.get(targetIndex.getZeroBased());
         model.deleteTrip(tripToDelete);
-        return new CommandResult(String.format(MESSAGE_DELETE_TRIP_SUCCESS, 1));
+
+        String summary = ListCommand.calculateSummary(model.getFilteredTripList());
+        return new CommandResult(String.format(MESSAGE_DELETE_TRIP_SUCCESS, 1, summary));
     }
 
     private CommandResult executeRangeDelete(Model model, List<Trip> lastShownList) throws CommandException {
@@ -131,11 +133,12 @@ public class DeleteCommand extends Command {
             model.deleteTrip(trip);
         }
 
+        String summary = ListCommand.calculateSummary(model.getFilteredTripList());
         if (tripsToDelete.size() == 1) {
-            return new CommandResult(String.format(MESSAGE_DELETE_TRIP_SUCCESS, 1));
+            return new CommandResult(String.format(MESSAGE_DELETE_TRIP_SUCCESS, 1, summary));
         }
 
-        return new CommandResult(String.format(MESSAGE_DELETE_TRIPS_SUCCESS, tripsToDelete.size()));
+        return new CommandResult(String.format(MESSAGE_DELETE_TRIPS_SUCCESS, tripsToDelete.size(), summary));
     }
 
     private CommandResult executeFilterDelete(Model model, List<Trip> lastShownList) throws CommandException {
@@ -151,11 +154,12 @@ public class DeleteCommand extends Command {
             model.deleteTrip(trip);
         }
 
+        String summary = ListCommand.calculateSummary(model.getFilteredTripList());
         if (tripsToDelete.size() == 1) {
-            return new CommandResult(String.format(MESSAGE_DELETE_TRIP_SUCCESS, 1));
+            return new CommandResult(String.format(MESSAGE_DELETE_TRIP_SUCCESS, 1, summary));
         }
 
-        return new CommandResult(String.format(MESSAGE_DELETE_TRIPS_SUCCESS, tripsToDelete.size()));
+        return new CommandResult(String.format(MESSAGE_DELETE_TRIPS_SUCCESS, tripsToDelete.size(), summary));
     }
 
     @Override

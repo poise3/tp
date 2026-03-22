@@ -35,7 +35,7 @@ public class AddCommand extends Command {
             + PREFIX_TAG + "friends "
             + PREFIX_TAG + "owesMoney";
 
-    public static final String MESSAGE_SUCCESS = "New trip added: %1$s";
+    public static final String MESSAGE_SUCCESS = "New trip added: %1$s\n%2$s";
     public static final String MESSAGE_DUPLICATE_TRIP = "This trip already exists in the trip log";
 
     private final Trip toAdd;
@@ -57,7 +57,8 @@ public class AddCommand extends Command {
         }
 
         model.addTrip(toAdd);
-        return new CommandResult(String.format(MESSAGE_SUCCESS, Messages.format(toAdd)));
+        String summary = ListCommand.calculateSummary(model.getFilteredTripList());
+        return new CommandResult(String.format(MESSAGE_SUCCESS, Messages.format(toAdd), summary));
     }
 
     @Override
