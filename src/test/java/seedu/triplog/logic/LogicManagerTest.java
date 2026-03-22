@@ -15,11 +15,13 @@ import static seedu.triplog.testutil.TypicalTrips.AMY;
 import java.io.IOException;
 import java.nio.file.AccessDeniedException;
 import java.nio.file.Path;
+import java.time.LocalDate;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
+import javafx.collections.ObservableList;
 import seedu.triplog.logic.commands.AddCommand;
 import seedu.triplog.logic.commands.CommandResult;
 import seedu.triplog.logic.commands.ListCommand;
@@ -69,7 +71,9 @@ public class LogicManagerTest {
     @Test
     public void execute_validCommand_success() throws Exception {
         String listCommand = ListCommand.COMMAND_WORD;
-        assertCommandSuccess(listCommand, ListCommand.MESSAGE_SUCCESS, model);
+        String expectedMessage = String.format(ListCommand.MESSAGE_SUCCESS,
+                calculateExpectedSummary(model.getFilteredTripList()));
+        assertCommandSuccess(listCommand, expectedMessage, model);
     }
 
     @Test
@@ -177,5 +181,37 @@ public class LogicManagerTest {
         expectedModel.addTrip(expectedTrip); //
 
         assertCommandFailure(addCommand, CommandException.class, expectedMessage, expectedModel);
+    }
+
+    /**
+     * Helper method to calculate expected summary based on current system time.
+     */
+    private String calculateExpectedSummary(ObservableList<Trip> trips) {
+        int upcoming = 0;
+        int ongoing = 0;
+        int completed = 0;
+        int planning = 0;
+        LocalDate today = LocalDate.now();
+
+        for (Trip trip : trips) {
+            if (trip.getStartDate() == null) {
+                planning++;
+                continue;
+            }
+
+            LocalDate start = trip.getStartDate().value;
+            LocalDate end = (trip.getEndDate() == null) ? null : trip.getEndDate().value;
+
+            if (today.isBefore(start)) {
+                upcoming++;
+            } else if (end != null && today.isAfter(end)) {
+                completed++;
+            } else {
+                ongoing++;
+            }
+        }
+
+        return String.format("Summary: %d Upcoming, %d Ongoing, %d Completed, %d Planning",
+                upcoming, ongoing, completed, planning);
     }
 }
