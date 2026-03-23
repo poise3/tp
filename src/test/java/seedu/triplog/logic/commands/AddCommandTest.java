@@ -170,6 +170,16 @@ public class AddCommandTest {
         public void updateSortedTripList(Comparator<Trip> comparator) {
             throw new AssertionError("This method should not be called.");
         }
+
+        @Override
+        public String getLastSortDescription() {
+            throw new AssertionError("This method should not be called.");
+        }
+
+        @Override
+        public void setLastSortDescription(String description) {
+            throw new AssertionError("This method should not be called.");
+        }
     }
 
     /**

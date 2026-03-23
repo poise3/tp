@@ -35,10 +35,10 @@ public class ListCommand extends Command {
     private final String sortKey;
 
     /**
-     * Default constructor: sets sortKey to "start".
+     * Default constructor: sets sortKey to null to maintain existing sort order.
      */
     public ListCommand() {
-        this.sortKey = "start";
+        this.sortKey = null;
     }
 
     /**
@@ -54,11 +54,18 @@ public class ListCommand extends Command {
     public CommandResult execute(Model model) throws CommandException {
         requireNonNull(model);
 
-        Comparator<Trip> comparator = getComparator(sortKey);
-        String sortDescription = getSortDescription(sortKey);
+        String sortDescription;
+
+        if (sortKey != null) {
+            Comparator<Trip> comparator = getComparator(sortKey);
+            model.updateSortedTripList(comparator);
+            sortDescription = getSortDescription(sortKey);
+            model.setLastSortDescription(sortDescription);
+        } else {
+            sortDescription = model.getLastSortDescription();
+        }
 
         model.updateFilteredTripList(PREDICATE_SHOW_ALL_TRIPS);
-        model.updateSortedTripList(comparator);
 
         ObservableList<Trip> lastShownList = model.getFilteredTripList();
         String summary = TripSummaryUtil.calculateSummary(lastShownList);
@@ -74,17 +81,13 @@ public class ListCommand extends Command {
         case "name":
             return Comparator.comparing(trip -> trip.getName().fullName.toLowerCase());
         case "end":
-            return Comparator.comparing(
-                    trip -> trip.getEndDate() == null ? null : trip.getEndDate().value,
-                    Comparator.nullsLast(Comparator.naturalOrder())
-            );
+            return Comparator.comparing(Trip::getEndDateDisplay,
+                    Comparator.nullsLast(Comparator.naturalOrder()));
         case "len":
             return (t1, t2) -> Long.compare(calculateDuration(t2), calculateDuration(t1));
         case "start":
-            return Comparator.comparing(
-                    trip -> trip.getStartDate() == null ? null : trip.getStartDate().value,
-                    Comparator.nullsLast(Comparator.naturalOrder())
-            );
+            return Comparator.comparing(Trip::getStartDateDisplay,
+                    Comparator.nullsLast(Comparator.naturalOrder()));
         default:
             throw new CommandException(MESSAGE_INVALID_SORT_KEY);
         }
