@@ -63,9 +63,10 @@ public class CommandBox extends UiPart<Region> {
 
     /**
      * Resets the command box to the default state.
+     * Changed to black/dark text to be visible against the white background.
      */
     private void resetStyle() {
-        commandTextField.setStyle("-fx-text-fill: white;");
+        commandTextField.setStyle("-fx-text-fill: #1A1A1A;");
     }
 
     /**

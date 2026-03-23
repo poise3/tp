@@ -74,7 +74,9 @@ public class CommandBoxTest {
         Platform.runLater(() -> commandTextField.setText("fai"));
         WaitForAsyncUtils.waitForFxEvents();
 
-        assertTrue(commandTextField.getStyle().contains("white"));
+        // Updated to check for the dark body text color instead of white
+        assertTrue(commandTextField.getStyle().contains("#1A1A1A"),
+                "Style should contain reset color #1A1A1A: " + commandTextField.getStyle());
         assertFalse(commandTextField.getStyle().contains("#ff4d4d"));
     }
 
