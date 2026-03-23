@@ -60,18 +60,26 @@ TripLog is a **desktop app for managing trips, optimized for use via a Command L
 - Parameters can be in any order.<br>
   e.g. if the command specifies `n/NAME p/PHONE`, `p/PHONE n/NAME` is also acceptable.
 
-- Extraneous parameters for commands that do not take in parameters (such as `help`, `list`, `exit` and `clear`) will be ignored.
+- Extraneous parameters for commands that do not take in parameters (such as `list`, `exit` and `clear`) will be ignored.
   </box>
 
 ### Viewing help : `help`
 
-Shows a help window explaining the command syntax and parameter requirements.
+Shows help for TripLog commands.
+
+Format: `help [COMMAND]`
+
+- Without arguments, `help` opens a help window showing syntax for all commands.
+- With a command name, `help COMMAND` displays the usage for that specific command inline in the result display (no window opens).
 
 ![help message](images/helpMessage.png)
 
-Format: `help`
+Examples:
+- `help` — opens the full help window.
+- `help add` — shows the usage for the `add` command inline.
+- `help delete` — shows the usage for the `delete` command inline.
 
-- The help window can be closed by clicking the 'x' button, or by pressing **Q** or **ESCAPE** while the window is focused.
+- The help window (opened by `help` with no arguments) can be closed by clicking the 'x' button, or by pressing **Q** or **ESCAPE** while the window is focused.
 
 ### Adding a trip: `add`
 
@@ -278,7 +286,7 @@ _Details coming soon ..._
 | **Add** | `add n/NAME [p/PHONE] [e/EMAIL] [a/ADDRESS] [sd/DATE] [ed/DATE] [t/TAG]…​` <br> e.g., `add n/James Ho p/22224444 sd/2026-01-01 t/friend` |
 | **Clear** | `clear`                                                                                                                                   |
 | **Delete** | `delete INDEX`<br> e.g., `delete 3`                                                                                                       |
-| **Edit** | `edit INDEX [n/NAME] [p/PHONE] [e/EMAIL] [a/ADDRESS] [sd/DATE] [ed/DATE] [t/TAG]…​`<br> e.g.,`edit 2 n/James Lee e/jameslee@example.com` |
-| **Find** | `find KEYWORD [MORE_KEYWORDS]`<br> e.g., `find Tokyo Osaka`                                                                                                              |
-| **List** | `list`                                                                                                                                                                   |
-| **Help** | `help`                                                                                                                                                                   |
+| **Edit**   | `edit INDEX [n/NAME] [p/PHONE] [e/EMAIL] [a/ADDRESS] [sd/DATE] [ed/DATE] [t/TAG]…​`<br> e.g.,`edit 2 n/James Lee e/jameslee@example.com` |
+| **Find**   | `find KEYWORD [MORE_KEYWORDS]`<br> e.g., `find Tokyo Osaka`                                                                                                              |
+| **List**   | `list`                                                                                                                                                                   |
+| **Help**   | `help [COMMAND]`<br> e.g., `help add`                                                                                                                                    |

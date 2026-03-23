@@ -13,6 +13,7 @@ import org.testfx.framework.junit5.Stop;
 
 import javafx.scene.input.KeyCode;
 import javafx.stage.Stage;
+import seedu.triplog.logic.commands.HelpCommand;
 
 @ExtendWith(ApplicationExtension.class)
 public class HelpWindowTest {
@@ -72,54 +73,54 @@ public class HelpWindowTest {
 
     @Test
     public void addUsage_containsCommandName() {
-        assertTrue(HelpWindow.ADD_USAGE.startsWith("add "));
+        assertTrue(HelpCommand.ADD_USAGE.startsWith("add "));
     }
 
     @Test
     public void editUsage_containsCommandName() {
-        assertTrue(HelpWindow.EDIT_USAGE.startsWith("edit "));
+        assertTrue(HelpCommand.EDIT_USAGE.startsWith("edit "));
     }
 
     @Test
     public void addUsage_containsDateOptions() {
-        assertTrue(HelpWindow.ADD_USAGE.contains("sd/"));
-        assertTrue(HelpWindow.ADD_USAGE.contains("ed/"));
+        assertTrue(HelpCommand.ADD_USAGE.contains("sd/"));
+        assertTrue(HelpCommand.ADD_USAGE.contains("ed/"));
     }
 
     @Test
     public void deleteUsage_containsCommandName() {
-        assertTrue(HelpWindow.DELETE_USAGE.startsWith("delete "));
+        assertTrue(HelpCommand.DELETE_USAGE.startsWith("delete "));
     }
 
     @Test
     public void deleteUsage_containsIndexPlaceholder() {
-        assertTrue(HelpWindow.DELETE_USAGE.contains("<INDEX>"));
+        assertTrue(HelpCommand.DELETE_USAGE.contains("<INDEX>"));
     }
 
     @Test
     public void tagUsage_containsCommandName() {
-        assertTrue(HelpWindow.TAG_USAGE.startsWith("tag "));
+        assertTrue(HelpCommand.TAG_USAGE.startsWith("tag "));
     }
 
     @Test
     public void findUsage_containsCommandName() {
-        assertTrue(HelpWindow.FIND_USAGE.startsWith("find "));
+        assertTrue(HelpCommand.FIND_USAGE.startsWith("find "));
     }
 
     @Test
     public void filterUsage_containsCommandName() {
-        assertTrue(HelpWindow.FILTER_USAGE.startsWith("filter "));
+        assertTrue(HelpCommand.FILTER_USAGE.startsWith("filter "));
     }
 
     @Test
     public void tagUsage_containsIndexAndTagNamePlaceholders() {
-        assertTrue(HelpWindow.TAG_USAGE.contains("<index>"));
-        assertTrue(HelpWindow.TAG_USAGE.contains("<tag-name>"));
+        assertTrue(HelpCommand.TAG_USAGE.contains("<index>"));
+        assertTrue(HelpCommand.TAG_USAGE.contains("<tag-name>"));
     }
 
     @Test
     public void listUsage_containsCommandName() {
-        assertTrue(HelpWindow.LIST_USAGE.startsWith("list"));
+        assertTrue(HelpCommand.LIST_USAGE.startsWith("list"));
     }
 
     @Test

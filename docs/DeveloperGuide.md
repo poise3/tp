@@ -173,6 +173,41 @@ Status Determination Logic:
 
 The result is encapsulated in the `CommandResult` message, displaying the current sort order and a tally of statuses.
 
+### Help command
+
+#### Implementation
+
+The `help` command supports two modes:
+
+1. **Full help window** — `help` (no argument) opens a separate `HelpWindow` popup displaying syntax for all commands.
+2. **Inline help** — `help COMMAND` (e.g., `help add`) displays the usage string for a specific command directly in the result display, without opening a window.
+
+The mode is determined in `HelpCommand#execute()`:
+
+* If no argument is given, a `CommandResult` with `showHelp = true` is returned. `MainWindow` detects this flag and calls `handleHelp()` to show the `HelpWindow`.
+* If an argument is given, `getUsageForCommand(argument)` returns the matching usage string, and a regular `CommandResult` is returned. The text is displayed inline in the `ResultDisplay`.
+
+The usage strings (e.g., `ADD_USAGE`, `DELETE_USAGE`) are defined as constants in `HelpCommand` and reused by `HelpWindow` to keep the content consistent between inline help and the popup window.
+
+The `TripLogParser` routes `help` to `HelpCommand`:
+
+* `help` → `new HelpCommand()`
+* `help add` → `new HelpCommand("add")`
+
+#### Design considerations
+
+**Aspect: Where to display per-command help**
+
+* **Alternative 1 (current choice):** Display inline in the existing `ResultDisplay`.
+  * Pros: No extra window; fast to access; keyboard-friendly.
+  * Cons: Long usage text may get truncated if the result area is small.
+
+* **Alternative 2:** Always open a `HelpWindow`, filtered to the requested command.
+  * Pros: Consistent UI; more space for content.
+  * Cons: More disruptive; requires an extra window management step.
+
+--------------------------------------------------------------------------------------------------------------------
+
 ### \[Proposed\] Undo/redo feature
 
 #### Proposed Implementation
