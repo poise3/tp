@@ -62,10 +62,9 @@ public class CommandBox extends UiPart<Region> {
     }
 
     /**
-     * Resets the command box to the default state (White underline from DarkTheme.css).
+     * Resets the command box to the default state.
      */
     private void resetStyle() {
-        commandTextField.setStyle("");
         commandTextField.setStyle("-fx-text-fill: white;");
     }
 
