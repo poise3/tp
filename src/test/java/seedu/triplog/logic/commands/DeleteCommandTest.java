@@ -38,7 +38,7 @@ public class DeleteCommandTest {
         ModelManager expectedModel = new ModelManager(model.getTripLog(), new UserPrefs());
         expectedModel.deleteTrip(tripToDelete);
 
-        String expectedSummary = ListCommand.calculateSummary(expectedModel.getFilteredTripList());
+        String expectedSummary = TripSummaryUtil.calculateSummary(expectedModel.getFilteredTripList());
         String expectedMessage = String.format(DeleteCommand.MESSAGE_DELETE_TRIP_SUCCESS, 1, expectedSummary);
 
         assertCommandSuccess(deleteCommand, model, expectedMessage, expectedModel);
@@ -63,7 +63,7 @@ public class DeleteCommandTest {
         expectedModel.deleteTrip(tripToDelete);
         showNoTrip(expectedModel);
 
-        String expectedSummary = ListCommand.calculateSummary(expectedModel.getFilteredTripList());
+        String expectedSummary = TripSummaryUtil.calculateSummary(expectedModel.getFilteredTripList());
         String expectedMessage = String.format(DeleteCommand.MESSAGE_DELETE_TRIP_SUCCESS, 1, expectedSummary);
 
         assertCommandSuccess(deleteCommand, model, expectedMessage, expectedModel);
@@ -84,7 +84,8 @@ public class DeleteCommandTest {
 
     @Test
     public void execute_validRangeUnfilteredList_success() {
-        DeleteCommand deleteCommand = new DeleteCommand(Index.fromOneBased(1), Index.fromOneBased(2));
+        DeleteCommand deleteCommand = new DeleteCommand(Index.fromOneBased(1),
+                Index.fromOneBased(2));
 
         Model expectedModel = new ModelManager(model.getTripLog(), new UserPrefs());
         Trip firstTrip = expectedModel.getFilteredTripList().get(0);
@@ -92,7 +93,7 @@ public class DeleteCommandTest {
         expectedModel.deleteTrip(firstTrip);
         expectedModel.deleteTrip(secondTrip);
 
-        String expectedSummary = ListCommand.calculateSummary(expectedModel.getFilteredTripList());
+        String expectedSummary = TripSummaryUtil.calculateSummary(expectedModel.getFilteredTripList());
         String expectedMessage = String.format(DeleteCommand.MESSAGE_DELETE_TRIPS_SUCCESS, 2, expectedSummary);
 
         assertCommandSuccess(deleteCommand, model, expectedMessage, expectedModel);
@@ -116,7 +117,7 @@ public class DeleteCommandTest {
         Model expectedModel = new ModelManager(model.getTripLog(), new UserPrefs());
         expectedModel.deleteTrip(firstTrip);
 
-        String expectedSummary = ListCommand.calculateSummary(expectedModel.getFilteredTripList());
+        String expectedSummary = TripSummaryUtil.calculateSummary(expectedModel.getFilteredTripList());
         String expectedMessage = String.format(DeleteCommand.MESSAGE_DELETE_TRIP_SUCCESS, 1, expectedSummary);
 
         assertCommandSuccess(deleteCommand, model, expectedMessage, expectedModel);
@@ -125,8 +126,8 @@ public class DeleteCommandTest {
     @Test
     public void execute_deleteByTagNoMatch_throwsException() {
         DeleteCommand deleteCommand = new DeleteCommand(
-                new TripMatchesDeletePredicate(null, null, null, null, null, null,
-                        Set.of(new Tag("nonexistenttag"))));
+                new TripMatchesDeletePredicate(null, null, null, null, null,
+                        null, Set.of(new Tag("nonexistenttag"))));
 
         assertCommandFailure(deleteCommand, model, DeleteCommand.MESSAGE_NO_MATCHING_TRIPS);
     }
@@ -135,8 +136,10 @@ public class DeleteCommandTest {
     public void equals() {
         DeleteCommand deleteFirstCommand = new DeleteCommand(INDEX_FIRST_TRIP);
         DeleteCommand deleteSecondCommand = new DeleteCommand(INDEX_SECOND_TRIP);
-        DeleteCommand deleteRangeCommand = new DeleteCommand(Index.fromOneBased(1), Index.fromOneBased(2));
-        DeleteCommand deleteRangeCommandCopy = new DeleteCommand(Index.fromOneBased(1), Index.fromOneBased(2));
+        DeleteCommand deleteRangeCommand = new DeleteCommand(Index.fromOneBased(1),
+                Index.fromOneBased(2));
+        DeleteCommand deleteRangeCommandCopy = new DeleteCommand(Index.fromOneBased(1),
+                Index.fromOneBased(2));
 
         assertTrue(deleteFirstCommand.equals(deleteFirstCommand));
 

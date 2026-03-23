@@ -45,7 +45,7 @@ public class EditCommandTest {
         Model expectedModel = new ModelManager(new TripLog(model.getTripLog()), new UserPrefs());
         expectedModel.setTrip(model.getFilteredTripList().get(0), editedTrip);
 
-        String expectedSummary = ListCommand.calculateSummary(expectedModel.getFilteredTripList());
+        String expectedSummary = TripSummaryUtil.calculateSummary(expectedModel.getFilteredTripList());
         String expectedMessage = String.format(MESSAGE_EDIT_TRIP_SUCCESS, Messages.format(editedTrip), expectedSummary);
 
         assertCommandSuccess(editCommand, model, expectedMessage, expectedModel);
@@ -67,7 +67,7 @@ public class EditCommandTest {
         Model expectedModel = new ModelManager(new TripLog(model.getTripLog()), new UserPrefs());
         expectedModel.setTrip(lastTrip, editedTrip);
 
-        String expectedSummary = ListCommand.calculateSummary(expectedModel.getFilteredTripList());
+        String expectedSummary = TripSummaryUtil.calculateSummary(expectedModel.getFilteredTripList());
         String expectedMessage = String.format(MESSAGE_EDIT_TRIP_SUCCESS, Messages.format(editedTrip), expectedSummary);
 
         assertCommandSuccess(editCommand, model, expectedMessage, expectedModel);
@@ -80,7 +80,7 @@ public class EditCommandTest {
 
         Model expectedModel = new ModelManager(new TripLog(model.getTripLog()), new UserPrefs());
 
-        String expectedSummary = ListCommand.calculateSummary(expectedModel.getFilteredTripList());
+        String expectedSummary = TripSummaryUtil.calculateSummary(expectedModel.getFilteredTripList());
         String expectedMessage = String.format(MESSAGE_EDIT_TRIP_SUCCESS, Messages.format(editedTrip), expectedSummary);
 
         assertCommandSuccess(editCommand, model, expectedMessage, expectedModel);
@@ -98,7 +98,7 @@ public class EditCommandTest {
         Model expectedModel = new ModelManager(new TripLog(model.getTripLog()), new UserPrefs());
         expectedModel.setTrip(model.getFilteredTripList().get(0), editedTrip);
 
-        String expectedSummary = ListCommand.calculateSummary(expectedModel.getFilteredTripList());
+        String expectedSummary = TripSummaryUtil.calculateSummary(expectedModel.getFilteredTripList());
         String expectedMessage = String.format(MESSAGE_EDIT_TRIP_SUCCESS, Messages.format(editedTrip), expectedSummary);
 
         assertCommandSuccess(editCommand, model, expectedMessage, expectedModel);

@@ -117,7 +117,7 @@ public class DeleteCommand extends Command {
         Trip tripToDelete = lastShownList.get(targetIndex.getZeroBased());
         model.deleteTrip(tripToDelete);
 
-        String summary = ListCommand.calculateSummary(model.getFilteredTripList());
+        String summary = TripSummaryUtil.calculateSummary(model.getFilteredTripList());
         return new CommandResult(String.format(MESSAGE_DELETE_TRIP_SUCCESS, 1, summary));
     }
 
@@ -133,7 +133,7 @@ public class DeleteCommand extends Command {
             model.deleteTrip(trip);
         }
 
-        String summary = ListCommand.calculateSummary(model.getFilteredTripList());
+        String summary = TripSummaryUtil.calculateSummary(model.getFilteredTripList());
         if (tripsToDelete.size() == 1) {
             return new CommandResult(String.format(MESSAGE_DELETE_TRIP_SUCCESS, 1, summary));
         }
@@ -154,7 +154,7 @@ public class DeleteCommand extends Command {
             model.deleteTrip(trip);
         }
 
-        String summary = ListCommand.calculateSummary(model.getFilteredTripList());
+        String summary = TripSummaryUtil.calculateSummary(model.getFilteredTripList());
         if (tripsToDelete.size() == 1) {
             return new CommandResult(String.format(MESSAGE_DELETE_TRIP_SUCCESS, 1, summary));
         }

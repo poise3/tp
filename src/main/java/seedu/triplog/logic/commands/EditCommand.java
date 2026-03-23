@@ -88,7 +88,7 @@ public class EditCommand extends Command {
         model.setTrip(tripToEdit, editedTrip);
         model.updateFilteredTripList(PREDICATE_SHOW_ALL_TRIPS);
 
-        String summary = ListCommand.calculateSummary(model.getFilteredTripList());
+        String summary = TripSummaryUtil.calculateSummary(model.getFilteredTripList());
         return new CommandResult(String.format(MESSAGE_EDIT_TRIP_SUCCESS, Messages.format(editedTrip), summary));
     }
 

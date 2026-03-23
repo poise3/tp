@@ -41,7 +41,7 @@ public class AddCommandTest {
 
         CommandResult commandResult = new AddCommand(validTrip).execute(modelStub);
 
-        String expectedSummary = ListCommand.calculateSummary(modelStub.getFilteredTripList());
+        String expectedSummary = TripSummaryUtil.calculateSummary(modelStub.getFilteredTripList());
         assertEquals(String.format(AddCommand.MESSAGE_SUCCESS, Messages.format(validTrip), expectedSummary),
                 commandResult.getFeedbackToUser());
         assertEquals(Arrays.asList(validTrip), modelStub.personsAdded);

@@ -23,6 +23,7 @@ import org.junit.jupiter.api.io.TempDir;
 import seedu.triplog.logic.commands.AddCommand;
 import seedu.triplog.logic.commands.CommandResult;
 import seedu.triplog.logic.commands.ListCommand;
+import seedu.triplog.logic.commands.TripSummaryUtil;
 import seedu.triplog.logic.commands.exceptions.CommandException;
 import seedu.triplog.logic.parser.exceptions.ParseException;
 import seedu.triplog.model.Model;
@@ -49,7 +50,8 @@ public class LogicManagerTest {
     public void setUp() {
         JsonTripLogStorage tripLogStorage =
                 new JsonTripLogStorage(temporaryFolder.resolve("tripLog.json"));
-        JsonUserPrefsStorage userPrefsStorage = new JsonUserPrefsStorage(temporaryFolder.resolve("userPrefs.json"));
+        JsonUserPrefsStorage userPrefsStorage = new JsonUserPrefsStorage(temporaryFolder
+                .resolve("userPrefs.json"));
         StorageManager storage = new StorageManager(tripLogStorage, userPrefsStorage);
         logic = new LogicManager(model, storage);
     }
@@ -69,7 +71,7 @@ public class LogicManagerTest {
     @Test
     public void execute_validCommand_success() throws Exception {
         String listCommand = ListCommand.COMMAND_WORD;
-        String expectedSummary = ListCommand.calculateSummary(model.getFilteredTripList());
+        String expectedSummary = TripSummaryUtil.calculateSummary(model.getFilteredTripList());
         String expectedMessage = String.format(ListCommand.MESSAGE_SUCCESS, "start date", expectedSummary);
         assertCommandSuccess(listCommand, expectedMessage, model);
     }
@@ -146,7 +148,7 @@ public class LogicManagerTest {
         ModelManager expectedModel = new ModelManager();
         expectedModel.addTrip(expectedTrip);
 
-        String expectedSummary = ListCommand.calculateSummary(expectedModel.getFilteredTripList());
+        String expectedSummary = TripSummaryUtil.calculateSummary(expectedModel.getFilteredTripList());
         String expectedFeedback = String.format(AddCommand.MESSAGE_SUCCESS,
                 seedu.triplog.logic.Messages.format(expectedTrip), expectedSummary);
 

@@ -3,7 +3,6 @@ package seedu.triplog.logic.commands;
 import static java.util.Objects.requireNonNull;
 import static seedu.triplog.model.Model.PREDICATE_SHOW_ALL_TRIPS;
 
-import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.Comparator;
 import java.util.Objects;
@@ -61,7 +60,7 @@ public class ListCommand extends Command {
         model.updateSortedTripList(comparator);
 
         ObservableList<Trip> lastShownList = model.getFilteredTripList();
-        String summary = calculateSummary(lastShownList);
+        String summary = TripSummaryUtil.calculateSummary(lastShownList);
 
         return new CommandResult(String.format(MESSAGE_SUCCESS, sortDescription, summary));
     }
@@ -112,37 +111,6 @@ public class ListCommand extends Command {
             return UNKNOWN_DURATION;
         }
         return ChronoUnit.DAYS.between(trip.getStartDate().value, trip.getEndDate().value);
-    }
-
-    /**
-     * Calculates the summary dashboard text for a given list of trips.
-     */
-    public static String calculateSummary(ObservableList<Trip> trips) {
-        int upcoming = 0;
-        int ongoing = 0;
-        int completed = 0;
-        int planning = 0;
-        LocalDate today = LocalDate.now();
-
-        for (Trip trip : trips) {
-            if (trip.getStartDate() == null) {
-                planning++;
-                continue;
-            }
-
-            LocalDate start = trip.getStartDate().value;
-            LocalDate end = (trip.getEndDate() == null) ? null : trip.getEndDate().value;
-
-            if (today.isBefore(start)) {
-                upcoming++;
-            } else if (end != null && today.isAfter(end)) {
-                completed++;
-            } else {
-                ongoing++;
-            }
-        }
-        return String.format("Summary: %d Upcoming, %d Ongoing, %d Completed, %d Planning",
-                upcoming, ongoing, completed, planning);
     }
 
     @Override

@@ -57,7 +57,7 @@ public class AddCommand extends Command {
         }
 
         model.addTrip(toAdd);
-        String summary = ListCommand.calculateSummary(model.getFilteredTripList());
+        String summary = TripSummaryUtil.calculateSummary(model.getFilteredTripList());
         return new CommandResult(String.format(MESSAGE_SUCCESS, Messages.format(toAdd), summary));
     }
 
