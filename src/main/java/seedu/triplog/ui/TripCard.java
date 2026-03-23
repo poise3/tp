@@ -1,7 +1,6 @@
 package seedu.triplog.ui;
 
 import java.util.Comparator;
-import java.util.Objects;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
@@ -47,44 +46,39 @@ public class TripCard extends UiPart<Region> {
         id.setText(displayedIndex + ". ");
         name.setText(trip.getName().fullName);
 
-        if (!Objects.isNull(trip.getPhone())) {
-            phone.setText(trip.getPhone().value);
-        } else {
-            phone.setText("");
-            phone.setManaged(false);
-        }
+        setOptionalLabel(phone, "Phone: ", trip.getPhoneDisplay());
+        setOptionalLabel(address, "Address: ", trip.getAddressDisplay());
+        setOptionalLabel(email, "Email: ", trip.getEmailDisplay());
+        setOptionalLabel(startDate, "Start: ", trip.getStartDateDisplay());
+        setOptionalLabel(endDate, "End: ", trip.getEndDateDisplay());
+        setTags(trip);
+    }
 
-        if (!Objects.isNull(trip.getAddress())) {
-            address.setText(trip.getAddress().value);
+    /**
+     * Sets optional field label on the UI or hides it if value is null
+     */
+    private void setOptionalLabel(Label label, String prefix, String value) {
+        if (value != null) {
+            label.setText(prefix + value);
         } else {
-            address.setText("");
-            address.setManaged(false);
+            label.setText("");
+            label.setManaged(false);
+            label.setVisible(false);
         }
+    }
 
-        if (!Objects.isNull(trip.getEmail())) {
-            email.setText(trip.getEmail().value);
+    /**
+     * Sets tags on the UI given a trip
+     */
+    private void setTags(Trip trip) {
+        if (trip.getTags().isEmpty()) {
+            tags.setManaged(false);
+            tags.setVisible(false);
         } else {
-            email.setText("");
-            email.setManaged(false);
+            trip.getTags().stream()
+                    .sorted(Comparator.comparing(tag -> tag.tagName))
+                    .forEach(tag -> tags.getChildren().add(new Label(tag.tagName)));
         }
-
-        if (!Objects.isNull(trip.getStartDate())) {
-            startDate.setText(trip.getStartDate().toString());
-        } else {
-            startDate.setText("");
-            startDate.setManaged(false);
-        }
-
-        if (!Objects.isNull(trip.getEndDate())) {
-            endDate.setText(trip.getEndDate().toString());
-        } else {
-            endDate.setText("");
-            endDate.setManaged(false);
-        }
-
-        trip.getTags().stream()
-                .sorted(Comparator.comparing(tag -> tag.tagName))
-                .forEach(tag -> tags.getChildren().add(new Label(tag.tagName)));
     }
 
     // getters mainly used for testing

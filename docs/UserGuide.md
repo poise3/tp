@@ -29,9 +29,7 @@ TripLog is a **desktop app for managing trips, optimized for use via a Command L
    Some example commands you can try:
     - `list` : Lists all trips and shows a status summary.
     * `add n/Tokyo, Japan sd/2026-03-10 ed/2026-03-20` : Adds a trip to Tokyo.
-
     * `delete 3` : Deletes the 3rd trip shown in the current list.
-
     * `clear` : Deletes all entries.
     - `exit` : Exits the app.
 
@@ -60,18 +58,26 @@ TripLog is a **desktop app for managing trips, optimized for use via a Command L
 - Parameters can be in any order.<br>
   e.g. if the command specifies `n/NAME p/PHONE`, `p/PHONE n/NAME` is also acceptable.
 
-- Extraneous parameters for commands that do not take in parameters (such as `help`, `list`, `exit` and `clear`) will be ignored.
+- For commands that do not take parameters (such as `help`, `exit` and `clear`), extraneous parameters will be ignored.
   </box>
 
 ### Viewing help : `help`
 
-Shows a help window explaining the command syntax and parameter requirements.
+Shows help for TripLog commands.
+
+Format: `help [COMMAND]`
+
+- Without arguments, `help` opens a help window showing syntax for all commands.
+- With a command name, `help COMMAND` displays the usage for that specific command inline in the result display (no window opens).
 
 ![help message](images/helpMessage.png)
 
-Format: `help`
+Examples:
+- `help` — opens the full help window.
+- `help add` — shows the usage for the `add` command inline.
+- `help delete` — shows the usage for the `delete` command inline.
 
-- The help window can be closed by clicking the 'x' button, or by pressing **Q** or **ESCAPE** while the window is focused.
+- The help window (opened by `help` with no arguments) can be closed by clicking the 'x' button, or by pressing **Q** or **ESCAPE** while the window is focused.
 
 ### Adding a trip: `add`
 
@@ -91,18 +97,30 @@ Examples:
 
 ### Listing all trips : `list`
 
-Shows a list of all trips currently in the log. The list is automatically **sorted by start date** in ascending order (earliest first). Trips with no start date are shown last.
+Shows a list of all trips currently in the log and displays a **Summary Dashboard** in the result box. The list can be optionally sorted by a specific key.
 
-The command also displays a **Summary Dashboard** in the result box, categorizing your trips based on the current date:
+The **Summary Dashboard** categorizes your trips based on the current date:
 * **Upcoming**: Trips starting after today.
 * **Ongoing**: Trips currently in progress (today is between start and end).
 * **Completed**: Trips that have already ended.
 * **Planning**: Trips with no start date specified.
 
-Format: `list`
+Format: `list [sort/KEY]`
 
-Example:
+- By default, trips are sorted by **start date** in ascending order (earliest first).
+- Trips with no start date are shown last.
+- The sort order is **persistent**: adding or editing trips will maintain the last chosen sort order.
+
+Supported `KEY` values:
+- `name`: Sorts alphabetically by destination name.
+- `start`: Sorts by start date (earliest first).
+- `end`: Sorts by end date (earliest first).
+- `len`: Sorts by duration of the trip (longest first).
+
+Examples:
 - `list` — Displays all trips ordered by start date and shows a summary (e.g. `Listed all trips sorted by start date. Summary: 1 Upcoming, 1 Ongoing, 5 Completed, 1 Planning`).
+- `list sort/name` — Displays all trips in alphabetical order.
+- `list sort/len` — Displays all trips starting with the longest durations.
 
 ### Editing a trip : `edit`
 
@@ -280,5 +298,6 @@ _Details coming soon ..._
 | **Delete** | `delete INDEX`<br> e.g., `delete 3`                                                                                                       |
 | **Edit** | `edit INDEX [n/NAME] [p/PHONE] [e/EMAIL] [a/ADDRESS] [sd/DATE] [ed/DATE] [t/TAG]…​`<br> e.g.,`edit 2 n/James Lee e/jameslee@example.com` |
 | **Find** | `find KEYWORD [MORE_KEYWORDS]`<br> e.g., `find Tokyo Osaka`                                                                                                              |
-| **List** | `list`                                                                                                                                                                   |
-| **Help** | `help`                                                                                                                                                                   |
+| **List** | `list [sort/KEY]` <br> e.g., `list sort/name`                                                                                                                            |                                                                                                                                                                 |
+| **Help**   | `help [COMMAND]`<br> e.g., `help add`                                                                                                                                    |
+

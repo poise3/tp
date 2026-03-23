@@ -145,6 +145,29 @@ public class TripTest {
     }
 
     @Test
+    public void constructor_nullStartDate_noException() {
+        Name name = new Name("Test Trip");
+        TripDate endDate = new TripDate("2026-01-01");
+
+        new Trip(name, null, null, null, Collections.emptySet(), null, endDate);
+    }
+
+    @Test
+    public void constructor_nullEndDate_noException() {
+        Name name = new Name("Test Trip");
+        TripDate startDate = new TripDate("2026-01-01");
+
+        new Trip(name, null, null, null, Collections.emptySet(), startDate, null);
+    }
+
+    @Test
+    public void constructor_bothDatesNull_noException() {
+        Name name = new Name("Test Trip");
+
+        new Trip(name, null, null, null, Collections.emptySet(), null, null);
+    }
+
+    @Test
     public void chronologicalComparator_differentDatesAndNulls_sortedChronologically() {
         // Case 1: Both dates present, different dates
         Trip janTrip = new Trip(new Name("A"), null, null, null, Collections.emptySet(),

@@ -50,7 +50,7 @@ public class EditCommand extends Command {
             + PREFIX_PHONE + "91234567 "
             + PREFIX_EMAIL + "johndoe@example.com";
 
-    public static final String MESSAGE_EDIT_TRIP_SUCCESS = "Edited Trip: %1$s";
+    public static final String MESSAGE_EDIT_TRIP_SUCCESS = "Edited Trip: %1$s\n%2$s";
     public static final String MESSAGE_NOT_EDITED = "At least one field to edit must be provided.";
     public static final String MESSAGE_DUPLICATE_TRIP = "This trip already exists in the trip log.";
 
@@ -87,7 +87,9 @@ public class EditCommand extends Command {
 
         model.setTrip(tripToEdit, editedTrip);
         model.updateFilteredTripList(PREDICATE_SHOW_ALL_TRIPS);
-        return new CommandResult(String.format(MESSAGE_EDIT_TRIP_SUCCESS, Messages.format(editedTrip)));
+
+        String summary = TripSummaryUtil.calculateSummary(model.getFilteredTripList());
+        return new CommandResult(String.format(MESSAGE_EDIT_TRIP_SUCCESS, Messages.format(editedTrip), summary));
     }
 
     /**

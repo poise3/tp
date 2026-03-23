@@ -15,6 +15,7 @@ import java.util.function.Predicate;
 
 import org.junit.jupiter.api.Test;
 
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import seedu.triplog.commons.core.GuiSettings;
 import seedu.triplog.logic.Messages;
@@ -40,7 +41,8 @@ public class AddCommandTest {
 
         CommandResult commandResult = new AddCommand(validTrip).execute(modelStub);
 
-        assertEquals(String.format(AddCommand.MESSAGE_SUCCESS, Messages.format(validTrip)),
+        String expectedSummary = TripSummaryUtil.calculateSummary(modelStub.getFilteredTripList());
+        assertEquals(String.format(AddCommand.MESSAGE_SUCCESS, Messages.format(validTrip), expectedSummary),
                 commandResult.getFeedbackToUser());
         assertEquals(Arrays.asList(validTrip), modelStub.personsAdded);
     }
@@ -204,6 +206,11 @@ public class AddCommandTest {
         public void addTrip(Trip trip) {
             requireNonNull(trip);
             personsAdded.add(trip);
+        }
+
+        @Override
+        public ObservableList<Trip> getFilteredTripList() {
+            return FXCollections.observableList(personsAdded);
         }
 
         @Override

@@ -33,9 +33,11 @@ public class AddCommandIntegrationTest {
         Model expectedModel = new ModelManager(model.getTripLog(), new UserPrefs());
         expectedModel.addTrip(validTrip);
 
-        assertCommandSuccess(new AddCommand(validTrip), model,
-                String.format(AddCommand.MESSAGE_SUCCESS, Messages.format(validTrip)),
-                expectedModel);
+        String expectedSummary = TripSummaryUtil.calculateSummary(expectedModel.getFilteredTripList());
+        String expectedMessage = String.format(AddCommand.MESSAGE_SUCCESS,
+                Messages.format(validTrip), expectedSummary);
+
+        assertCommandSuccess(new AddCommand(validTrip), model, expectedMessage, expectedModel);
     }
 
     @Test

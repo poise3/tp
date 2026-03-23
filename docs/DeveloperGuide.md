@@ -12,7 +12,8 @@
 
 ## **Acknowledgements**
 
-_{ list here sources of all reused/adapted ideas, code, documentation, and third-party libraries -- include links to the original source as well }_
+* Libraries used: [JavaFX](https://openjfx.io/), [Jackson](https://github.com/FasterXML/jackson), [JUnit5](https://junit.org/junit5/)
+* Original codebase: [AddressBook-Level3](https://github.com/se-edu/addressbook-level3)
 
 --------------------------------------------------------------------------------------------------------------------
 
@@ -155,23 +156,68 @@ Classes used by multiple components are in the `seedu.triplog.commons` package.
 
 ## **Implementation**
 
-### Trip Statistics and Automatic Sorting
+### Trip Statistics and Multi-Key Sorting
 
 #### Implementation
 
-The `ListCommand` has been enhanced to provide analytical feedback about the current state of the trip log. This implementation bridges the `Logic` and `Model` layers to transform a simple list view into a temporal dashboard.
+The `ListCommand` has been enhanced to provide analytical feedback and dynamic reordering of the trip log. This implementation bridges the `Logic` and `Model` layers to transform a simple list view into a temporal dashboard.
 
-Key mechanisms:
-* **Sorting Logic**: `ListCommand` utilizes `model#updateSortedTripList` with a custom `Comparator` that prioritizes chronological order based on `startDate`. It uses `nullsLast` handling to ensure "Planning" trips (no dates) appear at the bottom of the list.
-* **Temporal Categorization**: The `ListCommand#calculateSummary()` method iterates through the current list and compares trip dates against the current system time (`LocalDate.now()`).
+**Sorting Mechanism:**
+The sorting is implemented using a **Comparator Factory** pattern within `ListCommand`. The application supports dynamic reordering based on four primary sort keys: `name`, `start`, `end`, and `len`.
 
-Status Determination Logic:
+1. **`ListCommandParser`**: Intercepts the `list` command and identifies the `sort/` prefix. If no prefix is present, it defaults to chronological sorting.
+2. **Persistent Sorting**: The sort order is maintained in the `ModelManager` via a `SortedList` wrapper. Any subsequent operations (adding or editing trips) automatically re-apply the last used comparator to maintain order.
+3. **Null Handling**: All date-based comparators utilize `Comparator.nullsLast()` to ensure trips in the "Planning" stage (missing dates) do not clutter the top of the timeline.
+
+**Temporal Dashboard:**
+The trip statistics dashboard provides a temporal analysis of trips relative to `LocalDate.now()`. To ensure the dashboard remains accurate after data-modifying operations, the calculation logic is centralized:
+
+* **Centralized Logic**: The calculation logic is centralized in `TripSummaryUtil#calculateSummary(ObservableList<Trip>)`.
+* **Live Updates**: Data-modifying commands (`AddCommand`, `EditCommand`, and `DeleteCommand`) invoke this utility during their execution.
+* **Feedback Mechanism**: The resulting summary counts are appended to the `CommandResult` feedback string. This ensures that any change to a trip's dates or the addition/removal of trips is immediately reflected in the user's result display.
+
+**Status Determination Logic:**
 1. **Planning**: `startDate == null`
 2. **Upcoming**: `today < startDate`
 3. **Completed**: `today > endDate`
 4. **Ongoing**: `startDate <= today <= endDate` (Inclusive of boundaries)
 
-The result is encapsulated in the `CommandResult` message, displaying the current sort order and a tally of statuses.
+The result is a `CommandResult` message displaying the current sort order and a tally of statuses.
+
+### Help command
+
+#### Implementation
+
+The `help` command supports two modes:
+
+1. **Full help window** — `help` (no argument) opens a separate `HelpWindow` popup displaying syntax for all commands.
+2. **Inline help** — `help COMMAND` (e.g., `help add`) displays the usage string for a specific command directly in the result display, without opening a window.
+
+The mode is determined in `HelpCommand#execute()`:
+
+* If no argument is given, a `CommandResult` with `showHelp = true` is returned. `MainWindow` detects this flag and calls `handleHelp()` to show the `HelpWindow`.
+* If an argument is given, `getUsageForCommand(argument)` returns the matching usage string, and a regular `CommandResult` is returned. The text is displayed inline in the `ResultDisplay`.
+
+The usage strings (e.g., `ADD_USAGE`, `DELETE_USAGE`) are defined as constants in `HelpCommand` and reused by `HelpWindow` to keep the content consistent between inline help and the popup window.
+
+The `TripLogParser` routes `help` to `HelpCommand`:
+
+* `help` → `new HelpCommand()`
+* `help add` → `new HelpCommand("add")`
+
+#### Design considerations
+
+**Aspect: Where to display per-command help**
+
+* **Alternative 1 (current choice):** Display inline in the existing `ResultDisplay`.
+  * Pros: No extra window; fast to access; keyboard-friendly.
+  * Cons: Long usage text may get truncated if the result area is small.
+
+* **Alternative 2:** Always open a `HelpWindow`, filtered to the requested command.
+  * Pros: Consistent UI; more space for content.
+  * Cons: More disruptive; requires an extra window management step.
+
+--------------------------------------------------------------------------------------------------------------------
 
 ### \[Proposed\] Undo/redo feature
 
@@ -189,15 +235,9 @@ Given below is an example usage scenario and how the undo/redo mechanism behaves
 
 Step 1. The user launches the application for the first time. The `VersionedAddressBook` will be initialized with the initial address book state, and the `currentStatePointer` pointing to that single address book state.
 
-<puml src="diagrams/UndoRedoState0.puml" alt="UndoRedoState0" />
-
 Step 2. The user executes `delete 5` command to delete the 5th trip in the address book. The `delete` command calls `Model#commitAddressBook()`, causing the modified state of the address book after the `delete 5` command executes to be saved in the `addressBookStateList`, and the `currentStatePointer` is shifted to the newly inserted address book state.
 
-<puml src="diagrams/UndoRedoState1.puml" alt="UndoRedoState1" />
-
 Step 3. The user executes `add n/David …​` to add a new trip. The `add` command also calls `Model#commitAddressBook()`, causing another modified address book state to be saved into the `addressBookStateList`.
-
-<puml src="diagrams/UndoRedoState2.puml" alt="UndoRedoState2" />
 
 <box type="info" seamless>
 
@@ -207,29 +247,12 @@ Step 3. The user executes `add n/David …​` to add a new trip. The `add` comm
 
 Step 4. The user now decides that adding the trip was a mistake, and decides to undo that action by executing the `undo` command. The `undo` command will call `Model#undoAddressBook()`, which will shift the `currentStatePointer` once to the left, pointing it to the previous address book state, and restores the address book to that state.
 
-<puml src="diagrams/UndoRedoState3.puml" alt="UndoRedoState3" />
-
-
 <box type="info" seamless>
 
 **Note:** If the `currentStatePointer` is at index 0, pointing to the initial AddressBook state, then there are no previous AddressBook states to restore. The `undo` command uses `Model#canUndoAddressBook()` to check if this is the case. If so, it will return an error to the user rather
 than attempting to perform the undo.
 
 </box>
-
-The following sequence diagram shows how an undo operation goes through the `Logic` component:
-
-<puml src="diagrams/UndoSequenceDiagram-Logic.puml" alt="UndoSequenceDiagram-Logic" />
-
-<box type="info" seamless>
-
-**Note:** The lifeline for `UndoCommand` should end at the destroy marker (X) but due to a limitation of PlantUML, the lifeline reaches the end of diagram.
-
-</box>
-
-Similarly, how an undo operation goes through the `Model` component is shown below:
-
-<puml src="diagrams/UndoSequenceDiagram-Model.puml" alt="UndoSequenceDiagram-Model" />
 
 The `redo` command does the opposite — it calls `Model#redoAddressBook()`, which shifts the `currentStatePointer` once to the right, pointing to the previously undone state, and restores the address book to that state.
 
@@ -241,35 +264,7 @@ The `redo` command does the opposite — it calls `Model#redoAddressBook()`, whi
 
 Step 5. The user then decides to execute the command `list`. Commands that do not modify the address book, such as `list`, will usually not call `Model#commitAddressBook()`, `Model#undoAddressBook()` or `Model#redoAddressBook()`. Thus, the `addressBookStateList` remains unchanged.
 
-<puml src="diagrams/UndoRedoState4.puml" alt="UndoRedoState4" />
-
 Step 6. The user executes `clear`, which calls `Model#commitAddressBook()`. Since the `currentStatePointer` is not pointing at the end of the `addressBookStateList`, all address book states after the `currentStatePointer` will be purged. Reason: It no longer makes sense to redo the `add n/David …​` command. This is the behavior that most modern desktop applications follow.
-
-<puml src="diagrams/UndoRedoState5.puml" alt="UndoRedoState5" />
-
-The following activity diagram summarizes what happens when a user executes a new command:
-
-<puml src="diagrams/CommitActivityDiagram.puml" width="250" />
-
-#### Design considerations:
-
-**Aspect: How undo & redo executes:**
-
-* **Alternative 1 (current choice):** Saves the entire address book.
-    * Pros: Easy to implement.
-    * Cons: May have performance issues in terms of memory usage.
-
-* **Alternative 2:** Individual command knows how to undo/redo by
-  itself.
-    * Pros: Will use less memory (e.g. for `delete`, just save the trip being deleted).
-    * Cons: We must ensure that the implementation of each individual command are correct.
-
-_{more aspects and alternatives to be added}_
-
-### \[Proposed\] Data archiving
-
-_{Explain here how the data archiving feature will be implemented}_
-
 
 --------------------------------------------------------------------------------------------------------------------
 
@@ -314,7 +309,8 @@ Priorities: Essential (must have) MVP, High (expected to have) - `* * *`, Medium
 | `MVP`    | traveler                  | tag trips based on category                                      | be aware of the activity/purpose of each trip quickly        |
 | `MVP`    | frequent traveler         | search my entries / logs for tags                                | see whether i have done a specific activity in that region   |
 | `* * *`  | traveler                  | update the description of a trip entry                           | efficiently correct typos or add more detail to a trip       |
-| `* * *`  | traveler                  | list all trips sorted by date                                    | view my travel history chronologically                       |
+| `* * *`  | traveler                  | list all trips sorted by various criteria (name, date, duration) | view my travel history according to my current needs         |
+| `* * *`  | traveler                  | see a summary dashboard of my trips                              | get a high-level view of my travel status                    |
 | `* * *`  | new user                  | use a generic help command to recover the syntax of the commands | use the CLI without the need to memorise all instructions    |
 | `* * *`  | traveler                  | add start and end dates to a trip                                | distinguish short trips from long journeys                   |
 | `* * *`  | traveler                  | view trips taken within a given date range                       | analyze travel patterns over time                            |
@@ -324,70 +320,6 @@ Priorities: Essential (must have) MVP, High (expected to have) - `* * *`, Medium
 | `* *`    | traveler                  | attach short personal notes to a trip                            | remember meaningful experiences beyond basic facts           |
 | `*`      | photographer traveler     | link to photos in the local file system                          | retrieve relevant photos quickly                             |
 | `*`      | budget-conscious traveler | track the expenses at each destination                           | analyze the budget and plan accurately next time             |
-
-*{More to be added}*
-
-### Use cases
-
-(For all use cases below, the **System** is `TripLog` and the **Actor** is the `user`, unless specified otherwise)
-
-**Use case: Add an experience log to a trip**
-
-**MSS**
-
-1.  User requests to list trips.
-2.  TripLog shows a list of trips.
-3.  User finds the index of the specific trip they want to log an experience for (e.g., Tokyo trip).
-4.  User requests to add a note/experience (e.g., "Great sushi at Tsukiji") to that specific trip index.
-5.  TripLog adds the experience and confirms the log entry.
-
-    Use case ends.
-
-**Extensions**
-
-* 2a. The trip list is empty.
-  Use case ends.
-
-* 4a. The given index is invalid.
-    * 4a1. TripLog shows an error message.
-    * Use case resumes at step 2.
-
-* 4b. The experience description is missing.
-    * 4b1. TripLog shows an error message.
-    * Use case resumes at step 3.
-
-**Use case: Filter trips by category tag**
-
-**MSS**
-
-1.  User requests to view all trips associated with a specific tag (e.g., `work`).
-2.  TripLog searches the local data for trips containing that tag.
-3.  TripLog displays a filtered list of matching travel entries.
-
-    Use case ends.
-
-**Extensions**
-
-* 2a. No trips match the requested tag.
-    * 2a1. TripLog shows a message indicating no results found.
-    * Use case ends.
-
-**Use case: Delete a canceled trip entry**
-
-**MSS**
-
-1.  User requests to list trips.
-2.  TripLog shows a list of trips.
-3.  User identifies the trip to be removed and requests to delete it by index.
-4.  TripLog deletes the entry and updates the local storage.
-
-    Use case ends.
-
-**Extensions**
-
-* 3a. The given index is invalid.
-    * 3a1. TripLog shows an error message.
-    * Use case resumes at step 2.
 
 ### Non-Functional Requirements
 
@@ -409,6 +341,7 @@ Priorities: Essential (must have) MVP, High (expected to have) - `* * *`, Medium
 - **Destination**: Primary location of a trip (e.g "Mount Fuji"), mapped to the Name field
 - **Experience Log**: Descriptive note added to a trip to record activities or reminders
 - **Category Tag**: Label for grouping trips by purpose (e.g work) or region (e.g Japan)
+- **Duration**: The total days between the start and end date of a trip.
 
 --------------------------------------------------------------------------------------------------------------------
 
@@ -438,14 +371,26 @@ testers are expected to do more *exploratory* testing.
     1. Re-launch the app by double-clicking the jar file.<br>
        Expected: The most recent window size and location is retained.
 
-### Listing Trips and Viewing Statistics
+### Listing, Sorting, and Statistics
 
-1. Categorization Verification (Assume Today is 2026-03-22)
+1. Initial setup (Assume Today is 2026-03-23)
+    1. Add a variety of trips:
+        - Past: `add n/History sd/2020-01-01 ed/2020-01-05`
+        - Ongoing: `add n/Current Trip sd/2026-03-20 ed/2026-03-30`
+        - Future: `add n/Future Trip sd/2026-12-01 ed/2026-12-10`
+        - Planning: `add n/Bucket List Ideas`
 
-    1. Prerequisites: Ensure data has varying dates (Upcoming, Ongoing, Completed, No Date).
+2. Testing Sort Keys and Statistics
+    1. Test case: `list sort/name`<br>
+       Expected: Trips are sorted alphabetically. Result box shows: `Listed all trips sorted by name (alphabetical). Summary: 1 Upcoming, 1 Ongoing, 1 Completed, 1 Planning`.
+    2. Test case: `list sort/len`<br>
+       Expected: Trips are sorted by duration (longest first).
+    3. Test case: `list sort/price`<br>
+       Expected: Error message "Invalid sort key! Supported keys: name, start, end, len".
 
-    1. Test case: `list`<br>
-       Expected: Trip list displays all trips sorted chronologically by start date. The result box shows: `Listed all trips sorted by start date. Summary: X Upcoming, Y Ongoing, Z Completed, W Planning`.
+3. Testing Persistence
+    1. Test case: Execute `list sort/name`, then `add n/B-Destination`.
+       Expected: The new trip is added and automatically positioned in alphabetical order.
 
 ### Deleting a trip
 
