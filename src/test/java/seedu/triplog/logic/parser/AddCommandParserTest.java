@@ -27,10 +27,13 @@ import static seedu.triplog.logic.commands.CommandTestUtil.VALID_TAG_FRIEND;
 import static seedu.triplog.logic.commands.CommandTestUtil.VALID_TAG_HUSBAND;
 import static seedu.triplog.logic.parser.CliSyntax.PREFIX_ADDRESS;
 import static seedu.triplog.logic.parser.CliSyntax.PREFIX_EMAIL;
+import static seedu.triplog.logic.parser.CliSyntax.PREFIX_END_DATE;
 import static seedu.triplog.logic.parser.CliSyntax.PREFIX_NAME;
 import static seedu.triplog.logic.parser.CliSyntax.PREFIX_PHONE;
+import static seedu.triplog.logic.parser.CliSyntax.PREFIX_START_DATE;
 import static seedu.triplog.logic.parser.CommandParserTestUtil.assertParseFailure;
 import static seedu.triplog.logic.parser.CommandParserTestUtil.assertParseSuccess;
+import static seedu.triplog.model.trip.Trip.MESSAGE_INVALID_DATE_ORDER;
 import static seedu.triplog.testutil.TypicalTrips.AMY;
 import static seedu.triplog.testutil.TypicalTrips.BOB;
 
@@ -186,5 +189,16 @@ public class AddCommandParserTest {
         assertParseFailure(parser, PREAMBLE_NON_EMPTY + NAME_DESC_BOB + PHONE_DESC_BOB + EMAIL_DESC_BOB
                         + ADDRESS_DESC_BOB + TAG_DESC_HUSBAND + TAG_DESC_FRIEND,
                 String.format(MESSAGE_INVALID_COMMAND_FORMAT, AddCommand.MESSAGE_USAGE));
+    }
+
+    @Test
+    public void parse_invalidDateOrder_failure() {
+        String startDateLater = " " + PREFIX_START_DATE + "2025-12-31";
+        String endDateLater = " " + PREFIX_END_DATE + "2025-01-01";
+
+        // start date is after end date
+        assertParseFailure(parser,
+                NAME_DESC_BOB + startDateLater + endDateLater,
+                MESSAGE_INVALID_DATE_ORDER);
     }
 }

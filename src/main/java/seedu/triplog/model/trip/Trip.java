@@ -18,8 +18,7 @@ import seedu.triplog.model.tag.Tag;
  */
 public class Trip {
 
-    public static final String DATE_CONSTRAINTS =
-            "Start date cannot be after end date.";
+    public static final String MESSAGE_INVALID_DATE_ORDER = "Start date cannot be after end date.";
 
     /**
      * Comparison logic for trips:
@@ -65,7 +64,7 @@ public class Trip {
         requireAllNonNull(name, tags);
 
         if (startDate != null && endDate != null) {
-            checkArgument(!startDate.value.isAfter(endDate.value), DATE_CONSTRAINTS);
+            checkArgument(!startDate.value.isAfter(endDate.value), MESSAGE_INVALID_DATE_ORDER);
         }
 
         this.name = name;

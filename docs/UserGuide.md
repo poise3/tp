@@ -1,7 +1,7 @@
 ---
   layout: default.md
-  title: "User Guide"
-  pageNav: 3
+    title: "User Guide"
+    pageNav: 3
 ---
 
 # TripLog User Guide
@@ -27,13 +27,13 @@ TripLog is a **desktop app for managing trips, optimized for use via a Command L
 
 1. Type the command in the command box and press Enter to execute it. e.g. typing **`help`** and pressing Enter will open the help window.<br>
    Some example commands you can try:
-   - `list` : Lists all trips.
-   * `add n/Tokyo, Japan sd/2026-03-10 ed/2026-03-20` : Adds a trip to Tokyo.
+    - `list` : Lists all trips and shows a status summary.
+    * `add n/Tokyo, Japan sd/2026-03-10 ed/2026-03-20` : Adds a trip to Tokyo.
 
-   * `delete 3` : Deletes the 3rd trip shown in the current list.
+    * `delete 3` : Deletes the 3rd trip shown in the current list.
 
-   * `clear` : Deletes all entries.
-   - `exit` : Exits the app.
+    * `clear` : Deletes all entries.
+    - `exit` : Exits the app.
 
 1. Refer to the [Features](#features) below for details of each command.
 
@@ -99,13 +99,18 @@ Examples:
 
 ### Listing all trips : `list`
 
-Shows a list of all trips sorted by start date in ascending order (earliest first). Trips with no start date are shown last.
+Shows a list of all trips currently in the log. The list is automatically **sorted by start date** in ascending order (earliest first). Trips with no start date are shown last.
+
+The command also displays a **Summary Dashboard** in the result box, categorizing your trips based on the current date:
+* **Upcoming**: Trips starting after today.
+* **Ongoing**: Trips currently in progress (today is between start and end).
+* **Completed**: Trips that have already ended.
+* **Planning**: Trips with no start date specified.
 
 Format: `list`
 
 Example:
-
-- `list` — displays all trips ordered from earliest to latest start date
+- `list` — Displays all trips ordered by start date and shows a summary (e.g. `Listed all trips sorted by start date. Summary: 1 Upcoming, 1 Ongoing, 5 Completed, 1 Planning`).
 
 ### Editing a trip : `edit`
 
@@ -218,10 +223,10 @@ Filter trips by a given date range.
 
 Format: `filter sd/START_DATE ed/END_DATE`
 
-* Update the displayed list with trips satisfying this criteria: 
-START_DATE <= trip start date (required) <= trip end date (optional) <= END_DATE
+* Update the displayed list with trips satisfying this criteria:
+  START_DATE <= trip start date (required) <= trip end date (optional) <= END_DATE
 * START_DATE and END_DATE must be provided in YYYY-MM-DD format.
-* Ignores existing trip logs without starting date present 
+* Ignores existing trip logs without starting date present
 
 Examples:
 
@@ -278,8 +283,8 @@ _Details coming soon ..._
 
 | Action     | Format, Examples                                                                                                                                                         |
 | ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| **Add**    | `add n/NAME [p/PHONE] [e/EMAIL] [a/ADDRESS] [sd/DATE] [ed/DATE] [t/TAG]…​` <br> e.g., `add n/James Ho p/22224444 sd/2026-01-01 t/friend` |
-| **Clear**  | `clear`                                                                                                                                   |
+| **Add** | `add n/NAME [p/PHONE] [e/EMAIL] [a/ADDRESS] [sd/DATE] [ed/DATE] [t/TAG]…​` <br> e.g., `add n/James Ho p/22224444 sd/2026-01-01 t/friend` |
+| **Clear** | `clear`                                                                                                                                   |
 | **Delete** | `delete INDEX`<br> e.g., `delete 3`                                                                                                       |
 | **Edit**   | `edit INDEX [n/NAME] [p/PHONE] [e/EMAIL] [a/ADDRESS] [sd/DATE] [ed/DATE] [t/TAG]…​`<br> e.g.,`edit 2 n/James Lee e/jameslee@example.com` |
 | **Find**   | `find KEYWORD [MORE_KEYWORDS]`<br> e.g., `find Tokyo Osaka`                                                                                                              |
