@@ -1,7 +1,6 @@
 package seedu.triplog.ui;
 
 import java.util.Comparator;
-import java.util.Objects;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
@@ -47,46 +46,31 @@ public class TripCard extends UiPart<Region> {
         id.setText(displayedIndex + ". ");
         name.setText(trip.getName().fullName);
 
-        if (!Objects.isNull(trip.getPhone())) {
-            phone.setText("Phone: " + trip.getPhone().value);
-        } else {
-            phone.setText("");
-            phone.setManaged(false);
-            phone.setVisible(false);
-        }
+        setOptionalLabel(phone, "Phone: ", trip.getPhone() != null ? trip.getPhone().value : null);
+        setOptionalLabel(address, "Address: ", trip.getAddress() != null ? trip.getAddress().value : null);
+        setOptionalLabel(email, "Email: ", trip.getEmail() != null ? trip.getEmail().value : null);
+        setOptionalLabel(startDate, "Start: ", trip.getStartDate() != null ? trip.getStartDate().toString() : null);
+        setOptionalLabel(endDate, "End: ", trip.getEndDate() != null ? trip.getEndDate().toString() : null);
+        setTags(trip);
+    }
 
-        if (!Objects.isNull(trip.getAddress())) {
-            address.setText("Address: " + trip.getAddress().value);
+    /**
+     * Sets optional field label on the UI or hides it if value is null
+     */
+    private void setOptionalLabel(Label label, String prefix, String value) {
+        if (value != null) {
+            label.setText(prefix + value);
         } else {
-            address.setText("");
-            address.setManaged(false);
-            address.setVisible(false);
+            label.setText("");
+            label.setManaged(false);
+            label.setVisible(false);
         }
+    }
 
-        if (!Objects.isNull(trip.getEmail())) {
-            email.setText("Email: " + trip.getEmail().value);
-        } else {
-            email.setText("");
-            email.setManaged(false);
-            email.setVisible(false);
-        }
-
-        if (!Objects.isNull(trip.getStartDate())) {
-            startDate.setText("Start: " + trip.getStartDate().toString());
-        } else {
-            startDate.setText("");
-            startDate.setManaged(false);
-            startDate.setVisible(false);
-        }
-
-        if (!Objects.isNull(trip.getEndDate())) {
-            endDate.setText("End: " + trip.getEndDate().toString());
-        } else {
-            endDate.setText("");
-            endDate.setManaged(false);
-            endDate.setVisible(false);
-        }
-
+    /**
+     * Sets tags on the UI given a trip
+     */
+    private void setTags(Trip trip) {
         if (trip.getTags().isEmpty()) {
             tags.setManaged(false);
             tags.setVisible(false);
@@ -95,8 +79,6 @@ public class TripCard extends UiPart<Region> {
                     .sorted(Comparator.comparing(tag -> tag.tagName))
                     .forEach(tag -> tags.getChildren().add(new Label(tag.tagName)));
         }
-
-
     }
 
     // getters mainly used for testing
