@@ -62,7 +62,6 @@ public class CommandBox extends UiPart<Region> {
         String trimmedCommandText = commandText.trim();
         boolean isDeleteCommand = trimmedCommandText.equals("delete")
                 || trimmedCommandText.startsWith("delete ");
-        
         try {
             if (isDeleteCommand) {
                 // Second Enter on the exact same delete command -> confirm actual deletion
