@@ -1,0 +1,46 @@
+@startuml
+!include style.puml
+skinparam ArrowColor LOGIC_COLOR
+
+box Logic LOGIC_COLOR_T1
+participant ":ListCommand" as ListCommand LOGIC_COLOR
+participant ":TripSummaryUtil" as TripSummaryUtil LOGIC_COLOR
+participant ":CommandResult" as CommandResult LOGIC_COLOR
+end box
+
+box Model MODEL_COLOR_T1
+participant ":Model" as Model MODEL_COLOR
+end box
+
+[-> ListCommand : execute()
+activate ListCommand
+
+ListCommand -> ListCommand : getComparator("start")
+activate ListCommand
+ListCommand --> ListCommand : comparator
+deactivate ListCommand
+
+ListCommand -> Model : updateSortedTripList(comparator)
+activate Model
+Model --> ListCommand
+deactivate Model
+
+ListCommand -> Model : getFilteredTripList()
+activate Model
+Model --> ListCommand : lastShownList
+deactivate Model
+
+ListCommand -> TripSummaryUtil : calculateSummary(lastShownList)
+activate TripSummaryUtil
+TripSummaryUtil --> ListCommand : summary
+deactivate TripSummaryUtil
+
+create CommandResult
+ListCommand -> CommandResult : new CommandResult(...)
+activate CommandResult
+CommandResult --> ListCommand
+deactivate CommandResult
+
+[<-- ListCommand : result
+deactivate ListCommand
+@enduml
