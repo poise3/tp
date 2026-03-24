@@ -108,6 +108,7 @@ The **Summary Dashboard** categorizes your trips based on the current date:
 Format: `list [sort/KEY]`
 
 - By default, trips are sorted by **start date** in ascending order (earliest first).
+- **Tie-breaker**: If multiple trips share the same date or length, they are automatically sorted alphabetically by name.
 - Trips with no start date are shown last.
 - The sort order is **persistent**: adding or editing trips will maintain the last chosen sort order.
 
@@ -299,5 +300,4 @@ _Details coming soon ..._
 | **Edit** | `edit INDEX [n/NAME] [p/PHONE] [e/EMAIL] [a/ADDRESS] [sd/DATE] [ed/DATE] [t/TAG]…​`<br> e.g.,`edit 2 n/James Lee e/jameslee@example.com` |
 | **Find** | `find KEYWORD [MORE_KEYWORDS]`<br> e.g., `find Tokyo Osaka`                                                                                                              |
 | **List** | `list [sort/KEY]` <br> e.g., `list sort/name`                                                                                                                            |                                                                                                                                                                 |
-| **Help**   | `help [COMMAND]`<br> e.g., `help add`                                                                                                                                    |
-
+| **Help** | `help [COMMAND]`<br> e.g., `help add`                                                                                                                                    |
