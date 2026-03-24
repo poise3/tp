@@ -77,11 +77,11 @@ public class TagCommandTest {
         TagCommand command = new TagCommand(INDEX_FIRST_TRIP, tag);
 
         assertThrows(CommandException.class,
-                    String.format(
-                            TagCommand.MESSAGE_DUPLICATE_TAG,
-                            tag,
-                            Messages.format(trip)
-                    ), () -> command.execute(modelStub));
+                String.format(
+                        TagCommand.MESSAGE_DUPLICATE_TAG,
+                        tag,
+                        Messages.format(trip)
+                ), () -> command.execute(modelStub));
     }
 
     @Test
@@ -204,6 +204,16 @@ public class TagCommandTest {
 
         @Override
         public void updateSortedTripList(Comparator<Trip> comparator) {
+            throw new AssertionError("This method should not be called.");
+        }
+
+        @Override
+        public String getLastSortDescription() {
+            throw new AssertionError("This method should not be called.");
+        }
+
+        @Override
+        public void setLastSortDescription(String description) {
             throw new AssertionError("This method should not be called.");
         }
     }

@@ -72,6 +72,7 @@ public class LogicManagerTest {
     public void execute_validCommand_success() throws Exception {
         String listCommand = ListCommand.COMMAND_WORD;
         String expectedSummary = TripSummaryUtil.calculateSummary(model.getFilteredTripList());
+        // Updated to expect the default "start date" initialized in ModelManager
         String expectedMessage = String.format(ListCommand.MESSAGE_SUCCESS, "start date", expectedSummary);
         assertCommandSuccess(listCommand, expectedMessage, model);
     }

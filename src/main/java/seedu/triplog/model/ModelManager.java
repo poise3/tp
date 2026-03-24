@@ -25,6 +25,7 @@ public class ModelManager implements Model {
     private final UserPrefs userPrefs;
     private final FilteredList<Trip> filteredTrips;
     private final SortedList<Trip> sortedTrips;
+    private String lastSortDescription = "start date";
 
     /**
      * Initializes a ModelManager with the given tripLog and userPrefs.
@@ -142,6 +143,17 @@ public class ModelManager implements Model {
     public void updateSortedTripList(Comparator<Trip> comparator) {
         requireNonNull(comparator);
         sortedTrips.setComparator(comparator);
+    }
+
+    @Override
+    public String getLastSortDescription() {
+        return lastSortDescription;
+    }
+
+    @Override
+    public void setLastSortDescription(String description) {
+        requireNonNull(description);
+        this.lastSortDescription = description;
     }
 
     @Override

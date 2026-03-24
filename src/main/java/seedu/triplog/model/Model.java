@@ -94,4 +94,10 @@ public interface Model {
      * @throws NullPointerException if {@code comparator} is null.
      */
     void updateSortedTripList(Comparator<Trip> comparator);
+
+    /** Returns the description of the last applied sort key */
+    String getLastSortDescription();
+
+    /** Sets the description of the last applied sort key */
+    void setLastSortDescription(String description);
 }

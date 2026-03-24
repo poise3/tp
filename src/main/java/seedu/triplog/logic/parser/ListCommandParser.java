@@ -31,6 +31,7 @@ public class ListCommandParser implements Parser<ListCommand> {
             throw new ParseException(String.format(MESSAGE_INVALID_COMMAND_FORMAT, ListCommand.MESSAGE_USAGE));
         }
 
+        // If sort/ prefix is missing, return a ListCommand with a null sortKey to persist current sorting
         if (argMultimap.getValue(prefixSort).isEmpty()) {
             return new ListCommand();
         }
