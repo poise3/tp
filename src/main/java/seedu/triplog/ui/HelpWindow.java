@@ -25,7 +25,6 @@ public class HelpWindow extends UiPart<Stage> {
 
     private static final Logger logger = LogsCenter.getLogger(HelpWindow.class);
     private static final String FXML = "HelpWindow.fxml";
-    private boolean hasBeenShown = false;
 
     @FXML
     private Label prefixNote;
@@ -116,10 +115,8 @@ public class HelpWindow extends UiPart<Stage> {
     public void show() {
         logger.fine("Showing help page about the application.");
         getRoot().show();
-        if (!hasBeenShown) {
-            getRoot().centerOnScreen();
-            hasBeenShown = true;
-        }
+        getRoot().centerOnScreen();
+        
     }
 
     /**
