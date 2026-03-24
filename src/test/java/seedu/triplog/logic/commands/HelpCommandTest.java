@@ -76,6 +76,13 @@ public class HelpCommandTest {
     }
 
     @Test
+    public void execute_helpArgument_showsInlineUsage() {
+        CommandResult result = new HelpCommand("help").execute(model);
+        assertTrue(result.getFeedbackToUser().contains("help"));
+        assertFalse(result.isShowHelp());
+    }
+
+    @Test
     public void execute_unknownArgument_showsErrorMessage() {
         CommandResult result = new HelpCommand("foobar").execute(model);
         assertTrue(result.getFeedbackToUser().contains("foobar"));
