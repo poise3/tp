@@ -167,6 +167,35 @@ public class ListCommandTest {
     }
 
     @Test
+    public void execute_sortTieBreaker_alphabeticalFallBack() {
+        TripLog tripLog = new TripLog();
+        // Both start on the same day, A should come before Z.
+        Trip zebraTrip = new TripBuilder().withName("Zebra").withStart("2026-06-01").withEnd("2026-06-10").build();
+        Trip appleTrip = new TripBuilder().withName("Apple").withStart("2026-06-01").withEnd("2026-06-10").build();
+
+        tripLog.addTrip(zebraTrip);
+        tripLog.addTrip(appleTrip);
+
+        Model model = new ModelManager(tripLog, new UserPrefs());
+        Model expectedModel = new ModelManager(tripLog, new UserPrefs());
+
+        // Setup expected model sort manually to verify tie-breaker logic
+        Comparator<Trip> nameTieBreaker = Comparator.comparing(t -> t.getName().fullName.toLowerCase());
+        Comparator<Trip> startComparator = Comparator.comparing(Trip::getStartDateDisplay,
+                Comparator.nullsLast(Comparator.naturalOrder())).thenComparing(nameTieBreaker);
+
+        expectedModel.updateSortedTripList(startComparator);
+
+        String summary = TripSummaryUtil.calculateSummary(tripLog.getTripList());
+        String expectedMessage = String.format(ListCommand.MESSAGE_SUCCESS, "start date", summary);
+
+        assertCommandSuccess(new ListCommand("start"), model, expectedMessage, expectedModel);
+
+        // Final check: first element in model should be Apple
+        assertTrue(model.getFilteredTripList().get(0).getName().fullName.equals("Apple"));
+    }
+
+    @Test
     public void equals() {
         ListCommand listNameCommand = new ListCommand("name");
         ListCommand listStartCommand = new ListCommand("start");
