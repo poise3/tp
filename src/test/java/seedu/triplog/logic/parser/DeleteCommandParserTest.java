@@ -14,6 +14,7 @@ import seedu.triplog.logic.commands.DeleteCommand;
 import seedu.triplog.model.tag.Tag;
 import seedu.triplog.model.trip.Name;
 import seedu.triplog.model.trip.TripMatchesDeletePredicate;
+import seedu.triplog.model.trip.TripDate;
 
 /**
  * Contains unit tests for DeleteCommandParser.
@@ -46,6 +47,22 @@ public class DeleteCommandParserTest {
                 new DeleteCommand(new TripMatchesDeletePredicate(
                         null, null, null, null, null, null, Set.of(new Tag("family")))));
 
+    }
+
+    @Test
+    public void parse_validDateRange_returnsDeleteCommand() {
+        assertParseSuccess(parser, "sd/2026-03-01 ed/2026-03-10",
+                new DeleteCommand(new TripMatchesDeletePredicate(
+                        null, null, null, null,
+                        new TripDate("2026-03-01"),
+                        new TripDate("2026-03-10"),
+                        Set.of())));
+    }
+
+    @Test
+    public void parse_invalidDateRangeOrder_throwsParseException() {
+        assertParseFailure(parser, "sd/2026-03-10 ed/2026-03-01",
+                "Start date cannot be after end date.");
     }
 
     @Test
@@ -88,5 +105,11 @@ public class DeleteCommandParserTest {
     public void parse_invalidCriteriaPreamble_throwsParseException() {
         assertParseFailure(parser, "abc n/Tokyo",
                 String.format(MESSAGE_INVALID_COMMAND_FORMAT, DeleteCommand.MESSAGE_USAGE));
+    }
+
+    @Test
+    public void parse_dateRangeWithAnotherField_throwsParseException() {
+        assertParseFailure(parser, "n/Tokyo sd/2026-03-01 ed/2026-03-10",
+                "Delete by field accepts exactly one field only.");
     }
 }

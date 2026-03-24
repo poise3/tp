@@ -24,7 +24,8 @@ public class DeleteCommand extends Command {
     public static final String MESSAGE_USAGE = COMMAND_WORD
             + ": Deletes trip(s) from the displayed list.\n"
             + "Usage: delete INDEX | START-END | "
-            + "n/NAME | p/PHONE | e/EMAIL | a/ADDRESS | sd/START_DATE | ed/END_DATE | t/TAG";
+            + "n/NAME | p/PHONE | e/EMAIL | a/ADDRESS | "
+            + "sd/START_DATE | ed/END_DATE | sd/START_DATE ed/END_DATE | t/TAG";
 
     public static final String MESSAGE_DELETE_TRIP_SUCCESS = "Deleted %1$d trip.\n%2$s";
     public static final String MESSAGE_DELETE_TRIPS_SUCCESS = "Deleted %1$d trips.\n%2$s";
@@ -78,6 +79,8 @@ public class DeleteCommand extends Command {
         this.startIndex = startIndex;
         this.endIndex = endIndex;
         this.predicate = null;
+        assert startIndex.getZeroBased() <= endIndex.getZeroBased()
+                : "startIndex should not be after endIndex";
     }
 
     /**
@@ -95,6 +98,13 @@ public class DeleteCommand extends Command {
     @Override
     public CommandResult execute(Model model) throws CommandException {
         requireNonNull(model);
+
+        int activeModes = 0;
+        activeModes += targetIndex != null ? 1 : 0;
+        activeModes += startIndex != null && endIndex != null ? 1 : 0;
+        activeModes += predicate != null ? 1 : 0;
+
+        assert activeModes == 1 : "Exactly one delete mode should be active";
         List<Trip> lastShownList = model.getFilteredTripList();
 
         switch (mode) {

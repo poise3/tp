@@ -55,11 +55,23 @@ public class TripMatchesDeletePredicate implements Predicate<Trip> {
         if (address != null && !Objects.equals(address, trip.getAddress())) {
             return false;
         }
-        if (startDate != null && !Objects.equals(startDate, trip.getStartDate())) {
-            return false;
-        }
-        if (endDate != null && !Objects.equals(endDate, trip.getEndDate())) {
-            return false;
+        if (startDate != null && endDate != null) {
+            if (trip.getStartDate() == null || trip.getEndDate() == null) {
+                return false;
+            }
+            if (trip.getStartDate().value.isBefore(startDate.value)) {
+                return false;
+            }
+            if (trip.getEndDate().value.isAfter(endDate.value)) {
+                return false;
+            }
+        } else {
+            if (startDate != null && !Objects.equals(startDate, trip.getStartDate())) {
+                return false;
+            }
+            if (endDate != null && !Objects.equals(endDate, trip.getEndDate())) {
+                return false;
+            }
         }
         if (!tags.isEmpty() && trip.getTags().stream().noneMatch(tags::contains)) {
             return false;

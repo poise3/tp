@@ -31,7 +31,9 @@ public class DeleteCommandParser implements Parser<DeleteCommand> {
 
     private static final Pattern RANGE_PATTERN = Pattern.compile("\\s*(\\d+)\\s*-\\s*(\\d+)\\s*");
     private static final String MESSAGE_MULTIPLE_DELETE_FIELDS =
-            "Delete by field accepts exactly one field only.";
+            "Delete by field accepts exactly one field only, except for sd/ and ed/ used together as a date range.";
+    private static final String MESSAGE_INVALID_DATE_RANGE =
+            "Start date cannot be after end date.";
     /**
      * Parses the given {@code String} of arguments in the context of the DeleteCommand
      * and returns a DeleteCommand object for execution.
@@ -112,7 +114,11 @@ public class DeleteCommandParser implements Parser<DeleteCommand> {
 
         int prefixCount = countPresentPrefixes(argMultimap);
 
-        if (prefixCount != 1) {
+        boolean hasStartDate = argMultimap.getValue(PREFIX_START_DATE).isPresent();
+        boolean hasEndDate = argMultimap.getValue(PREFIX_END_DATE).isPresent();
+        boolean isDateRangeDelete = hasStartDate && hasEndDate && prefixCount == 2;
+
+        if (prefixCount != 1 && !isDateRangeDelete) {
             throw new ParseException(MESSAGE_MULTIPLE_DELETE_FIELDS);
         }
 
@@ -164,6 +170,10 @@ public class DeleteCommandParser implements Parser<DeleteCommand> {
                 throw new ParseException(MESSAGE_MULTIPLE_DELETE_FIELDS);
             }
             endDate = ParserUtil.parseTripDate(argMultimap.getValue(PREFIX_END_DATE).get());
+        }
+
+        if (startDate != null && endDate != null && startDate.value.isAfter(endDate.value)) {
+            throw new ParseException(MESSAGE_INVALID_DATE_RANGE);
         }
 
         if (!argMultimap.getAllValues(PREFIX_TAG).isEmpty()) {
