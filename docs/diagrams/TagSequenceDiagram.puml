@@ -62,8 +62,8 @@ activate CommandResult
 CommandResult --> TagCommand
 deactivate CommandResult
 
-DeleteCommand --> LogicManager : r
-deactivate DeleteCommand
+TagCommand --> LogicManager : r
+deactivate TagCommand
 
 [<--LogicManager
 deactivate LogicManager
