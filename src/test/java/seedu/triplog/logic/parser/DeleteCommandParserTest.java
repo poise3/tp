@@ -67,6 +67,22 @@ public class DeleteCommandParserTest {
     }
 
     @Test
+    public void parse_invalidRangeNonDigitStart_throwsParseException() {
+        assertParseFailure(parser, "a-1", DeleteCommand.MESSAGE_INVALID_RANGE_FORMAT);
+    }
+
+    @Test
+    public void parse_invalidRangeWithTrailingText_throwsParseException() {
+        assertParseFailure(parser, "1-3 abc", DeleteCommand.MESSAGE_INVALID_RANGE_FORMAT);
+    }
+
+    @Test
+    public void parse_malformedFieldDelete_throwsParseException() {
+        assertParseFailure(parser, "/Tokyo",
+                String.format(MESSAGE_INVALID_COMMAND_FORMAT, DeleteCommand.MESSAGE_USAGE));
+    }
+
+    @Test
     public void parse_multipleFields_throwsParseException() {
         assertParseFailure(parser, "n/Tokyo t/family",
                 MESSAGE_MULTIPLE_DELETE_FIELDS);

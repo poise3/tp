@@ -178,9 +178,19 @@ Examples:
 
 Deletes trip(s) from the currently displayed trip list.
 
-Format: `delete INDEX`
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`delete START-END`
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`delete PREFIX/VALUE`
+<box type="info" seamless>
+
+**Confirmation required:**  
+All delete operations first show a **preview** of the trips to be deleted.  
+Press **Enter again** to confirm the deletion, or edit the command to cancel.
+
+</box>
+
+Format:  
+`delete INDEX`  
+`delete START-END`  
+`delete PREFIX/VALUE`  
+`delete sd/START_DATE ed/END_DATE`
 
 - The command operates on the currently displayed trip list.
 
@@ -227,6 +237,20 @@ Examples:
 - `delete n/Tokyo` deletes all trips named "Tokyo".
 - `delete t/family` deletes all trips with the tag "family".
 - `delete sd/2026-03-01` deletes all trips with this start date.
+- 
+#### Delete by date range
+
+- Deletes all trips whose dates fall within the specified range.
+- Both `sd/START_DATE` and `ed/END_DATE` must be provided.
+- Dates must be in `YYYY-MM-DD` format.
+
+Examples:
+
+- `delete sd/2026-03-01 ed/2026-05-10` deletes all trips within this date range.
+
+#### Preview before deletion
+
+Before deleting, TripLog will display a preview of the trips that match the command.
 
 ### Filtering by date range : `filter`
 
@@ -296,8 +320,7 @@ _Details coming soon ..._
 | ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | **Add** | `add n/NAME [p/PHONE] [e/EMAIL] [a/ADDRESS] [sd/DATE] [ed/DATE] [t/TAG]…​` <br> e.g., `add n/James Ho p/22224444 sd/2026-01-01 t/friend` |
 | **Clear** | `clear`                                                                                                                                   |
-| **Delete** | `delete INDEX`<br> e.g., `delete 3`                                                                                                       |
-| **Edit** | `edit INDEX [n/NAME] [p/PHONE] [e/EMAIL] [a/ADDRESS] [sd/DATE] [ed/DATE] [t/TAG]…​`<br> e.g.,`edit 2 n/James Lee e/jameslee@example.com` |
+| **Delete** | `delete INDEX`<br>`delete START-END`<br>`delete PREFIX/VALUE`<br>`delete sd/START_DATE ed/END_DATE`<br> e.g., `delete 3`, `delete 1-3`, `delete t/family`, `delete sd/2026-03-01 ed/2026-05-10` || **Edit** | `edit INDEX [n/NAME] [p/PHONE] [e/EMAIL] [a/ADDRESS] [sd/DATE] [ed/DATE] [t/TAG]…​`<br> e.g.,`edit 2 n/James Lee e/jameslee@example.com` |
 | **Find** | `find KEYWORD [MORE_KEYWORDS]`<br> e.g., `find Tokyo Osaka`                                                                                                              |
 | **List** | `list [sort/KEY]` <br> e.g., `list sort/name`                                                                                                                            |                                                                                                                                                                 |
 | **Help** | `help [COMMAND]`<br> e.g., `help add`                                                                                                                                    |

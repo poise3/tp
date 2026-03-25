@@ -203,6 +203,52 @@ public class CommandBoxTest {
                 "No actual deletion should happen after editing the command.");
     }
 
+    @Test
+    public void handleCommandEntered_emptyCommand_noExecution() throws Exception {
+        AtomicInteger executeCount = new AtomicInteger(0);
+
+        CommandBox box = new CommandBox(commandText -> {
+            executeCount.incrementAndGet();
+            return new CommandResult("Should not run");
+        });
+
+        TextField field = (TextField) box.getRoot().lookup("#commandTextField");
+
+        Platform.runLater(() -> field.setText(""));
+        WaitForAsyncUtils.waitForFxEvents();
+
+        invokeHandle(box);
+        WaitForAsyncUtils.waitForFxEvents();
+
+        assertEquals(0, executeCount.get());
+        assertEquals("", field.getText());
+    }
+
+    @Test
+    public void handleCommandEntered_deleteOnly_previewShownTextNotCleared() throws Exception {
+        AtomicInteger previewCount = new AtomicInteger(0);
+
+        CommandBox deleteBox = new CommandBox(commandText -> {
+            if (commandText.equals("deletepreview")) {
+                previewCount.incrementAndGet();
+                return new CommandResult("Preview: nothing");
+            }
+            throw new ParseException("Failure Message");
+        });
+
+        TextField field = (TextField) deleteBox.getRoot().lookup("#commandTextField");
+
+        Platform.runLater(() -> field.setText("delete"));
+        WaitForAsyncUtils.waitForFxEvents();
+
+        invokeHandle(deleteBox);
+        WaitForAsyncUtils.waitForFxEvents();
+
+        assertEquals("delete", field.getText());
+        assertEquals(1, previewCount.get());
+        assertTrue(field.getStyle().contains("#00ffcc"));
+    }
+
     private void invokeHandle(CommandBox box) throws Exception {
         Method method = CommandBox.class.getDeclaredMethod("handleCommandEntered");
         method.setAccessible(true);

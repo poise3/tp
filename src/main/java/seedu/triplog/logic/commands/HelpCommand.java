@@ -31,15 +31,19 @@ public class HelpCommand extends Command {
                     + "  e.g. edit 1 n/Paris sd/2026-05-01";
 
     public static final String DELETE_USAGE =
-            "delete <INDEX> | <START-END> | <PREFIX/VALUE>\n"
+            "delete <INDEX> | <START-END> | <PREFIX/VALUE> | sd/<start-date> ed/<end-date>\n"
                     + "  Removes trip(s) from the currently displayed list.\n"
+                    + "  All delete operations first show a preview before confirmation.\n"
+                    + "  Press Enter again to confirm deletion.\n"
                     + "  INDEX must be a positive integer (1, 2, 3, …).\n"
                     + "  START must be <= END for range deletion.\n"
                     + "  Only one PREFIX can be used for field deletion.\n"
+                    + "  Dates must be YYYY-MM-DD.\n"
                     + "  e.g.  delete 2\n"
                     + "        delete 1-3\n"
                     + "        delete n/Tokyo\n"
-                    + "        delete t/family";
+                    + "        delete t/family\n"
+                    + "        delete sd/2026-03-01 ed/2026-05-10";
 
     public static final String TAG_USAGE =
             "tag <INDEX> <tag-name>\n"
