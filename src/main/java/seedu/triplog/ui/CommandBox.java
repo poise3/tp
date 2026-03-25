@@ -27,6 +27,8 @@ public class CommandBox extends UiPart<Region> {
             + "-fx-text-fill: #ff4d4d;";
 
     private final CommandExecutor commandExecutor;
+    private boolean deletePendingConfirmation = false;
+    private String lastDeleteCommand = null;
 
     @FXML
     private TextField commandTextField;
@@ -37,8 +39,14 @@ public class CommandBox extends UiPart<Region> {
     public CommandBox(CommandExecutor commandExecutor) {
         super(FXML);
         this.commandExecutor = commandExecutor;
-        commandTextField.textProperty().addListener((unused1, unused2,
-                                                     unused3) -> resetStyle());
+        commandTextField.textProperty().addListener((unused1, oldValue, newValue) -> {
+            resetStyle();
+
+            if (!newValue.equals(lastDeleteCommand)) {
+                deletePendingConfirmation = false;
+                lastDeleteCommand = null;
+            }
+        });
     }
 
     /**
@@ -51,11 +59,41 @@ public class CommandBox extends UiPart<Region> {
             return;
         }
 
+        String trimmedCommandText = commandText.trim();
+        boolean isDeleteCommand = trimmedCommandText.equals("delete")
+                || trimmedCommandText.startsWith("delete ");
         try {
+            if (isDeleteCommand) {
+                // Second Enter on the exact same delete command -> confirm actual deletion
+                if (deletePendingConfirmation && commandText.equals(lastDeleteCommand)) {
+                    commandExecutor.execute(commandText);
+                    commandTextField.setText("");
+                    deletePendingConfirmation = false;
+                    lastDeleteCommand = null;
+                    applySuccessStyle();
+                    return;
+                }
+
+                // First Enter -> show preview only
+                String deleteArguments = commandText.substring("delete".length());
+                String previewCommandText = "deletepreview" + deleteArguments;
+
+                commandExecutor.execute(previewCommandText);
+
+                deletePendingConfirmation = true;
+                lastDeleteCommand = commandText;
+                applySuccessStyle();
+                return;
+            }
+
+            // All non-delete commands behave normally
             commandExecutor.execute(commandText);
             commandTextField.setText("");
             applySuccessStyle();
+
         } catch (CommandException | ParseException e) {
+            deletePendingConfirmation = false;
+            lastDeleteCommand = null;
             applyErrorStyle();
             applyShakeAnimation();
         }

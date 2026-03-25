@@ -1,5 +1,6 @@
 package seedu.triplog.logic.commands;
 
+import seedu.triplog.logic.commands.exceptions.CommandException;
 import seedu.triplog.model.Model;
 
 /**
@@ -31,15 +32,19 @@ public class HelpCommand extends Command {
                     + "  e.g. edit 1 n/Paris sd/2026-05-01";
 
     public static final String DELETE_USAGE =
-            "delete <INDEX> | <START-END> | <PREFIX/VALUE>\n"
+            "delete <INDEX> | <START-END> | <PREFIX/VALUE> | sd/<start-date> ed/<end-date>\n"
                     + "  Removes trip(s) from the currently displayed list.\n"
+                    + "  All delete operations first show a preview before confirmation.\n"
+                    + "  Press Enter again to confirm deletion.\n"
                     + "  INDEX must be a positive integer (1, 2, 3, …).\n"
                     + "  START must be <= END for range deletion.\n"
                     + "  Only one PREFIX can be used for field deletion.\n"
+                    + "  Dates must be YYYY-MM-DD.\n"
                     + "  e.g.  delete 2\n"
                     + "        delete 1-3\n"
                     + "        delete n/Tokyo\n"
-                    + "        delete t/family";
+                    + "        delete t/family\n"
+                    + "        delete sd/2026-03-01 ed/2026-05-10";
 
     public static final String TAG_USAGE =
             "tag <INDEX> <tag-name>\n"
@@ -74,14 +79,14 @@ public class HelpCommand extends Command {
     }
 
     @Override
-    public CommandResult execute(Model model) {
+    public CommandResult execute(Model model) throws CommandException {
         if (argument.isEmpty()) {
             return new CommandResult(SHOWING_HELP_MESSAGE, true, false);
         }
         return new CommandResult(getUsageForCommand(argument), false, false);
     }
 
-    private static String getUsageForCommand(String commandWord) {
+    private static String getUsageForCommand(String commandWord) throws CommandException {
         switch (commandWord) {
         case COMMAND_WORD:
             return MESSAGE_USAGE;
@@ -100,7 +105,7 @@ public class HelpCommand extends Command {
         case ListCommand.COMMAND_WORD:
             return LIST_USAGE;
         default:
-            return String.format(MESSAGE_UNKNOWN_HELP_COMMAND, commandWord);
+            throw new CommandException(String.format(MESSAGE_UNKNOWN_HELP_COMMAND, commandWord));
         }
     }
 }

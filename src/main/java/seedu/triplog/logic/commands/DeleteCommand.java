@@ -24,7 +24,8 @@ public class DeleteCommand extends Command {
     public static final String MESSAGE_USAGE = COMMAND_WORD
             + ": Deletes trip(s) from the displayed list.\n"
             + "Usage: delete INDEX | START-END | "
-            + "n/NAME | p/PHONE | e/EMAIL | a/ADDRESS | sd/START_DATE | ed/END_DATE | t/TAG";
+            + "n/NAME | p/PHONE | e/EMAIL | a/ADDRESS | "
+            + "sd/START_DATE | ed/END_DATE | sd/START_DATE ed/END_DATE | t/TAG";
 
     public static final String MESSAGE_DELETE_TRIP_SUCCESS = "Deleted %1$d trip.\n%2$s";
     public static final String MESSAGE_DELETE_TRIPS_SUCCESS = "Deleted %1$d trips.\n%2$s";
@@ -42,6 +43,10 @@ public class DeleteCommand extends Command {
             "Range is out of range of the currently displayed trip list.";
     public static final String MESSAGE_NO_MATCHING_TRIPS =
             "No trips in the currently displayed list matched the given delete criteria.";
+    public static final String MESSAGE_PREVIEW_DELETE_TRIP = "Preview: 1 trip will be deleted.\n";
+    public static final String MESSAGE_PREVIEW_DELETE_TRIPS = "Preview: %1$d trips will be deleted.\n";
+    public static final String MESSAGE_PREVIEW_FOOTER =
+            "\nPress Enter again to confirm deletion, or edit the command to cancel.";
 
     private enum DeleteMode {
         SINGLE,
@@ -78,6 +83,8 @@ public class DeleteCommand extends Command {
         this.startIndex = startIndex;
         this.endIndex = endIndex;
         this.predicate = null;
+        assert startIndex.getZeroBased() <= endIndex.getZeroBased()
+                : "startIndex should not be after endIndex";
     }
 
     /**
@@ -95,6 +102,13 @@ public class DeleteCommand extends Command {
     @Override
     public CommandResult execute(Model model) throws CommandException {
         requireNonNull(model);
+
+        int activeModes = 0;
+        activeModes += targetIndex != null ? 1 : 0;
+        activeModes += startIndex != null && endIndex != null ? 1 : 0;
+        activeModes += predicate != null ? 1 : 0;
+
+        assert activeModes == 1 : "Exactly one delete mode should be active";
         List<Trip> lastShownList = model.getFilteredTripList();
 
         switch (mode) {
@@ -107,6 +121,77 @@ public class DeleteCommand extends Command {
         default:
             throw new AssertionError("Unknown delete mode");
         }
+    }
+
+    /**
+     * Returns the list of trips that would be deleted by this command.
+     *
+     * @param model The model containing the currently displayed trip list.
+     * @return The list of trips to be deleted.
+     * @throws CommandException If the delete target is invalid or no trips match the criteria.
+     */
+    public List<Trip> getTripsToDelete(Model model) throws CommandException {
+        requireNonNull(model);
+        List<Trip> lastShownList = model.getFilteredTripList();
+
+        switch (mode) {
+        case SINGLE:
+            if (targetIndex.getZeroBased() >= lastShownList.size()) {
+                throw new CommandException(MESSAGE_INDEX_OUT_OF_RANGE);
+            }
+            return List.of(lastShownList.get(targetIndex.getZeroBased()));
+
+        case RANGE:
+            if (startIndex.getZeroBased() >= lastShownList.size()
+                    || endIndex.getZeroBased() >= lastShownList.size()) {
+                throw new CommandException(MESSAGE_RANGE_OUT_OF_RANGE);
+            }
+            return new ArrayList<>(
+                    lastShownList.subList(startIndex.getZeroBased(), endIndex.getZeroBased() + 1));
+
+        case FILTER:
+            List<Trip> tripsToDelete = lastShownList.stream()
+                    .filter(predicate)
+                    .toList();
+
+            if (tripsToDelete.isEmpty()) {
+                throw new CommandException(MESSAGE_NO_MATCHING_TRIPS);
+            }
+            return tripsToDelete;
+
+        default:
+            throw new AssertionError("Unknown delete mode");
+        }
+    }
+
+    /**
+     * Builds a preview message showing the trips that will be deleted upon confirmation.
+     *
+     * @param tripsToDelete The list of trips to be deleted.
+     * @return A formatted preview message for display to the user.
+     */
+    public String buildPreviewMessage(List<Trip> tripsToDelete) {
+        StringBuilder sb = new StringBuilder();
+
+        if (tripsToDelete.size() == 1) {
+            sb.append(MESSAGE_PREVIEW_DELETE_TRIP);
+        } else {
+            sb.append(String.format(MESSAGE_PREVIEW_DELETE_TRIPS, tripsToDelete.size()));
+        }
+
+        for (int i = 0; i < tripsToDelete.size(); i++) {
+            Trip trip = tripsToDelete.get(i);
+            sb.append(i + 1).append(". ")
+                    .append(trip.getName())
+                    .append(" (")
+                    .append(trip.getStartDate())
+                    .append(" to ")
+                    .append(trip.getEndDate())
+                    .append(")\n");
+        }
+
+        sb.append(MESSAGE_PREVIEW_FOOTER);
+        return sb.toString().trim();
     }
 
     private CommandResult executeSingleDelete(Model model, List<Trip> lastShownList) throws CommandException {

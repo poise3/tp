@@ -8,6 +8,9 @@ import static seedu.triplog.logic.commands.CommandTestUtil.assertCommandSuccess;
 import static seedu.triplog.logic.commands.CommandTestUtil.showTripAtIndex;
 import static seedu.triplog.testutil.TypicalIndexes.INDEX_FIRST_TRIP;
 import static seedu.triplog.testutil.TypicalIndexes.INDEX_SECOND_TRIP;
+import static seedu.triplog.testutil.TypicalTrips.ALICE;
+import static seedu.triplog.testutil.TypicalTrips.ELLE;
+import static seedu.triplog.testutil.TypicalTrips.FIONA;
 import static seedu.triplog.testutil.TypicalTrips.getTypicalTripLog;
 
 import java.util.Set;
@@ -21,6 +24,7 @@ import seedu.triplog.model.UserPrefs;
 import seedu.triplog.model.tag.Tag;
 import seedu.triplog.model.trip.Name;
 import seedu.triplog.model.trip.Trip;
+import seedu.triplog.model.trip.TripDate;
 import seedu.triplog.model.trip.TripMatchesDeletePredicate;
 
 /**
@@ -133,6 +137,76 @@ public class DeleteCommandTest {
     }
 
     @Test
+    public void getTripsToDelete_singleIndex_returnsTrip() throws Exception {
+        DeleteCommand deleteCommand = new DeleteCommand(INDEX_FIRST_TRIP);
+
+        assertEquals(1, deleteCommand.getTripsToDelete(model).size());
+        assertEquals(model.getFilteredTripList().get(0), deleteCommand.getTripsToDelete(model).get(0));
+    }
+
+    @Test
+    public void getTripsToDelete_range_returnsTrips() throws Exception {
+        DeleteCommand deleteCommand = new DeleteCommand(Index.fromOneBased(1), Index.fromOneBased(2));
+
+        assertEquals(2, deleteCommand.getTripsToDelete(model).size());
+    }
+
+    @Test
+    public void getTripsToDelete_filter_returnsTrips() throws Exception {
+        DeleteCommand deleteCommand = new DeleteCommand(
+                new TripMatchesDeletePredicate(new Name("Alice Pauline"),
+                        null, null, null, null, null, Set.of()));
+
+        assertEquals(1, deleteCommand.getTripsToDelete(model).size());
+    }
+
+    @Test
+    public void buildPreviewMessage_singleTrip_success() {
+        DeleteCommand deleteCommand = new DeleteCommand(INDEX_FIRST_TRIP);
+        Trip trip = model.getFilteredTripList().get(0);
+
+        String message = deleteCommand.buildPreviewMessage(java.util.List.of(trip));
+        assertTrue(message.contains("Preview:"));
+        assertTrue(message.contains(trip.getName().fullName));
+    }
+
+    @Test
+    public void buildPreviewMessage_multipleTrips_success() {
+        DeleteCommand deleteCommand = new DeleteCommand(Index.fromOneBased(1), Index.fromOneBased(2));
+        java.util.List<Trip> trips = java.util.List.of(
+                model.getFilteredTripList().get(0),
+                model.getFilteredTripList().get(1));
+
+        String message = deleteCommand.buildPreviewMessage(trips);
+
+        assertTrue(message.contains("Preview:"));
+        assertTrue(message.contains(trips.get(0).getName().fullName));
+        assertTrue(message.contains(trips.get(1).getName().fullName));
+    }
+
+    @Test
+    public void buildPreviewMessage_singleTrip_usesSingularHeader() {
+        DeleteCommand deleteCommand = new DeleteCommand(INDEX_FIRST_TRIP);
+        Trip trip = model.getFilteredTripList().get(0);
+
+        String message = deleteCommand.buildPreviewMessage(java.util.List.of(trip));
+
+        assertTrue(message.contains("Preview: 1 trip will be deleted."));
+    }
+
+    @Test
+    public void buildPreviewMessage_multipleTrips_usesPluralHeader() {
+        DeleteCommand deleteCommand = new DeleteCommand(Index.fromOneBased(1), Index.fromOneBased(2));
+        java.util.List<Trip> trips = java.util.List.of(
+                model.getFilteredTripList().get(0),
+                model.getFilteredTripList().get(1));
+
+        String message = deleteCommand.buildPreviewMessage(trips);
+
+        assertTrue(message.contains("Preview: 2 trips will be deleted."));
+    }
+
+    @Test
     public void equals() {
         DeleteCommand deleteFirstCommand = new DeleteCommand(INDEX_FIRST_TRIP);
         DeleteCommand deleteSecondCommand = new DeleteCommand(INDEX_SECOND_TRIP);
@@ -170,5 +244,188 @@ public class DeleteCommandTest {
     private void showNoTrip(Model model) {
         model.updateFilteredTripList(p -> false);
         assertTrue(model.getFilteredTripList().isEmpty());
+    }
+
+    @Test
+    public void execute_deleteByDateRange_success() {
+        Model model = new ModelManager(getTypicalTripLog(), new UserPrefs());
+        Model expectedModel = new ModelManager(getTypicalTripLog(), new UserPrefs());
+
+        DeleteCommand deleteCommand = new DeleteCommand(
+                new TripMatchesDeletePredicate(
+                        null, null, null, null,
+                        new TripDate("2026-03-01"),
+                        new TripDate("2026-05-10"),
+                        Set.of()));
+
+        expectedModel.deleteTrip(ALICE);
+        expectedModel.deleteTrip(ELLE);
+        expectedModel.deleteTrip(FIONA);
+
+        String expectedSummary = TripSummaryUtil.calculateSummary(expectedModel.getFilteredTripList());
+        String expectedMessage = String.format(DeleteCommand.MESSAGE_DELETE_TRIPS_SUCCESS, 3, expectedSummary);
+
+        assertCommandSuccess(deleteCommand, model, expectedMessage, expectedModel);
+    }
+
+    @Test
+    public void execute_deleteByExactStartDate_success() {
+        Model model = new ModelManager(getTypicalTripLog(), new UserPrefs());
+        Model expectedModel = new ModelManager(getTypicalTripLog(), new UserPrefs());
+
+        DeleteCommand deleteCommand = new DeleteCommand(
+                new TripMatchesDeletePredicate(
+                        null, null, null, null,
+                        new TripDate("2026-03-01"),
+                        null,
+                        Set.of()));
+
+        expectedModel.deleteTrip(FIONA);
+
+        String expectedSummary = TripSummaryUtil.calculateSummary(expectedModel.getFilteredTripList());
+        String expectedMessage = String.format(DeleteCommand.MESSAGE_DELETE_TRIP_SUCCESS, 1, expectedSummary);
+
+        assertCommandSuccess(deleteCommand, model, expectedMessage, expectedModel);
+    }
+
+    @Test
+    public void execute_deleteByExactEndDate_success() {
+        Model model = new ModelManager(getTypicalTripLog(), new UserPrefs());
+        Model expectedModel = new ModelManager(getTypicalTripLog(), new UserPrefs());
+
+        DeleteCommand deleteCommand = new DeleteCommand(
+                new TripMatchesDeletePredicate(
+                        null, null, null, null,
+                        null,
+                        new TripDate("2026-04-10"),
+                        Set.of()));
+
+        expectedModel.deleteTrip(ALICE);
+
+        String expectedSummary = TripSummaryUtil.calculateSummary(expectedModel.getFilteredTripList());
+        String expectedMessage = String.format(DeleteCommand.MESSAGE_DELETE_TRIP_SUCCESS, 1, expectedSummary);
+
+        assertCommandSuccess(deleteCommand, model, expectedMessage, expectedModel);
+    }
+
+    @Test
+    public void executeDeleteByDateRange_noMatchThrowsException() {
+        Model model = new ModelManager(getTypicalTripLog(), new UserPrefs());
+
+        DeleteCommand deleteCommand = new DeleteCommand(
+                new TripMatchesDeletePredicate(
+                        null, null, null, null,
+                        new TripDate("2025-01-01"),
+                        new TripDate("2025-01-10"),
+                        Set.of()));
+
+        assertCommandFailure(deleteCommand, model, DeleteCommand.MESSAGE_NO_MATCHING_TRIPS);
+    }
+
+    @Test
+    public void execute_validSingleElementRange_success() {
+        Model model = new ModelManager(getTypicalTripLog(), new UserPrefs());
+        Model expectedModel = new ModelManager(getTypicalTripLog(), new UserPrefs());
+
+        DeleteCommand deleteCommand = new DeleteCommand(Index.fromOneBased(2), Index.fromOneBased(2));
+
+        Trip tripToDelete = expectedModel.getFilteredTripList().get(1);
+        expectedModel.deleteTrip(tripToDelete);
+
+        String expectedSummary = TripSummaryUtil.calculateSummary(expectedModel.getFilteredTripList());
+        String expectedMessage = String.format(DeleteCommand.MESSAGE_DELETE_TRIP_SUCCESS, 1, expectedSummary);
+
+        assertCommandSuccess(deleteCommand, model, expectedMessage, expectedModel);
+    }
+
+    @Test
+    public void execute_validSingleElementRange_returnsSingleDeleteMessage() {
+        Model model = new ModelManager(getTypicalTripLog(), new UserPrefs());
+        Model expectedModel = new ModelManager(getTypicalTripLog(), new UserPrefs());
+
+        DeleteCommand deleteCommand = new DeleteCommand(Index.fromOneBased(2), Index.fromOneBased(2));
+
+        Trip tripToDelete = expectedModel.getFilteredTripList().get(1);
+        expectedModel.deleteTrip(tripToDelete);
+
+        String expectedSummary = TripSummaryUtil.calculateSummary(expectedModel.getFilteredTripList());
+        String expectedMessage = String.format(DeleteCommand.MESSAGE_DELETE_TRIP_SUCCESS, 1, expectedSummary);
+
+        assertCommandSuccess(deleteCommand, model, expectedMessage, expectedModel);
+    }
+
+    @Test
+    public void execute_filterDeleteSingleMatch_returnsSingleDeleteMessage() {
+        Model model = new ModelManager(getTypicalTripLog(), new UserPrefs());
+        Model expectedModel = new ModelManager(getTypicalTripLog(), new UserPrefs());
+
+        Trip tripToDelete = expectedModel.getFilteredTripList().get(0);
+        DeleteCommand deleteCommand = new DeleteCommand(
+                trip -> trip.equals(model.getFilteredTripList().get(0)));
+
+        expectedModel.deleteTrip(tripToDelete);
+
+        String expectedSummary = TripSummaryUtil.calculateSummary(expectedModel.getFilteredTripList());
+        String expectedMessage = String.format(DeleteCommand.MESSAGE_DELETE_TRIP_SUCCESS, 1, expectedSummary);
+
+        assertCommandSuccess(deleteCommand, model, expectedMessage, expectedModel);
+    }
+
+    @Test
+    public void getTripsToDelete_invalidRange_throwsCommandException() {
+        DeleteCommand deleteCommand = new DeleteCommand(
+                Index.fromOneBased(1),
+                Index.fromOneBased(model.getFilteredTripList().size() + 1));
+
+        assertCommandFailure(deleteCommand, model, DeleteCommand.MESSAGE_RANGE_OUT_OF_RANGE);
+    }
+
+    @Test
+    public void getTripsToDelete_filterNoMatch_throwsCommandException() {
+        DeleteCommand deleteCommand = new DeleteCommand(
+                new TripMatchesDeletePredicate(
+                        new Name("Nonexistent"),
+                        null, null, null, null, null, Set.of()));
+
+        assertCommandFailure(deleteCommand, model, DeleteCommand.MESSAGE_NO_MATCHING_TRIPS);
+    }
+
+    @Test
+    public void equals_filterMode() {
+        TripMatchesDeletePredicate predicate1 = new TripMatchesDeletePredicate(
+                new Name("Alice Pauline"), null, null, null, null, null, Set.of());
+        TripMatchesDeletePredicate predicate2 = new TripMatchesDeletePredicate(
+                new Name("Alice Pauline"), null, null, null, null, null, Set.of());
+        TripMatchesDeletePredicate predicate3 = new TripMatchesDeletePredicate(
+                new Name("Elle Tan"), null, null, null, null, null, Set.of());
+
+        DeleteCommand deleteFilterCommand1 = new DeleteCommand(predicate1);
+        DeleteCommand deleteFilterCommand2 = new DeleteCommand(predicate2);
+        DeleteCommand deleteFilterCommand3 = new DeleteCommand(predicate3);
+
+        assertTrue(deleteFilterCommand1.equals(deleteFilterCommand2));
+        assertFalse(deleteFilterCommand1.equals(deleteFilterCommand3));
+    }
+
+    @Test
+    public void toStringMethod_rangeMode() {
+        Index startIndex = Index.fromOneBased(1);
+        Index endIndex = Index.fromOneBased(2);
+        DeleteCommand deleteCommand = new DeleteCommand(startIndex, endIndex);
+
+        String expected = DeleteCommand.class.getCanonicalName()
+                + "{mode=RANGE, startIndex=" + startIndex + ", endIndex=" + endIndex + "}";
+
+        assertEquals(expected, deleteCommand.toString());
+    }
+
+    @Test
+    public void toStringMethod_filterMode() {
+        TripMatchesDeletePredicate predicate = new TripMatchesDeletePredicate(
+                new Name("Alice Pauline"), null, null, null, null, null, Set.of());
+        DeleteCommand deleteCommand = new DeleteCommand(predicate);
+        String expected = DeleteCommand.class.getCanonicalName()
+                + "{mode=FILTER, predicate=" + predicate + "}";
+        assertEquals(expected, deleteCommand.toString());
     }
 }
