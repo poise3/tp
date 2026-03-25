@@ -97,6 +97,17 @@ public class ResultDisplay extends UiPart<Region> {
      */
     private boolean isError(String message) {
         String lower = message.toLowerCase();
-        return lower.contains("invalid") || lower.contains("unknown") || lower.contains("error");
+        return lower.contains("invalid")
+                || lower.contains("unknown")
+                || lower.contains("error")
+                || lower.contains("cannot")
+                || lower.contains("failed")
+                || lower.contains("exception")
+                || lower.contains("must")
+                || lower.contains("no such")
+                || lower.contains("not allowed")
+                || lower.contains("insufficient")
+                || lower.contains("duplicate");
     }
 }
+

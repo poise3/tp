@@ -8,6 +8,9 @@ import static seedu.triplog.logic.commands.CommandTestUtil.assertCommandSuccess;
 import static seedu.triplog.logic.commands.CommandTestUtil.showTripAtIndex;
 import static seedu.triplog.testutil.TypicalIndexes.INDEX_FIRST_TRIP;
 import static seedu.triplog.testutil.TypicalIndexes.INDEX_SECOND_TRIP;
+import static seedu.triplog.testutil.TypicalTrips.ALICE;
+import static seedu.triplog.testutil.TypicalTrips.ELLE;
+import static seedu.triplog.testutil.TypicalTrips.FIONA;
 import static seedu.triplog.testutil.TypicalTrips.getTypicalTripLog;
 
 import java.util.Set;
@@ -21,6 +24,7 @@ import seedu.triplog.model.UserPrefs;
 import seedu.triplog.model.tag.Tag;
 import seedu.triplog.model.trip.Name;
 import seedu.triplog.model.trip.Trip;
+import seedu.triplog.model.trip.TripDate;
 import seedu.triplog.model.trip.TripMatchesDeletePredicate;
 
 /**
@@ -170,5 +174,81 @@ public class DeleteCommandTest {
     private void showNoTrip(Model model) {
         model.updateFilteredTripList(p -> false);
         assertTrue(model.getFilteredTripList().isEmpty());
+    }
+
+    @Test
+    public void execute_deleteByDateRange_success() {
+        Model model = new ModelManager(getTypicalTripLog(), new UserPrefs());
+        Model expectedModel = new ModelManager(getTypicalTripLog(), new UserPrefs());
+
+        DeleteCommand deleteCommand = new DeleteCommand(
+                new TripMatchesDeletePredicate(
+                        null, null, null, null,
+                        new TripDate("2026-03-01"),
+                        new TripDate("2026-05-10"),
+                        Set.of()));
+
+        expectedModel.deleteTrip(ALICE);
+        expectedModel.deleteTrip(ELLE);
+        expectedModel.deleteTrip(FIONA);
+
+        String expectedSummary = TripSummaryUtil.calculateSummary(expectedModel.getFilteredTripList());
+        String expectedMessage = String.format(DeleteCommand.MESSAGE_DELETE_TRIPS_SUCCESS, 3, expectedSummary);
+
+        assertCommandSuccess(deleteCommand, model, expectedMessage, expectedModel);
+    }
+
+    @Test
+    public void execute_deleteByExactStartDate_success() {
+        Model model = new ModelManager(getTypicalTripLog(), new UserPrefs());
+        Model expectedModel = new ModelManager(getTypicalTripLog(), new UserPrefs());
+
+        DeleteCommand deleteCommand = new DeleteCommand(
+                new TripMatchesDeletePredicate(
+                        null, null, null, null,
+                        new TripDate("2026-03-01"),
+                        null,
+                        Set.of()));
+
+        expectedModel.deleteTrip(FIONA);
+
+        String expectedSummary = TripSummaryUtil.calculateSummary(expectedModel.getFilteredTripList());
+        String expectedMessage = String.format(DeleteCommand.MESSAGE_DELETE_TRIP_SUCCESS, 1, expectedSummary);
+
+        assertCommandSuccess(deleteCommand, model, expectedMessage, expectedModel);
+    }
+
+    @Test
+    public void execute_deleteByExactEndDate_success() {
+        Model model = new ModelManager(getTypicalTripLog(), new UserPrefs());
+        Model expectedModel = new ModelManager(getTypicalTripLog(), new UserPrefs());
+
+        DeleteCommand deleteCommand = new DeleteCommand(
+                new TripMatchesDeletePredicate(
+                        null, null, null, null,
+                        null,
+                        new TripDate("2026-04-10"),
+                        Set.of()));
+
+        expectedModel.deleteTrip(ALICE);
+
+        String expectedSummary = TripSummaryUtil.calculateSummary(expectedModel.getFilteredTripList());
+        String expectedMessage = String.format(DeleteCommand.MESSAGE_DELETE_TRIP_SUCCESS, 1, expectedSummary);
+
+        assertCommandSuccess(deleteCommand, model, expectedMessage, expectedModel);
+    }
+
+    @Test
+    public void executeDeleteByDateRange_noMatchThrowsException() {
+        Model model = new ModelManager(getTypicalTripLog(), new UserPrefs());
+
+        DeleteCommand deleteCommand = new DeleteCommand(
+                new TripMatchesDeletePredicate(
+                        null, null, null, null,
+                        new TripDate("2025-01-01"),
+                        new TripDate("2025-01-10"),
+                        Set.of()));
+
+        assertCommandFailure(deleteCommand, model, DeleteCommand.MESSAGE_NO_MATCHING_TRIPS);
     }
 }
