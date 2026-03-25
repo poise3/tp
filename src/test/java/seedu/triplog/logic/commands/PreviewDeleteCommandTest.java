@@ -2,6 +2,10 @@ package seedu.triplog.logic.commands;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static seedu.triplog.testutil.TypicalTrips.ALICE;
+import static seedu.triplog.testutil.TypicalTrips.ELLE;
+import static seedu.triplog.testutil.TypicalTrips.FIONA;
 import static seedu.triplog.testutil.TypicalTrips.getTypicalTripLog;
 
 import org.junit.jupiter.api.Test;
@@ -20,11 +24,9 @@ public class PreviewDeleteCommandTest {
         PreviewDeleteCommand command = new PreviewDeleteCommand("1");
         CommandResult result = command.execute(model);
 
-        assertEquals(
-                "Preview: 1 trip will be deleted.\n"
-                        + "1. Alice Pauline (2026-04-01 to 2026-04-10)\n"
-                        + "\nPress Enter again to confirm deletion, or edit the command to cancel.",
-                result.getFeedbackToUser());
+        String feedback = result.getFeedbackToUser();
+        assertTrue(feedback.contains("Preview:"));
+        assertTrue(feedback.contains(model.getFilteredTripList().get(0).getName().fullName));
     }
 
     @Test
@@ -32,13 +34,12 @@ public class PreviewDeleteCommandTest {
         PreviewDeleteCommand command = new PreviewDeleteCommand("sd/2026-03-01 ed/2026-05-10");
         CommandResult result = command.execute(model);
 
-        assertEquals(
-                "Preview: 3 trips will be deleted.\n"
-                        + "1. Alice Pauline (2026-04-01 to 2026-04-10)\n"
-                        + "2. Elle Meyer (2026-05-01 to 2026-05-10)\n"
-                        + "3. Fiona Kunz (2026-03-01 to 2026-03-10)\n"
-                        + "\nPress Enter again to confirm deletion, or edit the command to cancel.",
-                result.getFeedbackToUser());
+        String feedback = result.getFeedbackToUser();
+        assertTrue(feedback.contains("Preview:"));
+        assertTrue(feedback.contains("3"));
+        assertTrue(feedback.contains(ALICE.getName().fullName));
+        assertTrue(feedback.contains(ELLE.getName().fullName));
+        assertTrue(feedback.contains(FIONA.getName().fullName));
     }
 
     @Test

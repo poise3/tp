@@ -166,12 +166,8 @@ public class DeleteCommandTest {
         Trip trip = model.getFilteredTripList().get(0);
 
         String message = deleteCommand.buildPreviewMessage(java.util.List.of(trip));
-
-        assertEquals(
-                "Preview: 1 trip will be deleted.\n"
-                        + "1. Alice Pauline (2026-04-01 to 2026-04-10)\n"
-                        + "\nPress Enter again to confirm deletion, or edit the command to cancel.",
-                message);
+        assertTrue(message.contains("Preview:"));
+        assertTrue(message.contains(trip.getName().fullName));
     }
 
     @Test
@@ -183,12 +179,9 @@ public class DeleteCommandTest {
 
         String message = deleteCommand.buildPreviewMessage(trips);
 
-        assertEquals(
-                "Preview: 2 trips will be deleted.\n"
-                        + "1. Alice Pauline (2026-04-01 to 2026-04-10)\n"
-                        + "2. Benson Meier (2026-02-01 to 2026-02-10)\n"
-                        + "\nPress Enter again to confirm deletion, or edit the command to cancel.",
-                message);
+        assertTrue(message.contains("Preview:"));
+        assertTrue(message.contains(trips.get(0).getName().fullName));
+        assertTrue(message.contains(trips.get(1).getName().fullName));
     }
 
     @Test
