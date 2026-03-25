@@ -25,6 +25,10 @@ public class TripCard extends UiPart<Region> {
     @FXML
     private Label id;
     @FXML
+    private Label startDate;
+    @FXML
+    private Label endDate;
+    @FXML
     private Label phone;
     @FXML
     private Label address;
@@ -32,10 +36,17 @@ public class TripCard extends UiPart<Region> {
     private Label email;
     @FXML
     private FlowPane tags;
+
     @FXML
-    private Label startDate;
+    private HBox startDateBox;
     @FXML
-    private Label endDate;
+    private HBox endDateBox;
+    @FXML
+    private HBox phoneBox;
+    @FXML
+    private HBox addressBox;
+    @FXML
+    private HBox emailBox;
 
     /**
      * Creates a {@code TripCard} with the given {@code Trip} and index to display.
@@ -46,24 +57,23 @@ public class TripCard extends UiPart<Region> {
         id.setText(displayedIndex + ". ");
         name.setText(trip.getName().fullName);
 
-        setOptionalLabel(phone, "Phone: ", trip.getPhoneDisplay());
-        setOptionalLabel(address, "Address: ", trip.getAddressDisplay());
-        setOptionalLabel(email, "Email: ", trip.getEmailDisplay());
-        setOptionalLabel(startDate, "Start: ", trip.getStartDateDisplay());
-        setOptionalLabel(endDate, "End: ", trip.getEndDateDisplay());
+        setOptionalLabel(phone, "Phone: ", trip.getPhoneDisplay(), phoneBox);
+        setOptionalLabel(address, "Address: ", trip.getAddressDisplay(), addressBox);
+        setOptionalLabel(email, "Email: ", trip.getEmailDisplay(), emailBox);
+        setOptionalLabel(startDate, "Start: ", trip.getStartDateDisplay(), startDateBox);
+        setOptionalLabel(endDate, "End: ", trip.getEndDateDisplay(), endDateBox);
         setTags(trip);
     }
 
     /**
      * Sets optional field label on the UI or hides it if value is null
      */
-    private void setOptionalLabel(Label label, String prefix, String value) {
+    private void setOptionalLabel(Label label, String prefix, String value, HBox box) {
         if (value != null) {
             label.setText(prefix + value);
         } else {
-            label.setText("");
-            label.setManaged(false);
-            label.setVisible(false);
+            box.setVisible(false);
+            box.setManaged(false);
         }
     }
 
