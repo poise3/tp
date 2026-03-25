@@ -107,5 +107,7 @@ public class ResultDisplay extends UiPart<Region> {
                 || lower.contains("no such")
                 || lower.contains("not allowed")
                 || lower.contains("insufficient")
-                || lower.contains("duplicate");    }
+                || lower.contains("duplicate");
+    }
 }
+

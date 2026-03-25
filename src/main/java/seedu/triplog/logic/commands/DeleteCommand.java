@@ -123,6 +123,13 @@ public class DeleteCommand extends Command {
         }
     }
 
+    /**
+     * Returns the list of trips that would be deleted by this command.
+     *
+     * @param model The model containing the currently displayed trip list.
+     * @return The list of trips to be deleted.
+     * @throws CommandException If the delete target is invalid or no trips match the criteria.
+     */
     public List<Trip> getTripsToDelete(Model model) throws CommandException {
         requireNonNull(model);
         List<Trip> lastShownList = model.getFilteredTripList();
@@ -157,6 +164,12 @@ public class DeleteCommand extends Command {
         }
     }
 
+    /**
+     * Builds a preview message showing the trips that will be deleted upon confirmation.
+     *
+     * @param tripsToDelete The list of trips to be deleted.
+     * @return A formatted preview message for display to the user.
+     */
     public String buildPreviewMessage(List<Trip> tripsToDelete) {
         StringBuilder sb = new StringBuilder();
 

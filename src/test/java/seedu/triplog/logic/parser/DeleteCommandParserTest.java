@@ -3,6 +3,7 @@ package seedu.triplog.logic.parser;
 import static seedu.triplog.logic.Messages.MESSAGE_INVALID_COMMAND_FORMAT;
 import static seedu.triplog.logic.parser.CommandParserTestUtil.assertParseFailure;
 import static seedu.triplog.logic.parser.CommandParserTestUtil.assertParseSuccess;
+import static seedu.triplog.logic.parser.DeleteCommandParser.MESSAGE_MULTIPLE_DELETE_FIELDS;
 import static seedu.triplog.testutil.TypicalIndexes.INDEX_FIRST_TRIP;
 
 import java.util.Set;
@@ -13,8 +14,8 @@ import seedu.triplog.commons.core.index.Index;
 import seedu.triplog.logic.commands.DeleteCommand;
 import seedu.triplog.model.tag.Tag;
 import seedu.triplog.model.trip.Name;
-import seedu.triplog.model.trip.TripMatchesDeletePredicate;
 import seedu.triplog.model.trip.TripDate;
+import seedu.triplog.model.trip.TripMatchesDeletePredicate;
 
 /**
  * Contains unit tests for DeleteCommandParser.
@@ -68,9 +69,9 @@ public class DeleteCommandParserTest {
     @Test
     public void parse_multipleFields_throwsParseException() {
         assertParseFailure(parser, "n/Tokyo t/family",
-                "Delete by field accepts exactly one field only.");
+                MESSAGE_MULTIPLE_DELETE_FIELDS);
         assertParseFailure(parser, "n/Tokyo n/India",
-                "Delete by field accepts exactly one field only.");
+                MESSAGE_MULTIPLE_DELETE_FIELDS);
     }
 
     @Test
@@ -110,6 +111,6 @@ public class DeleteCommandParserTest {
     @Test
     public void parse_dateRangeWithAnotherField_throwsParseException() {
         assertParseFailure(parser, "n/Tokyo sd/2026-03-01 ed/2026-03-10",
-                "Delete by field accepts exactly one field only.");
+                MESSAGE_MULTIPLE_DELETE_FIELDS);
     }
 }

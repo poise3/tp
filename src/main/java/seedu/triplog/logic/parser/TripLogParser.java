@@ -18,9 +18,9 @@ import seedu.triplog.logic.commands.FilterCommand;
 import seedu.triplog.logic.commands.FindCommand;
 import seedu.triplog.logic.commands.HelpCommand;
 import seedu.triplog.logic.commands.ListCommand;
+import seedu.triplog.logic.commands.PreviewDeleteCommand;
 import seedu.triplog.logic.commands.TagCommand;
 import seedu.triplog.logic.parser.exceptions.ParseException;
-import seedu.triplog.logic.commands.PreviewDeleteCommand;
 
 /**
  * Parses user input.

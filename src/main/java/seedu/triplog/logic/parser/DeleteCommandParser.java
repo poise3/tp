@@ -28,10 +28,9 @@ import seedu.triplog.model.trip.TripMatchesDeletePredicate;
  * Parses input arguments and creates a new DeleteCommand object.
  */
 public class DeleteCommandParser implements Parser<DeleteCommand> {
-
-    private static final Pattern RANGE_PATTERN = Pattern.compile("\\s*(\\d+)\\s*-\\s*(\\d+)\\s*");
-    private static final String MESSAGE_MULTIPLE_DELETE_FIELDS =
+    static final String MESSAGE_MULTIPLE_DELETE_FIELDS =
             "Delete by field accepts exactly one field only, except for sd/ and ed/ used together as a date range.";
+    private static final Pattern RANGE_PATTERN = Pattern.compile("\\s*(\\d+)\\s*-\\s*(\\d+)\\s*");
     private static final String MESSAGE_INVALID_DATE_RANGE =
             "Start date cannot be after end date.";
     /**
