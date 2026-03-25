@@ -1,5 +1,6 @@
 package seedu.triplog.logic.commands;
 
+import seedu.triplog.logic.commands.exceptions.CommandException;
 import seedu.triplog.model.Model;
 
 /**
@@ -78,14 +79,14 @@ public class HelpCommand extends Command {
     }
 
     @Override
-    public CommandResult execute(Model model) {
+    public CommandResult execute(Model model) throws CommandException {
         if (argument.isEmpty()) {
             return new CommandResult(SHOWING_HELP_MESSAGE, true, false);
         }
         return new CommandResult(getUsageForCommand(argument), false, false);
     }
 
-    private static String getUsageForCommand(String commandWord) {
+    private static String getUsageForCommand(String commandWord) throws CommandException {
         switch (commandWord) {
         case COMMAND_WORD:
             return MESSAGE_USAGE;
@@ -104,7 +105,7 @@ public class HelpCommand extends Command {
         case ListCommand.COMMAND_WORD:
             return LIST_USAGE;
         default:
-            return String.format(MESSAGE_UNKNOWN_HELP_COMMAND, commandWord);
+            throw new CommandException(String.format(MESSAGE_UNKNOWN_HELP_COMMAND, commandWord));
         }
     }
 }
