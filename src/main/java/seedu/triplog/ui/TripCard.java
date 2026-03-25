@@ -112,6 +112,26 @@ public class TripCard extends UiPart<Region> {
         return endDate;
     }
 
+    public HBox getPhoneBox() {
+        return phoneBox;
+    }
+
+    public HBox getAddressBox() {
+        return addressBox;
+    }
+
+    public HBox getEmailBox() {
+        return emailBox;
+    }
+
+    public HBox getStartDateBox() {
+        return startDateBox;
+    }
+
+    public HBox getEndDateBox() {
+        return endDateBox;
+    }
+
     public FlowPane getTags() {
         return tags;
     }

@@ -83,18 +83,18 @@ public class TripCardTest {
         assertEquals("", tripCard.getEndDateLabel().getText());
 
         // check that the nodes are unmanaged
-        assertFalse(tripCard.getPhoneLabel().isManaged());
-        assertFalse(tripCard.getAddressLabel().isManaged());
-        assertFalse(tripCard.getEmailLabel().isManaged());
-        assertFalse(tripCard.getStartDateLabel().isManaged());
-        assertFalse(tripCard.getEndDateLabel().isManaged());
+        assertFalse(tripCard.getPhoneBox().isManaged());
+        assertFalse(tripCard.getAddressBox().isManaged());
+        assertFalse(tripCard.getEmailBox().isManaged());
+        assertFalse(tripCard.getStartDateBox().isManaged());
+        assertFalse(tripCard.getEndDateBox().isManaged());
 
         // check that the nodes are not visible
-        assertFalse(tripCard.getPhoneLabel().isVisible());
-        assertFalse(tripCard.getAddressLabel().isVisible());
-        assertFalse(tripCard.getEmailLabel().isVisible());
-        assertFalse(tripCard.getStartDateLabel().isVisible());
-        assertFalse(tripCard.getEndDateLabel().isVisible());
+        assertFalse(tripCard.getPhoneBox().isVisible());
+        assertFalse(tripCard.getAddressBox().isVisible());
+        assertFalse(tripCard.getEmailBox().isVisible());
+        assertFalse(tripCard.getStartDateBox().isVisible());
+        assertFalse(tripCard.getEndDateBox().isVisible());
     }
 
     @Test
