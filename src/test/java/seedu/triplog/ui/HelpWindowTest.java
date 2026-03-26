@@ -40,8 +40,8 @@ public class HelpWindowTest {
     }
 
     @Test
-    public void isCloseKey_nullCode_returnsFalse() {
-        assertFalse(HelpWindow.isCloseKey(null));
+    public void isCloseKey_nullCode_throwsAssertionError() {
+        assertThrows(AssertionError.class, () -> HelpWindow.isCloseKey(null));
     }
 
     @Test
