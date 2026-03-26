@@ -180,16 +180,16 @@ Deletes trip(s) from the currently displayed trip list.
 
 <box type="info" seamless>
 
-**Confirmation required:**  
-All delete operations first show a **preview** of the trips to be deleted.  
+**Confirmation required:**
+All delete operations first show a **preview** of the trips to be deleted.
 Press **Enter again** to confirm the deletion, or edit the command to cancel.
 
 </box>
 
-Format:  
-`delete INDEX`  
-`delete START-END`  
-`delete PREFIX/VALUE`  
+Format:
+`delete INDEX`
+`delete START-END`
+`delete PREFIX/VALUE`
 `delete sd/START_DATE ed/END_DATE`
 
 - The command operates on the currently displayed trip list.
@@ -237,7 +237,7 @@ Examples:
 - `delete n/Tokyo` deletes all trips named "Tokyo".
 - `delete t/family` deletes all trips with the tag "family".
 - `delete sd/2026-03-01` deletes all trips with this start date.
-- 
+
 #### Delete by date range
 
 - Deletes all trips whose dates fall within the specified range.
