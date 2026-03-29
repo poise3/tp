@@ -3,7 +3,6 @@ package seedu.triplog.logic.commands;
 import static java.util.Objects.requireNonNull;
 import static seedu.triplog.model.Model.PREDICATE_SHOW_ALL_TRIPS;
 
-import java.time.temporal.ChronoUnit;
 import java.util.Comparator;
 import java.util.Objects;
 
@@ -29,8 +28,6 @@ public class ListCommand extends Command {
 
     public static final String MESSAGE_INVALID_SORT_KEY = "Invalid sort key! "
             + "Supported keys: name, start, end, len";
-
-    private static final long UNKNOWN_DURATION = -1;
 
     private final String sortKey;
 
@@ -108,8 +105,8 @@ public class ListCommand extends Command {
     }
 
     private Comparator<Trip> getDurationComparator() {
-        Comparator<Trip> lenComparator = (t1, t2) -> Long.compare(calculateDuration(t2),
-                calculateDuration(t1));
+        Comparator<Trip> lenComparator = (t1, t2) -> Long.compare(t2.getDurationInDays(),
+                t1.getDurationInDays());
         return lenComparator.thenComparing(getNameComparator());
     }
 
@@ -128,13 +125,6 @@ public class ListCommand extends Command {
         default:
             return "start date";
         }
-    }
-
-    private long calculateDuration(Trip trip) {
-        if (trip.getStartDate() == null || trip.getEndDate() == null) {
-            return UNKNOWN_DURATION;
-        }
-        return ChronoUnit.DAYS.between(trip.getStartDate().value, trip.getEndDate().value);
     }
 
     @Override
