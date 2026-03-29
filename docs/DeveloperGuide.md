@@ -222,7 +222,7 @@ The mode is determined in `HelpCommand#execute()`:
 * If no argument is given, a `CommandResult` with `showHelp = true` is returned. `MainWindow` detects this flag and calls `handleHelp()` to show the `HelpWindow`.
 * If an argument is given, `getUsageForCommand(argument)` returns the matching usage string, and a regular `CommandResult` is returned. The text is displayed inline in the `ResultDisplay`.
 
-The usage strings (e.g., `ADD_USAGE`, `DELETE_USAGE`) are defined as constants in `HelpCommand` and reused by `HelpWindow` to keep the content consistent between inline help and the popup window.
+The usage strings (e.g., `ADD_USAGE`, `DELETE_USAGE`) are defined as constants in `CommandUsage` and reused by both `HelpCommand` and `HelpWindow` to keep the content consistent between inline help and the popup window.
 
 The `TripLogParser` routes `help` to `HelpCommand`:
 

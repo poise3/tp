@@ -12,7 +12,7 @@ public class CommandUsage {
                     + "  e.g. add n/Tokyo sd/2026-03-01 t/food";
 
     public static final String EDIT_USAGE =
-            "edit INDEX [n/<destination>] [p/<phone>] [e/<email>] [a/<address>] "
+            "edit <INDEX> [n/<destination>] [p/<phone>] [e/<email>] [a/<address>] "
                     + "[sd/<start-date>] [ed/<end-date>] [t/<tag>]...\n"
                     + "  Edits the trip at the specified index. At least one field must be provided.\n"
                     + "  e.g. edit 1 n/Paris sd/2026-05-01";
@@ -49,7 +49,7 @@ public class CommandUsage {
                     + "  e.g. filter sd/2026-01-01 ed/2026-03-31";
 
     public static final String LIST_USAGE =
-            "list [sort/KEY]\n"
+            "list [sort/<key>]\n"
                     + "  Displays all trips with a summary (Upcoming, Ongoing, Completed, Planning).\n"
                     + "  Optional sort keys: name, start, end, len.\n"
                     + "  e.g. list, list sort/name, list sort/len";

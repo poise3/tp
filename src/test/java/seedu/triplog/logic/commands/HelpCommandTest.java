@@ -81,7 +81,7 @@ public class HelpCommandTest {
     @Test
     public void execute_helpArgument_showsInlineUsage() throws CommandException {
         CommandResult result = new HelpCommand("help").execute(model);
-        assertTrue(result.getFeedbackToUser().contains("help"));
+        assertTrue(result.getFeedbackToUser().startsWith("help"));
         assertFalse(result.isShowHelp());
     }
 
