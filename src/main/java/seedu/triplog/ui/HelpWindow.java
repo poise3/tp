@@ -51,6 +51,12 @@ public class HelpWindow extends UiPart<Stage> {
     private Label listUsage;
 
     @FXML
+    private Label clearUsage;
+
+    @FXML
+    private Label exitUsage;
+
+    @FXML
     private Label exitNote;
 
     /**
@@ -69,6 +75,8 @@ public class HelpWindow extends UiPart<Stage> {
         findUsage.setText(CommandUsage.FIND_USAGE);
         filterUsage.setText(CommandUsage.FILTER_USAGE);
         listUsage.setText(CommandUsage.LIST_USAGE);
+        clearUsage.setText(CommandUsage.CLEAR_USAGE);
+        exitUsage.setText(CommandUsage.EXIT_USAGE);
         exitNote.setText(EXIT_NOTE);
         root.addEventFilter(KeyEvent.KEY_PRESSED, event -> {
             if (isCloseKey(event.getCode())) {
