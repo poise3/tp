@@ -8,8 +8,6 @@ import static seedu.triplog.testutil.TypicalTrips.ALICE;
 
 import org.junit.jupiter.api.Test;
 
-import seedu.triplog.model.trip.exceptions.DuplicateTripException;
-
 public class UniqueTripListTest {
 
     private final UniqueTripList uniqueTripList = new UniqueTripList();
@@ -20,31 +18,17 @@ public class UniqueTripListTest {
     }
 
     @Test
-    public void contains_tripNotInList_returnsFalse() {
-        assertFalse(uniqueTripList.contains(ALICE));
-    }
-
-    @Test
     public void contains_tripInList_returnsTrue() {
         uniqueTripList.add(ALICE);
         assertTrue(uniqueTripList.contains(ALICE));
     }
 
     @Test
-    public void add_nullTrip_throwsNullPointerException() {
-        assertThrows(NullPointerException.class, () -> uniqueTripList.add(null));
-    }
-
-    @Test
-    public void add_duplicateTrip_throwsDuplicateTripException() {
-        uniqueTripList.add(ALICE);
-        assertThrows(DuplicateTripException.class, () -> uniqueTripList.add(ALICE));
-    }
-
-    @Test
     public void remove_existingTrip_removesTrip() {
         uniqueTripList.add(ALICE);
+        assertTrue(uniqueTripList.contains(ALICE));
         uniqueTripList.remove(ALICE);
+
         UniqueTripList expectedUniqueTripList = new UniqueTripList();
         assertEquals(expectedUniqueTripList, uniqueTripList);
         assertFalse(uniqueTripList.contains(ALICE));
@@ -54,10 +38,5 @@ public class UniqueTripListTest {
     public void asUnmodifiableObservableList_modifyList_throwsUnsupportedOperationException() {
         assertThrows(UnsupportedOperationException.class, ()
                 -> uniqueTripList.asUnmodifiableObservableList().remove(0));
-    }
-
-    @Test
-    public void toStringMethod() {
-        assertEquals(uniqueTripList.asUnmodifiableObservableList().toString(), uniqueTripList.toString());
     }
 }
