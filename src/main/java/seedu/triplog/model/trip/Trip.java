@@ -3,6 +3,7 @@ package seedu.triplog.model.trip;
 import static seedu.triplog.commons.util.AppUtil.checkArgument;
 import static seedu.triplog.commons.util.CollectionUtil.requireAllNonNull;
 
+import java.time.temporal.ChronoUnit;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
@@ -44,6 +45,8 @@ public class Trip {
 
         return dateComparison;
     };
+
+    private static final long UNKNOWN_DURATION = -1;
 
     // Identity fields
     private final Name name;
@@ -129,6 +132,17 @@ public class Trip {
 
     public TripDate getEndDate() {
         return endDate;
+    }
+
+    /**
+     * Calculates the duration of the trip in days.
+     * Returns -1 if dates are missing.
+     */
+    public long getDurationInDays() {
+        if (startDate == null || endDate == null) {
+            return UNKNOWN_DURATION;
+        }
+        return ChronoUnit.DAYS.between(startDate.value, endDate.value);
     }
 
     public String getPhoneDisplay() {
