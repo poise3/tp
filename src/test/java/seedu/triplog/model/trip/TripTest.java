@@ -187,6 +187,22 @@ public class TripTest {
     }
 
     @Test
+    public void constructor_nameTooLong_throwsIllegalArgumentException() {
+        String longName = "A".repeat(100);
+        assertThrows(IllegalArgumentException.class, () ->
+                new Trip(new Name(longName), null, null, null, Collections.emptySet(), null, null)
+        );
+    }
+
+    @Test
+    public void constructor_validTrip_success() {
+        TripDate start = new TripDate("2025-01-01");
+        TripDate end = new TripDate("2025-12-31");
+        Trip trip = new Trip(new Name("Valid Trip"), null, null, null, Collections.emptySet(), start, end);
+        assertEquals("Valid Trip", trip.getName().toString());
+    }
+
+    @Test
     public void chronologicalComparator_differentDatesAndNulls_sortedChronologically() {
         // Case 1: Both dates present, different dates
         Trip janTrip = new Trip(new Name("A"), null, null, null, Collections.emptySet(),
