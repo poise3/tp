@@ -81,11 +81,7 @@ public class EditCommand extends Command {
         Trip tripToEdit = lastShownList.get(index.getZeroBased());
         Trip editedTrip = createEditedTrip(tripToEdit, editTripDescriptor);
 
-        boolean isDuplicate = model.getTripLog().getTripList().stream()
-                .filter(trip -> !trip.equals(tripToEdit))
-                .anyMatch(trip -> trip.isSameTrip(editedTrip));
-
-        if (isDuplicate) {
+        if (model.hasTripExcluding(editedTrip, tripToEdit)) {
             throw new CommandException(MESSAGE_DUPLICATE_TRIP);
         }
 

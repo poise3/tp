@@ -61,7 +61,11 @@ public class UniqueTripList implements Iterable<Trip> {
             throw new TripNotFoundException();
         }
 
-        if (!target.isSameTrip(editedTrip) && contains(editedTrip)) {
+        boolean isDuplicate = internalList.stream()
+                .filter(trip -> !trip.equals(target))
+                .anyMatch(trip -> trip.isSameTrip(editedTrip));
+
+        if (isDuplicate) {
             throw new DuplicateTripException();
         }
 

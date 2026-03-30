@@ -178,6 +178,11 @@ public class TagCommandTest {
         }
 
         @Override
+        public boolean hasTripExcluding(Trip trip, Trip otherTrip) {
+            throw new AssertionError("This method should not be called.");
+        }
+
+        @Override
         public void deleteTrip(Trip target) {
             throw new AssertionError("This method should not be called.");
         }

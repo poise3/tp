@@ -101,6 +101,14 @@ public class ModelManager implements Model {
     }
 
     @Override
+    public boolean hasTripExcluding(Trip trip, Trip excludedTrip) {
+        requireNonNull(trip);
+        return tripLog.getTripList().stream()
+                .filter(t -> !t.equals(excludedTrip))
+                .anyMatch(t -> t.isSameTrip(trip));
+    }
+
+    @Override
     public void deleteTrip(Trip target) {
         tripLog.removeTrip(target);
     }
