@@ -119,10 +119,13 @@ public class TripLogParserTest {
         // 2. Test mixed case 'HeLp'
         assertTrue(parser.parseCommand("HeLp") instanceof HelpCommand);
 
-        // 3. Test 'EXIT'
+        // 3. Test uppercase 'EXIT'
         assertTrue(parser.parseCommand("EXIT") instanceof ExitCommand);
 
-        // 4. Test 'clear' in caps
+        // 4. Test uppercase 'CLEAR'
         assertTrue(parser.parseCommand("CLEAR") instanceof ClearCommand);
+
+        // 5. Test uppercase 'DELETE'
+        assertTrue(parser.parseCommand("DELETE 1") instanceof DeleteCommand);
     }
 }
