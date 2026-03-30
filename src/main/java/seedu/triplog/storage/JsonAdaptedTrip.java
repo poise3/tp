@@ -84,7 +84,7 @@ class JsonAdaptedTrip {
 
         if (name == null) {
             throw new IllegalValueException(String.format(MISSING_FIELD_MESSAGE_FORMAT,
-                                                          Name.class.getSimpleName()));
+                    Name.class.getSimpleName()));
         }
         if (!Name.isValidName(name)) {
             throw new IllegalValueException(Name.MESSAGE_CONSTRAINTS);
@@ -122,7 +122,7 @@ class JsonAdaptedTrip {
         if (startDate == null) {
             modelStartDate = null;
         } else if (!TripDate.isValidDate(startDate)) {
-            throw new IllegalValueException(Address.MESSAGE_CONSTRAINTS);
+            throw new IllegalValueException(TripDate.MESSAGE_CONSTRAINTS);
         } else {
             modelStartDate = new TripDate(startDate);
         }
@@ -131,14 +131,18 @@ class JsonAdaptedTrip {
         if (endDate == null) {
             modelEndDate = null;
         } else if (!TripDate.isValidDate(endDate)) {
-            throw new IllegalValueException(Address.MESSAGE_CONSTRAINTS);
+            throw new IllegalValueException(TripDate.MESSAGE_CONSTRAINTS);
         } else {
             modelEndDate = new TripDate(endDate);
         }
 
+        if (modelStartDate != null && modelEndDate != null && modelStartDate.value.isAfter(modelEndDate.value)) {
+            throw new IllegalValueException(Trip.MESSAGE_INVALID_DATE_ORDER);
+        }
+
         final Set<Tag> modelTags = new HashSet<>(tripTags);
         return new Trip(modelName, modelPhone, modelEmail, modelAddress, modelTags,
-                        modelStartDate, modelEndDate);
+                modelStartDate, modelEndDate);
     }
 
 }

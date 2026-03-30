@@ -110,6 +110,25 @@ public class TripTest {
     }
 
     @Test
+    public void getDurationInDays() {
+        Name name = new Name("Test");
+        // Valid range
+        Trip validTrip = new Trip(name, null, null, null, Collections.emptySet(),
+                new TripDate("2026-01-01"), new TripDate("2026-01-11"));
+        assertEquals(10, validTrip.getDurationInDays());
+
+        // Null start
+        Trip nullStart = new Trip(name, null, null, null, Collections.emptySet(),
+                null, new TripDate("2026-01-11"));
+        assertEquals(-1, nullStart.getDurationInDays());
+
+        // Null end
+        Trip nullEnd = new Trip(name, null, null, null, Collections.emptySet(),
+                new TripDate("2026-01-01"), null);
+        assertEquals(-1, nullEnd.getDurationInDays());
+    }
+
+    @Test
     public void constructor_startDateAfterEndDate_throwsIllegalArgumentException() {
         Name name = new Name("Test Trip");
         Phone phone = null;

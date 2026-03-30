@@ -125,6 +125,7 @@ public class UniqueTripListTest {
         uniqueTripList.remove(ALICE);
         UniqueTripList expectedUniqueTripList = new UniqueTripList();
         assertEquals(expectedUniqueTripList, uniqueTripList);
+        assertFalse(uniqueTripList.contains(ALICE)); // exercises post-condition assertions
     }
 
     @Test

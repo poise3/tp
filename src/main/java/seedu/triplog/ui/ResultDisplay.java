@@ -2,6 +2,8 @@ package seedu.triplog.ui;
 
 import static java.util.Objects.requireNonNull;
 
+import java.util.stream.Stream;
+
 import javafx.fxml.FXML;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.Region;
@@ -97,17 +99,8 @@ public class ResultDisplay extends UiPart<Region> {
      */
     private boolean isError(String message) {
         String lower = message.toLowerCase();
-        return lower.contains("invalid")
-                || lower.contains("unknown")
-                || lower.contains("error")
-                || lower.contains("cannot")
-                || lower.contains("failed")
-                || lower.contains("exception")
-                || lower.contains("must")
-                || lower.contains("no such")
-                || lower.contains("not allowed")
-                || lower.contains("insufficient")
-                || lower.contains("duplicate");
+        return Stream.of("invalid", "unknown", "error", "cannot", "failed", "exception",
+                        "must", "no such", "not allowed", "insufficient", "duplicate")
+                .anyMatch(lower::contains);
     }
 }
-

@@ -77,6 +77,7 @@ public class UniqueTripList implements Iterable<Trip> {
         if (!internalList.remove(toRemove)) {
             throw new TripNotFoundException();
         }
+        assert !contains(toRemove);
     }
 
     public void setTrips(UniqueTripList replacement) {

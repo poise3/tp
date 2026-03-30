@@ -45,7 +45,7 @@ public class JsonAdaptedTripTest {
     public void toModelType_invalidName_throwsIllegalValueException() {
         JsonAdaptedTrip person =
                 new JsonAdaptedTrip(INVALID_NAME, VALID_PHONE, VALID_EMAIL, VALID_ADDRESS,
-                                    VALID_TAGS, VALID_START_DATE, VALID_END_DATE);
+                        VALID_TAGS, VALID_START_DATE, VALID_END_DATE);
         String expectedMessage = Name.MESSAGE_CONSTRAINTS;
         assertThrows(IllegalValueException.class, expectedMessage, person::toModelType);
     }
@@ -53,9 +53,9 @@ public class JsonAdaptedTripTest {
     @Test
     public void toModelType_nullName_throwsIllegalValueException() {
         JsonAdaptedTrip person = new JsonAdaptedTrip(null, VALID_PHONE, VALID_EMAIL, VALID_ADDRESS,
-                                                     VALID_TAGS, VALID_START_DATE, VALID_END_DATE);
+                VALID_TAGS, VALID_START_DATE, VALID_END_DATE);
         String expectedMessage = String.format(MISSING_FIELD_MESSAGE_FORMAT,
-                                               Name.class.getSimpleName());
+                Name.class.getSimpleName());
         assertThrows(IllegalValueException.class, expectedMessage, person::toModelType);
     }
 
@@ -63,17 +63,17 @@ public class JsonAdaptedTripTest {
     public void toModelType_invalidPhone_throwsIllegalValueException() {
         JsonAdaptedTrip person =
                 new JsonAdaptedTrip(VALID_NAME, INVALID_PHONE, VALID_EMAIL, VALID_ADDRESS,
-                                    VALID_TAGS, VALID_START_DATE, VALID_END_DATE);
+                        VALID_TAGS, VALID_START_DATE, VALID_END_DATE);
         String expectedMessage = Phone.MESSAGE_CONSTRAINTS;
         assertThrows(IllegalValueException.class, expectedMessage,
-                     person::toModelType);
+                person::toModelType);
     }
 
     @Test
     public void toModelType_invalidEmail_throwsIllegalValueException() {
         JsonAdaptedTrip person =
                 new JsonAdaptedTrip(VALID_NAME, VALID_PHONE, INVALID_EMAIL, VALID_ADDRESS,
-                                    VALID_TAGS, VALID_START_DATE, VALID_END_DATE);
+                        VALID_TAGS, VALID_START_DATE, VALID_END_DATE);
         String expectedMessage = Email.MESSAGE_CONSTRAINTS;
         assertThrows(IllegalValueException.class, expectedMessage, person::toModelType);
     }
@@ -82,7 +82,7 @@ public class JsonAdaptedTripTest {
     public void toModelType_invalidAddress_throwsIllegalValueException() {
         JsonAdaptedTrip person =
                 new JsonAdaptedTrip(VALID_NAME, VALID_PHONE, VALID_EMAIL, INVALID_ADDRESS,
-                                    VALID_TAGS, VALID_START_DATE, VALID_END_DATE);
+                        VALID_TAGS, VALID_START_DATE, VALID_END_DATE);
         String expectedMessage = Address.MESSAGE_CONSTRAINTS;
         assertThrows(IllegalValueException.class, expectedMessage, person::toModelType);
     }
@@ -93,8 +93,31 @@ public class JsonAdaptedTripTest {
         invalidTags.add(new JsonAdaptedTag(INVALID_TAG));
         JsonAdaptedTrip person =
                 new JsonAdaptedTrip(VALID_NAME, VALID_PHONE, VALID_EMAIL, VALID_ADDRESS,
-                                    invalidTags, VALID_START_DATE, VALID_END_DATE);
+                        invalidTags, VALID_START_DATE, VALID_END_DATE);
         assertThrows(IllegalValueException.class, person::toModelType);
+    }
+
+    @Test
+    public void toModelType_invalidDateOrder_throwsIllegalValueException() {
+        String startDate = "2026-12-31";
+        String endDate = "2026-01-01";
+        JsonAdaptedTrip trip = new JsonAdaptedTrip(VALID_NAME, VALID_PHONE, VALID_EMAIL, VALID_ADDRESS,
+                VALID_TAGS, startDate, endDate);
+        assertThrows(IllegalValueException.class, Trip.MESSAGE_INVALID_DATE_ORDER, trip::toModelType);
+    }
+
+    @Test
+    public void toModelType_invalidStartDate_throwsIllegalValueException() {
+        JsonAdaptedTrip trip = new JsonAdaptedTrip(VALID_NAME, VALID_PHONE, VALID_EMAIL, VALID_ADDRESS,
+                VALID_TAGS, "not-a-date", VALID_END_DATE);
+        assertThrows(IllegalValueException.class, trip::toModelType);
+    }
+
+    @Test
+    public void toModelType_invalidEndDate_throwsIllegalValueException() {
+        JsonAdaptedTrip trip = new JsonAdaptedTrip(VALID_NAME, VALID_PHONE, VALID_EMAIL, VALID_ADDRESS,
+                VALID_TAGS, VALID_START_DATE, "2026-99-99");
+        assertThrows(IllegalValueException.class, trip::toModelType);
     }
 
     @Test
