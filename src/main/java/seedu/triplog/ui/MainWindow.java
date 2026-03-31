@@ -73,6 +73,11 @@ public class MainWindow extends UiPart<Stage> {
 
         commandBox = new CommandBox(this::executeCommand);
         commandBoxPlaceholder.getChildren().add(commandBox.getRoot());
+
+        if (logic.getInitialDataLoadError() != null) {
+            resultDisplay.setFeedbackToUser(logic.getInitialDataLoadError());
+        }
+
         Platform.runLater(() -> commandBox.requestFocus());
     }
 
