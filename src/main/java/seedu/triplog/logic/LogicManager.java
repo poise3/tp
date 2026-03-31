@@ -31,13 +31,22 @@ public class LogicManager implements Logic {
     private final Model model;
     private final Storage storage;
     private final TripLogParser tripLogParser;
+    private final String initialDataLoadError;
 
     /**
      * Constructs a {@code LogicManager} with the given {@code Model} and {@code Storage}.
      */
     public LogicManager(Model model, Storage storage) {
+        this(model, storage, null);
+    }
+
+    /**
+     * Constructs a {@code LogicManager} with the given {@code Model}, {@code Storage}, and an initialization error.
+     */
+    public LogicManager(Model model, Storage storage, String initialDataLoadError) {
         this.model = model;
         this.storage = storage;
+        this.initialDataLoadError = initialDataLoadError;
         tripLogParser = new TripLogParser();
     }
 
@@ -88,5 +97,10 @@ public class LogicManager implements Logic {
     @Override
     public void setGuiSettings(GuiSettings guiSettings) {
         model.setGuiSettings(guiSettings);
+    }
+
+    @Override
+    public String getInitialDataLoadError() {
+        return initialDataLoadError;
     }
 }

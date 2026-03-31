@@ -45,6 +45,7 @@ public class MainApp extends Application {
     protected Storage storage;
     protected Model model;
     protected Config config;
+    protected String initialDataLoadError;
 
     @Override
     public void init() throws Exception {
@@ -62,7 +63,7 @@ public class MainApp extends Application {
 
         model = initModelManager(storage, userPrefs);
 
-        logic = new LogicManager(model, storage);
+        logic = new LogicManager(model, storage, initialDataLoadError);
 
         ui = new UiManager(logic);
     }
@@ -88,6 +89,7 @@ public class MainApp extends Application {
             logger.warning("Data file at " + storage.getTripLogFilePath() + " could not be loaded."
                     + " Will be starting with an empty TripLog.");
             initialData = new TripLog();
+            initialDataLoadError = "Data file error: Corrupted entry detected. Starting fresh.";
         }
 
         return new ModelManager(initialData, userPrefs);

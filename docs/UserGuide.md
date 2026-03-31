@@ -293,7 +293,7 @@ TripLog data are saved automatically as a JSON file `[JAR file location]/data/tr
 <box type="warning" seamless>
 
 **Caution:**
-If your changes to the data file makes its format invalid, TripLog will discard all data and start with an empty data file at the next run. Hence, it is recommended to take a backup of the file before editing it.<br>
+If your changes to the data file makes its format invalid, TripLog will show an error message `[!!] Data file error: Corrupted entry detected. Starting fresh.` and start with an empty data file at the next run. This alerts you that your local edits contained errors. Hence, it is recommended to take a backup of the file before editing it.<br>
 Furthermore, certain edits can cause the TripLog to behave in unexpected ways (e.g., if a value entered is outside the acceptable range). Therefore, edit the data file only if you are confident that you can update it correctly.
 </box>
 

@@ -1,6 +1,7 @@
 package seedu.triplog.logic;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static seedu.triplog.logic.Messages.MESSAGE_INVALID_TRIP_DISPLAYED_INDEX;
 import static seedu.triplog.logic.Messages.MESSAGE_UNKNOWN_COMMAND;
 import static seedu.triplog.logic.commands.CommandTestUtil.ADDRESS_DESC_AMY;
@@ -45,6 +46,7 @@ public class LogicManagerTest {
 
     private Model model = new ModelManager();
     private Logic logic;
+    private StorageManager storage;
 
     @BeforeEach
     public void setUp() {
@@ -52,7 +54,7 @@ public class LogicManagerTest {
                 new JsonTripLogStorage(temporaryFolder.resolve("tripLog.json"));
         JsonUserPrefsStorage userPrefsStorage = new JsonUserPrefsStorage(temporaryFolder
                 .resolve("userPrefs.json"));
-        StorageManager storage = new StorageManager(tripLogStorage, userPrefsStorage);
+        storage = new StorageManager(tripLogStorage, userPrefsStorage);
         logic = new LogicManager(model, storage);
     }
 
@@ -97,6 +99,18 @@ public class LogicManagerTest {
     @Test
     public void getSortedTripList_modifyList_throwsUnsupportedOperationException() {
         assertThrows(UnsupportedOperationException.class, () -> logic.getSortedTripList().remove(0));
+    }
+
+    @Test
+    public void getInitialDataLoadError_noError_returnsNull() {
+        assertNull(logic.getInitialDataLoadError());
+    }
+
+    @Test
+    public void getInitialDataLoadError_withError_returnsErrorMessage() {
+        String errorMessage = "Test Error Message";
+        Logic logicWithError = new LogicManager(model, storage, errorMessage);
+        assertEquals(errorMessage, logicWithError.getInitialDataLoadError());
     }
 
     private void assertCommandSuccess(String inputCommand, String expectedMessage,

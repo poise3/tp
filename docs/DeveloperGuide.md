@@ -461,6 +461,6 @@ testers are expected to do more *exploratory* testing.
     1. To simulate a missing file, simply delete the `triplog.json` file from the `data/` folder while the app is closed.
     2. Expected: Upon re-launching, TripLog should initialize with a clean set of sample data.
     3. To simulate a corrupted file, open `triplog.json` in a text editor and delete a necessary bracket or comma to break the JSON structure.
-    4. Expected: Upon re-launching, TripLog should detect the invalid format, discard the data, and start with an empty trip log.
+    4. Expected: Upon re-launching, TripLog should detect the invalid format, discard the data, and show the message `[!!] Data file error: Corrupted entry detected. Starting fresh.`
 
 --------------------------------------------------------------------------------------------------------------------

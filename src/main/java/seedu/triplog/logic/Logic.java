@@ -30,10 +30,14 @@ public interface Logic {
      */
     ReadOnlyTripLog getTripLog();
 
-    /** Returns an unmodifiable view of the filtered list of trips */
+    /**
+     * Returns an unmodifiable view of the filtered list of trips
+     */
     ObservableList<Trip> getFilteredTripList();
 
-    /** Returns an unmodifiable view of the sorted trip list */
+    /**
+     * Returns an unmodifiable view of the sorted trip list
+     */
     ObservableList<Trip> getSortedTripList();
 
     /**
@@ -50,4 +54,9 @@ public interface Logic {
      * Set the user prefs' GUI settings.
      */
     void setGuiSettings(GuiSettings guiSettings);
+
+    /**
+     * Returns the error message from the initial data load, if any.
+     */
+    String getInitialDataLoadError();
 }
