@@ -12,12 +12,11 @@ import seedu.triplog.model.trip.Name;
 import seedu.triplog.model.trip.Trip;
 import seedu.triplog.model.trip.TripDate;
 
-
 /**
  * Contains utility methods for populating {@code TripLog} with sample data.
  */
 public class SampleDataUtil {
-    public static Trip[] getSamplePersons() {
+    public static Trip[] getSampleTrips() {
         return new Trip[] {
             new Trip(new Name("Hotel California"), null, null,
                         new Address("1670 Ocean Ave, Santa Monica"),
@@ -41,14 +40,14 @@ public class SampleDataUtil {
                         getTagSet("garden"), null, null),
             new Trip(new Name("National Museum of Singapore"), null, null,
                         new Address("93 Stamford Rd, Singapore 178897"),
-                        getTagSet("colleagues"), new TripDate("2025-12-25"),
+                        getTagSet("museum"), new TripDate("2025-12-25"),
                         new TripDate("2025-12-30"))
         };
     }
 
     public static ReadOnlyTripLog getSampleTripLog() {
         TripLog sampleAb = new TripLog();
-        for (Trip sampleTrip : getSamplePersons()) {
+        for (Trip sampleTrip : getSampleTrips()) {
             sampleAb.addTrip(sampleTrip);
         }
         return sampleAb;
