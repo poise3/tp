@@ -35,6 +35,9 @@ public class TagTest {
         // same case-insensitive word -> returns true
         assertTrue(tag.equals(new Tag("Leisure")));
 
+        // full caps testing -> returns true
+        assertTrue(tag.equals(new Tag("LEISURE")));
+
         // same object -> returns true
         assertTrue(tag.equals(tag));
 
