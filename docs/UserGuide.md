@@ -82,6 +82,7 @@ Examples:
 
 - The help window can also be opened by pressing **F1** or using the Help menu.
 - The help window can be closed by clicking the 'x' button, or by pressing **Q** or **ESCAPE** while the window is focused.
+- The help window is resizable — drag any edge or corner to adjust its size.
 
 ### Adding a trip: `add`
 

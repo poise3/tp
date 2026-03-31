@@ -78,6 +78,8 @@ public class HelpWindow extends UiPart<Stage> {
         clearUsage.setText(CommandUsage.CLEAR_USAGE);
         exitUsage.setText(CommandUsage.EXIT_USAGE);
         exitNote.setText(EXIT_NOTE);
+        root.setMinWidth(400);
+        root.setMinHeight(300);
         root.addEventFilter(KeyEvent.KEY_PRESSED, event -> {
             if (isCloseKey(event.getCode())) {
                 hide();
