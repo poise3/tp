@@ -31,7 +31,6 @@ import seedu.triplog.logic.parser.exceptions.ParseException;
 import seedu.triplog.model.Model;
 import seedu.triplog.model.ModelManager;
 import seedu.triplog.model.ReadOnlyTripLog;
-import seedu.triplog.model.TripLog;
 import seedu.triplog.model.UserPrefs;
 import seedu.triplog.model.trip.Trip;
 import seedu.triplog.storage.JsonTripLogStorage;
@@ -126,11 +125,19 @@ public class LogicManagerTest {
 
     @Test
     public void getSummary_nullSortDescription_defaultsToStartDate() {
-        UserPrefs nullSortPrefs = new UserPrefs();
-        nullSortPrefs.setLastSortDescription("start date");
-        Model modelWithNullSort = new ModelManager(new TripLog(), nullSortPrefs);
-        Logic logicWithNullSort = new LogicManager(modelWithNullSort, storage);
-        assertTrue(logicWithNullSort.getSummary().contains("sorted by start date"));
+        // Use a Model stub to force a null return value for the sort description
+        Model modelStub = new ModelManager() {
+            @Override
+            public String getLastSortDescription() {
+                return null;
+            }
+        };
+
+        Logic logicWithNullSort = new LogicManager(modelStub, storage);
+        String summary = logicWithNullSort.getSummary();
+
+        // This triggers the 'if (sortDescription == null)' branch in LogicManager
+        assertTrue(summary.contains("sorted by start date"));
     }
 
     private void assertCommandSuccess(String inputCommand, String expectedMessage,
