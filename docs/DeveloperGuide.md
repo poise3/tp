@@ -224,6 +224,8 @@ The mode is determined in `HelpCommand#execute()`:
 
 The usage strings (e.g., `ADD_USAGE`, `DELETE_USAGE`) are defined as constants in `CommandUsage` and reused by both `HelpCommand` and `HelpWindow` to keep the content consistent between inline help and the popup window.
 
+The `HelpWindow` is resizable. The `ScrollPane` (which is the scene root) grows to fill the window as the user resizes it, showing a vertical scrollbar only when the content exceeds the window height. A minimum size of 400×300 px is enforced on the `Stage` to prevent the window from being dragged to an unusably small size.
+
 The `TripLogParser` routes `help` to `HelpCommand`:
 
 * `help` → `new HelpCommand()`
