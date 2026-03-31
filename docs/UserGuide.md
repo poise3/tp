@@ -43,6 +43,9 @@ TripLog is a **desktop app for managing trips, optimized for use via a Command L
 
 **Notes about the command format:**<br>
 
+- **Command words are case-insensitive.**<br>
+  e.g. `ADD`, `Add`, and `add` are all recognized as the same command.
+
 - Words in `UPPER_CASE` are the parameters to be supplied by the user.<br>
   e.g. in `add n/NAME`, `NAME` is a parameter which can be used as `add n/National Museum`.
 

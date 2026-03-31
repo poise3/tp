@@ -407,6 +407,17 @@ testers are expected to do more *exploratory* testing.
     1. Re-launch the app by double-clicking the jar file.<br>
        Expected: The most recent window size and location is retained.
 
+### Command Word Case-Insensitivity
+
+1. Testing command word variations
+    1. Prerequisites: App launched with sample data.
+    2. Test case: `ADD n/Paris`
+       Expected: Trip to Paris is added (case-insensitive for command word).
+    3. Test case: `lIsT`
+       Expected: Trip list is displayed normally.
+    4. Test case: `EXIT`
+       Expected: Application shuts down.
+
 ### Listing, Sorting, and Statistics
 
 1. Initial setup (Assume Today is 2026-03-24)
