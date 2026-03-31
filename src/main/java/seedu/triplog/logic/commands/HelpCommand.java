@@ -39,7 +39,7 @@ public class HelpCommand extends Command {
     }
 
     private static String getUsageForCommand(String commandWord) throws CommandException {
-        switch (commandWord) {
+        switch (commandWord.toLowerCase()) {
         case COMMAND_WORD:
             return MESSAGE_USAGE;
         case AddCommand.COMMAND_WORD:
