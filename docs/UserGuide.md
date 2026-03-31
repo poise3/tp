@@ -28,7 +28,7 @@ TripLog is a **desktop app for managing trips, optimized for use via a Command L
 1. Type the command in the command box and press Enter to execute it. e.g. typing **`help`** and pressing Enter will open the help window.<br>
    Some example commands you can try:
     - `list` : Lists all trips and shows a status summary.
-    * `add n/Tokyo, Japan sd/2026-03-10 ed/2026-03-20` : Adds a trip to Tokyo.
+    * `add n/Tokyo Japan sd/2026-03-10 ed/2026-03-20` : Adds a trip to Tokyo.
     * `delete 3` : Deletes the 3rd trip shown in the current list.
     * `clear` : Deletes all entries.
     - `exit` : Exits the app.
@@ -44,7 +44,7 @@ TripLog is a **desktop app for managing trips, optimized for use via a Command L
 **Notes about the command format:**<br>
 
 - Words in `UPPER_CASE` are the parameters to be supplied by the user.<br>
-  e.g. in `add n/NAME`, `NAME` is a parameter which can be used as `add n/John Doe`.
+  e.g. in `add n/NAME`, `NAME` is a parameter which can be used as `add n/National Museum`.
 
 - Values with spaces do not need quotes — the parser reads up to the next prefix.<br>
   e.g. `n/New York` and `a/123 Main St` are both valid.
