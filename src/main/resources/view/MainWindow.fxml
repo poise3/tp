@@ -30,9 +30,9 @@
           <Insets top="10" right="20" bottom="20" left="20"/>
         </padding>
 
-        <HBox alignment="CENTER_LEFT" VBox.vgrow="NEVER" style="-fx-padding: 10 0 0 10;">
+        <HBox alignment="CENTER_LEFT" VBox.vgrow="NEVER" style="-fx-padding: 10 0 0 0;">
 
-          <MenuBar styleClass="menu-bubble-left">
+          <MenuBar styleClass="menu-bubble-left" >
             <menus>
               <Menu mnemonicParsing="false" text="File">
                 <items>
