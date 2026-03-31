@@ -181,12 +181,21 @@ public class DeleteCommand extends Command {
 
         for (int i = 0; i < tripsToDelete.size(); i++) {
             Trip trip = tripsToDelete.get(i);
+
+            String start = trip.getStartDate() == null
+                    ? "No date"
+                    : trip.getStartDate().toString();
+
+            String end = trip.getEndDate() == null
+                    ? "No date"
+                    : trip.getEndDate().toString();
+
             sb.append(i + 1).append(". ")
                     .append(trip.getName())
                     .append(" (")
-                    .append(trip.getStartDate())
+                    .append(start)
                     .append(" to ")
-                    .append(trip.getEndDate())
+                    .append(end)
                     .append(")\n");
         }
 
