@@ -22,8 +22,7 @@ TripLog is a **desktop app for managing trips, optimized for use via a Command L
 1. Copy the file to the folder you want to use as the _home folder_ for your TripLog.
 
 1. Open a command terminal, `cd` into the folder you put the jar file in, and use the `java -jar triplog.jar` command to run the application.<br>
-   A GUI similar to the below should appear in a few seconds. Note how the app contains some sample data.<br>
-   ![Ui](images/Ui.png)
+   A GUI similar to the below should appear in a few seconds. **Upon startup, TripLog automatically displays a summary dashboard and your last used sort order.**
 
 1. Type the command in the command box and press Enter to execute it. e.g. typing **`help`** and pressing Enter will open the help window.<br>
    Some example commands you can try:
@@ -113,7 +112,7 @@ Format: `list [sort/KEY]`
 - By default, trips are sorted by **start date** in ascending order (earliest first).
 - **Tie-breaker**: If multiple trips share the same date or length, they are automatically sorted alphabetically by name.
 - Trips with no start date are shown last.
-- The sort order is **persistent**: adding or editing trips will maintain the last chosen sort order.
+- The sort order is **persistent**: adding or editing trips will maintain the last chosen sort order, **even after restarting the application.**
 
 Supported `KEY` values:
 - `name`: Sorts alphabetically by destination name.
@@ -284,7 +283,7 @@ Format: `exit`
 
 ### Saving the data
 
-TripLog data are saved in the hard disk automatically after any command that changes the data. There is no need to save manually.
+TripLog data and user preferences (such as your last used sort order) are saved in the hard disk automatically after any command that changes the data or state. There is no need to save manually.
 
 ### Editing the data file
 

@@ -439,6 +439,13 @@ testers are expected to do more *exploratory* testing.
     1. Test case: Execute `list sort/name`, then `add n/B-Destination`.
        Expected: The new trip is added and automatically positioned in alphabetical order.
 
+4. Testing Startup Summary and Persistence
+    1. Prerequisites: App contains trips with various dates.
+    2. Test case: Open the application.
+       Expected: The Result Display immediately shows a summary dashboard and the last used sort order without entering any commands.
+    3. Test case: Sort the list using `list sort/name`, exit the application, and re-launch.
+       Expected: The summary dashboard and the list itself remain sorted by name alphabetically.
+
 ### Locating trips by name
 
 1. Testing partial word matching
