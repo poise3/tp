@@ -1,6 +1,7 @@
 package seedu.triplog.logic.commands;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static seedu.triplog.logic.commands.CommandTestUtil.assertCommandFailure;
 import static seedu.triplog.logic.commands.CommandTestUtil.assertCommandSuccess;
@@ -216,6 +217,27 @@ public class ListCommandTest {
         assertCommandSuccess(new ListCommand("start"), model, expectedMessage, expectedModel);
 
         assertTrue(model.getFilteredTripList().get(0).getName().fullName.equals(appleTrip.getName().fullName));
+    }
+
+    @Test
+    public void getComparatorFromDescription_validDescriptions_returnsCorrectComparator() {
+        // Test Name branch
+        assertNotNull(ListCommand.getComparatorFromDescription(ListCommand.SORT_DESC_NAME));
+
+        // Test End Date branch
+        assertNotNull(ListCommand.getComparatorFromDescription(ListCommand.SORT_DESC_END));
+
+        // Test Duration branch
+        assertNotNull(ListCommand.getComparatorFromDescription(ListCommand.SORT_DESC_LEN));
+
+        // Test Start Date branch
+        assertNotNull(ListCommand.getComparatorFromDescription(ListCommand.SORT_DESC_START));
+
+        // Test Null branch (falls back to default)
+        assertNotNull(ListCommand.getComparatorFromDescription(null));
+
+        // Test Unknown string branch (falls back to default)
+        assertNotNull(ListCommand.getComparatorFromDescription("unknown"));
     }
 
     @Test
