@@ -59,4 +59,9 @@ public interface Logic {
      * Returns the error message from the initial data load, if any.
      */
     String getInitialDataLoadError();
+
+    /**
+     * Returns the summary of trip statuses including sort information.
+     */
+    String getSummary();
 }
