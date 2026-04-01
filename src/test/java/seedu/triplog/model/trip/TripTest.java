@@ -30,53 +30,54 @@ public class TripTest {
 
     @Test
     public void isSameTrip() {
-        // same object -> returns true
+        // EP: same object
         assertTrue(ALICE.isSameTrip(ALICE));
 
-        // null -> returns false
+        // EP: null input
         assertFalse(ALICE.isSameTrip(null));
 
-        // same name, same dates, other attributes different -> returns true
+        // EP: same name, same dates, other attributes different
         Trip editedAlice = new TripBuilder(ALICE).withPhone(VALID_PHONE_BOB).withEmail(VALID_EMAIL_BOB)
                 .withAddress(VALID_ADDRESS_BOB).withTags(VALID_TAG_HUSBAND).build();
         assertTrue(ALICE.isSameTrip(editedAlice));
 
-        // different name, all other attributes same -> returns false
+        // EP: different name, all other attributes same
         editedAlice = new TripBuilder(ALICE).withName(VALID_NAME_BOB).build();
         assertFalse(ALICE.isSameTrip(editedAlice));
 
-        // name differs only in case, all other attributes same -> returns true
+        // EP: name differs only in case
         Trip editedBob = new TripBuilder(BOB).withName(VALID_NAME_BOB.toLowerCase()).build();
         assertTrue(BOB.isSameTrip(editedBob));
 
-        // name has trailing spaces, all other attributes same -> returns false
+        // EP: name has trailing spaces
         String nameWithTrailingSpaces = VALID_NAME_BOB + " ";
         editedBob = new TripBuilder(BOB).withName(nameWithTrailingSpaces).build();
         assertFalse(BOB.isSameTrip(editedBob));
 
-        // same name, non-overlapping dates -> returns false
+        // EP: same name, non-overlapping dates
         Trip trip1 = new TripBuilder().withName("Trip").withStart("2026-01-01").withEnd("2026-01-10").build();
         Trip trip2 = new TripBuilder().withName("Trip").withStart("2026-02-01").withEnd("2026-02-10").build();
         assertFalse(trip1.isSameTrip(trip2));
 
-        // same name, overlapping dates -> returns true
+        // EP: same name, overlapping dates (partial)
         trip2 = new TripBuilder().withName("Trip").withStart("2026-01-05").withEnd("2026-01-15").build();
         assertTrue(trip1.isSameTrip(trip2));
 
-        // same name, one range contains the other -> returns true
+        // EP: same name, one range contains the other
         trip2 = new TripBuilder().withName("Trip").withStart("2026-01-03").withEnd("2026-01-07").build();
         assertTrue(trip1.isSameTrip(trip2));
 
-        // same name, touching at boundary (end1 == start2) -> returns true
+        // EP: same name, touching at boundary (Boundary Value: start2 == end1)
         trip2 = new TripBuilder().withName("Trip").withStart("2026-01-10").withEnd("2026-01-20").build();
         assertTrue(trip1.isSameTrip(trip2));
 
-        // same name, identical dates -> returns true
+        // EP: same name, identical dates
         trip2 = new TripBuilder().withName("Trip").withStart("2026-01-01").withEnd("2026-01-10").build();
         assertTrue(trip1.isSameTrip(trip2));
 
-        // different name, overlapping dates -> returns false
-        trip2 = new TripBuilder().withName("Other Trip").withStart("2026-01-05").withEnd("2026-01-15").build();
+        // EP: different name, overlapping dates
+        trip2 = new TripBuilder().withName("Other Trip").withStart("2026-01-05")
+                .withEnd("2026-01-15").build();
         assertFalse(trip1.isSameTrip(trip2));
     }
 
@@ -166,6 +167,7 @@ public class TripTest {
 
     @Test
     public void isSameTrip_bothNullDates_returnsFalse() {
+        // EP: both trips have no dates specified
         Trip trip1 = new TripBuilder().withName("Trip").withStart(null).withEnd(null).build();
         Trip trip2 = new TripBuilder().withName("Trip").withStart(null).withEnd(null).build();
         assertFalse(trip1.isSameTrip(trip2));
@@ -229,17 +231,17 @@ public class TripTest {
     @Test
     public void getDurationInDays() {
         Name name = new Name("Test");
-        // Valid range
+        // EP: valid date range
         Trip validTrip = new Trip(name, null, null, null, Collections.emptySet(),
                 new TripDate("2026-01-01"), new TripDate("2026-01-11"));
         assertEquals(10, validTrip.getDurationInDays());
 
-        // Null start
+        // EP: null start date
         Trip nullStart = new Trip(name, null, null, null, Collections.emptySet(),
                 null, new TripDate("2026-01-11"));
         assertEquals(-1, nullStart.getDurationInDays());
 
-        // Null end
+        // EP: null end date
         Trip nullEnd = new Trip(name, null, null, null, Collections.emptySet(),
                 new TripDate("2026-01-01"), null);
         assertEquals(-1, nullEnd.getDurationInDays());
@@ -247,6 +249,7 @@ public class TripTest {
 
     @Test
     public void constructor_startDateAfterEndDate_throwsIllegalArgumentException() {
+        // EP: start date comes after end date
         Name name = new Name("Test Trip");
         Phone phone = null;
         Email email = null;
@@ -262,6 +265,7 @@ public class TripTest {
 
     @Test
     public void constructor_startDateEqualsEndDate_noException() {
+        // Boundary Value Analysis: start date and end date are identical
         Name name = new Name("Test Trip");
         TripDate startDate = new TripDate("2026-01-01");
         TripDate endDate = new TripDate("2026-01-01");
@@ -272,6 +276,7 @@ public class TripTest {
 
     @Test
     public void constructor_startDateBeforeEndDate_noException() {
+        // EP: start date comes before end date
         Name name = new Name("Test Trip");
         TripDate startDate = new TripDate("2026-01-01");
         TripDate endDate = new TripDate("2026-12-31");
@@ -305,9 +310,11 @@ public class TripTest {
 
     @Test
     public void constructor_nameTooLong_throwsIllegalArgumentException() {
+        // Boundary Value Analysis: name length is exactly MAX + 1
         String longName = "A".repeat(MAX_NAME_LENGTH + 1);
         assertThrows(IllegalArgumentException.class, () ->
-                new Trip(new Name(longName), null, null, null, Collections.emptySet(), null, null)
+                new Trip(new Name(longName), null, null, null, Collections.emptySet(),
+                        null, null)
         );
     }
 
@@ -315,30 +322,34 @@ public class TripTest {
     public void constructor_validTrip_success() {
         TripDate start = new TripDate("2025-01-01");
         TripDate end = new TripDate("2025-12-31");
-        Trip trip = new Trip(new Name("Valid Trip"), null, null, null, Collections.emptySet(), start, end);
+        Trip trip = new Trip(new Name("Valid Trip"), null, null, null, Collections.emptySet(),
+                start, end);
         assertEquals("Valid Trip", trip.getName().toString());
     }
 
     @Test
     public void chronologicalComparator_differentDatesAndNulls_sortedChronologically() {
-        // Case 1: Both dates present, different dates
+        // EP: both dates present, different months
         Trip janTrip = new Trip(new Name("A"), null, null, null, Collections.emptySet(),
                 new TripDate("2026-01-01"), null);
         Trip febTrip = new Trip(new Name("B"), null, null, null, Collections.emptySet(),
                 new TripDate("2026-02-01"), null);
         assertTrue(Trip.CHRONOLOGICAL_COMPARATOR.compare(janTrip, febTrip) < 0);
 
-        // Case 2: One date null, one present (null should be last)
-        Trip nullTrip = new Trip(new Name("C"), null, null, null, Collections.emptySet(), null, null);
+        // EP: comparison between present date and null (null should be last)
+        Trip nullTrip = new Trip(new Name("C"), null, null, null, Collections.emptySet(),
+                null, null);
         assertTrue(Trip.CHRONOLOGICAL_COMPARATOR.compare(janTrip, nullTrip) < 0);
         assertTrue(Trip.CHRONOLOGICAL_COMPARATOR.compare(nullTrip, janTrip) > 0);
 
-        // Case 3: Both dates null, alphabetical tie-break
-        Trip nullTripAlphaA = new Trip(new Name("Alpha"), null, null, null, Collections.emptySet(), null, null);
-        Trip nullTripBetaB = new Trip(new Name("Beta"), null, null, null, Collections.emptySet(), null, null);
+        // EP: both dates null, falls back to alphabetical tie-break
+        Trip nullTripAlphaA = new Trip(new Name("Alpha"), null, null, null, Collections.emptySet(),
+                null, null);
+        Trip nullTripBetaB = new Trip(new Name("Beta"), null, null, null, Collections.emptySet(),
+                null, null);
         assertTrue(Trip.CHRONOLOGICAL_COMPARATOR.compare(nullTripAlphaA, nullTripBetaB) < 0);
 
-        // Case 4: Same dates, alphabetical tie-break
+        // EP: same dates, falls back to alphabetical tie-break
         Trip sameDateA = new Trip(new Name("A"), null, null, null, Collections.emptySet(),
                 new TripDate("2026-01-01"), null);
         Trip sameDateB = new Trip(new Name("B"), null, null, null, Collections.emptySet(),

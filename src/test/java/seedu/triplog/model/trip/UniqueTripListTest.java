@@ -25,22 +25,26 @@ public class UniqueTripListTest {
 
     @Test
     public void contains_nullTrip_throwsNullPointerException() {
+        // EP: null trip
         assertThrows(NullPointerException.class, () -> uniqueTripList.contains(null));
     }
 
     @Test
     public void contains_tripNotInList_returnsFalse() {
+        // EP: trip not in list
         assertFalse(uniqueTripList.contains(ALICE));
     }
 
     @Test
     public void contains_tripInList_returnsTrue() {
+        // EP: trip exists in list
         uniqueTripList.add(ALICE);
         assertTrue(uniqueTripList.contains(ALICE));
     }
 
     @Test
     public void contains_tripWithSameIdentityFieldsInList_returnsTrue() {
+        // EP: trip with same identity (name + overlapping dates) exists
         uniqueTripList.add(ALICE);
         Trip editedAlice = new TripBuilder(ALICE).withAddress(VALID_ADDRESS_BOB).withTags(VALID_TAG_HUSBAND)
                 .build();
@@ -54,6 +58,7 @@ public class UniqueTripListTest {
 
     @Test
     public void add_duplicateTrip_throwsDuplicateTripException() {
+        // EP: adding a trip that already exists
         uniqueTripList.add(ALICE);
         assertThrows(DuplicateTripException.class, () -> uniqueTripList.add(ALICE));
     }
@@ -70,11 +75,13 @@ public class UniqueTripListTest {
 
     @Test
     public void setTrip_targetTripNotInList_throwsTripNotFoundException() {
+        // EP: target trip does not exist in the list
         assertThrows(TripNotFoundException.class, () -> uniqueTripList.setTrip(ALICE, ALICE));
     }
 
     @Test
     public void add_sameNameNonOverlappingDates_success() {
+        // EP: same name but dates do not intersect
         Trip trip1 = new TripBuilder().withName("Trip").withStart("2026-01-01").withEnd("2026-01-10").build();
         Trip trip2 = new TripBuilder().withName("Trip").withStart("2026-02-01").withEnd("2026-02-10").build();
         uniqueTripList.add(trip1);
@@ -84,6 +91,7 @@ public class UniqueTripListTest {
 
     @Test
     public void add_sameNameOverlappingDates_throwsDuplicateTripException() {
+        // EP: same name and dates overlap
         Trip trip1 = new TripBuilder().withName("Trip").withStart("2026-01-01").withEnd("2026-01-10").build();
         Trip trip2 = new TripBuilder().withName("Trip").withStart("2026-01-05").withEnd("2026-01-15").build();
         uniqueTripList.add(trip1);
@@ -92,13 +100,15 @@ public class UniqueTripListTest {
 
     @Test
     public void setTrip_editedTripOverlapsWithOtherTrip_throwsDuplicateTripException() {
+        // EP: editing results in an overlap with a third trip
         Trip trip1 = new TripBuilder().withName("Trip").withStart("2026-01-01").withEnd("2026-01-10").build();
         Trip trip2 = new TripBuilder().withName("Trip").withStart("2026-02-01").withEnd("2026-02-10").build();
         uniqueTripList.add(trip1);
         uniqueTripList.add(trip2);
 
         // Edit trip2's dates to overlap with trip1
-        Trip editedTrip2 = new TripBuilder().withName("Trip").withStart("2026-01-05").withEnd("2026-01-15").build();
+        Trip editedTrip2 = new TripBuilder().withName("Trip").withStart("2026-01-05").withEnd("2026-01-15")
+                .build();
         assertThrows(DuplicateTripException.class, () -> uniqueTripList.setTrip(trip2, editedTrip2));
     }
 
@@ -145,11 +155,13 @@ public class UniqueTripListTest {
 
     @Test
     public void remove_tripDoesNotExist_throwsTripNotFoundException() {
+        // EP: removing a trip not present in list
         assertThrows(TripNotFoundException.class, () -> uniqueTripList.remove(ALICE));
     }
 
     @Test
     public void remove_existingTrip_removesTrip() {
+        // EP: removing a trip present in list
         uniqueTripList.add(ALICE);
         uniqueTripList.remove(ALICE);
         UniqueTripList expectedUniqueTripList = new UniqueTripList();
@@ -188,6 +200,7 @@ public class UniqueTripListTest {
 
     @Test
     public void setTrips_listWithDuplicateTrips_throwsDuplicateTripException() {
+        // EP: replacement list contains duplicates
         List<Trip> listWithDuplicateTrips = Arrays.asList(ALICE, ALICE);
         assertThrows(DuplicateTripException.class, () -> uniqueTripList.setTrips(listWithDuplicateTrips));
     }
