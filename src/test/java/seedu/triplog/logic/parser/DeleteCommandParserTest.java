@@ -1,5 +1,6 @@
 package seedu.triplog.logic.parser;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static seedu.triplog.logic.Messages.MESSAGE_INVALID_COMMAND_FORMAT;
 import static seedu.triplog.logic.parser.CommandParserTestUtil.assertParseFailure;
 import static seedu.triplog.logic.parser.CommandParserTestUtil.assertParseSuccess;
@@ -127,6 +128,57 @@ public class DeleteCommandParserTest {
     @Test
     public void parse_dateRangeWithAnotherField_throwsParseException() {
         assertParseFailure(parser, "n/Tokyo sd/2026-03-01 ed/2026-03-10",
+                MESSAGE_MULTIPLE_DELETE_FIELDS);
+    }
+
+    @Test
+    public void parse_validPhoneCriteria_returnsDeleteCommand() {
+        assertDoesNotThrow(() -> parser.parse("p/91234567"));
+    }
+
+    @Test
+    public void parse_validEmailCriteria_returnsDeleteCommand() {
+        assertDoesNotThrow(() -> parser.parse("e/test@example.com"));
+    }
+
+    @Test
+    public void parse_validAddressCriteria_returnsDeleteCommand() {
+        assertDoesNotThrow(() -> parser.parse("a/Japan"));
+    }
+
+    @Test
+    public void parse_duplicatePhonePrefix_throwsParseException() {
+        assertParseFailure(parser, "p/91234567 p/98765432",
+                MESSAGE_MULTIPLE_DELETE_FIELDS);
+    }
+
+    @Test
+    public void parse_duplicateEmailPrefix_throwsParseException() {
+        assertParseFailure(parser, "e/test1@example.com e/test2@example.com",
+                MESSAGE_MULTIPLE_DELETE_FIELDS);
+    }
+
+    @Test
+    public void parse_duplicateAddressPrefix_throwsParseException() {
+        assertParseFailure(parser, "a/Japan a/Korea",
+                MESSAGE_MULTIPLE_DELETE_FIELDS);
+    }
+
+    @Test
+    public void parse_duplicateStartDatePrefix_throwsParseException() {
+        assertParseFailure(parser, "sd/2026-03-01 sd/2026-03-02",
+                MESSAGE_MULTIPLE_DELETE_FIELDS);
+    }
+
+    @Test
+    public void parse_duplicateEndDatePrefix_throwsParseException() {
+        assertParseFailure(parser, "ed/2026-03-10 ed/2026-03-11",
+                MESSAGE_MULTIPLE_DELETE_FIELDS);
+    }
+
+    @Test
+    public void parse_duplicateTagPrefix_throwsParseException() {
+        assertParseFailure(parser, "t/family t/work",
                 MESSAGE_MULTIPLE_DELETE_FIELDS);
     }
 }
