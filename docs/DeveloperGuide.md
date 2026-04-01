@@ -156,6 +156,19 @@ The following sequence diagram shows how the `add` command is parsed and execute
 <puml src="diagrams/AddSequenceDiagram.puml" alt="Add Command Sequence Diagram" />
 
 ### Trip Deletion: Delete Command
+The `delete` command supports multiple deletion modes, including:
+- deletion by index,
+- deletion by index range,
+- deletion by field (e.g. name or tag),
+- deletion by date range.
+
+The parsing of the command is handled by `DeleteCommandParser`, which determines the deletion mode based on the input format and constructs the corresponding `DeleteCommand`.
+
+To prevent accidental data loss, the delete operation follows a **two-step confirmation flow**:
+1. The first execution generates a preview of the trips to be deleted.
+2. The user must confirm the pending deletion by pressing Enter again; otherwise, editing the command cancels the operation.
+
+Invalid combinations of delete modes (e.g. mixing index and field deletion) are rejected during parsing.
 
 The following sequence diagram shows the logic for deleting a trip:
 
@@ -461,18 +474,41 @@ testers are expected to do more *exploratory* testing.
 
 ### Deleting a trip
 
-1. Deleting a trip while all trips are being shown
+1. Deleting a trip using index
 
     1. Prerequisites: List all trips using the `list` command. Multiple trips in the list.
 
-    1. Test case: `delete 1`<br>
-       Expected: First trip is deleted from the list. Details of the deleted trip shown in the status message. Timestamp in the status bar is updated.
+    2. Test case: `delete 1`  
+       Expected: A preview of the first trip is shown. No trip is deleted yet.
 
-    1. Test case: `delete 0`<br>
-       Expected: No trip is deleted. Error details shown in the status message. Status bar remains the same.
+    3. Test case: Press Enter again with `delete 1`  
+       Expected: First trip is deleted from the list. Details of the deleted trip shown in the status message.
 
-    1. Other incorrect delete commands to try: `delete`, `delete x`, `...` (where x is larger than the list size)<br>
-       Expected: Similar to previous.
+2. Cancelling deletion
+
+    1. Test case: `delete 1`, then modify the command instead of confirming  
+       Expected: No trip is deleted.
+
+3. Invalid index
+
+    1. Test case: `delete 0`  
+       Expected: No trip is deleted. Error message shown.
+
+4. Deleting a range of trips
+
+    1. Test case: `delete 1-3`  
+       Expected: Preview of trips 1 to 3 is shown.  
+       After confirmation, all three trips are deleted.
+
+5. Deleting by field
+
+    1. Test case: `delete n/Tokyo`  
+       Expected: All trips with name "Tokyo" are previewed, then deleted after confirmation.
+
+6. Deleting by date range
+
+    1. Test case: `delete sd/2026-01-01 ed/2026-12-31`  
+       Expected: Trips matching the specified date range are previewed, then deleted after confirmation.
 
 ### Saving data
 

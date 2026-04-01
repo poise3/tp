@@ -210,6 +210,7 @@ Format:
 `delete PREFIX/VALUE`
 `delete sd/START_DATE ed/END_DATE`
 
+- Only one delete mode may be used at a time (e.g. `delete 1 t/family` is invalid).
 - The command operates on the currently displayed trip list.
 
 #### Delete by index
@@ -237,8 +238,10 @@ Examples:
 
 #### Delete by field
 
-- Deletes all trips that match a specified field.
+- Deletes all trips whose specified field **exactly matches** the given value.
 - Only **one field** can be used at a time.
+- Field matching is **exact (not partial)**.  
+  For example, `delete n/Tokyo` matches `Tokyo`, but not `Tokyo Japan`.
 
 Supported prefixes:
 
@@ -258,7 +261,7 @@ Examples:
 
 #### Delete by date range
 
-- Deletes all trips whose dates fall within the specified range.
+- Deletes all trips whose start and end dates match the specified range using both `sd/` and `ed/`.
 - Both `sd/START_DATE` and `ed/END_DATE` must be provided.
 - Dates must be in `YYYY-MM-DD` format.
 
