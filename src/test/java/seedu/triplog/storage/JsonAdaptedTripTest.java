@@ -35,14 +35,17 @@ public class JsonAdaptedTripTest {
             .collect(Collectors.toList());
     private static final String VALID_START_DATE = BENSON.getStartDate().toString();
     private static final String VALID_END_DATE = BENSON.getEndDate().toString();
+
     @Test
     public void toModelType_validPersonDetails_returnsPerson() throws Exception {
+        // EP: valid inputs
         JsonAdaptedTrip person = new JsonAdaptedTrip(BENSON);
         assertEquals(BENSON, person.toModelType());
     }
 
     @Test
     public void toModelType_invalidName_throwsIllegalValueException() {
+        // EP: invalid name format
         JsonAdaptedTrip person =
                 new JsonAdaptedTrip(INVALID_NAME, VALID_PHONE, VALID_EMAIL, VALID_ADDRESS,
                         VALID_TAGS, VALID_START_DATE, VALID_END_DATE);
@@ -52,6 +55,7 @@ public class JsonAdaptedTripTest {
 
     @Test
     public void toModelType_nullName_throwsIllegalValueException() {
+        // EP: missing compulsory field (null)
         JsonAdaptedTrip person = new JsonAdaptedTrip(null, VALID_PHONE, VALID_EMAIL, VALID_ADDRESS,
                 VALID_TAGS, VALID_START_DATE, VALID_END_DATE);
         String expectedMessage = String.format(MISSING_FIELD_MESSAGE_FORMAT,
@@ -61,6 +65,7 @@ public class JsonAdaptedTripTest {
 
     @Test
     public void toModelType_invalidPhone_throwsIllegalValueException() {
+        // EP: invalid phone format
         JsonAdaptedTrip person =
                 new JsonAdaptedTrip(VALID_NAME, INVALID_PHONE, VALID_EMAIL, VALID_ADDRESS,
                         VALID_TAGS, VALID_START_DATE, VALID_END_DATE);
@@ -71,6 +76,7 @@ public class JsonAdaptedTripTest {
 
     @Test
     public void toModelType_invalidEmail_throwsIllegalValueException() {
+        // EP: invalid email format
         JsonAdaptedTrip person =
                 new JsonAdaptedTrip(VALID_NAME, VALID_PHONE, INVALID_EMAIL, VALID_ADDRESS,
                         VALID_TAGS, VALID_START_DATE, VALID_END_DATE);
@@ -80,6 +86,7 @@ public class JsonAdaptedTripTest {
 
     @Test
     public void toModelType_invalidAddress_throwsIllegalValueException() {
+        // EP: invalid address format
         JsonAdaptedTrip person =
                 new JsonAdaptedTrip(VALID_NAME, VALID_PHONE, VALID_EMAIL, INVALID_ADDRESS,
                         VALID_TAGS, VALID_START_DATE, VALID_END_DATE);
@@ -89,6 +96,7 @@ public class JsonAdaptedTripTest {
 
     @Test
     public void toModelType_invalidTags_throwsIllegalValueException() {
+        // EP: list containing invalid tag format
         List<JsonAdaptedTag> invalidTags = new ArrayList<>(VALID_TAGS);
         invalidTags.add(new JsonAdaptedTag(INVALID_TAG));
         JsonAdaptedTrip person =
@@ -99,6 +107,7 @@ public class JsonAdaptedTripTest {
 
     @Test
     public void toModelType_invalidDateOrder_throwsIllegalValueException() {
+        // EP: logical error in persisted data (Start > End)
         String startDate = "2026-12-31";
         String endDate = "2026-01-01";
         JsonAdaptedTrip trip = new JsonAdaptedTrip(VALID_NAME, VALID_PHONE, VALID_EMAIL, VALID_ADDRESS,
@@ -108,6 +117,7 @@ public class JsonAdaptedTripTest {
 
     @Test
     public void toModelType_invalidStartDate_throwsIllegalValueException() {
+        // EP: invalid date string format
         JsonAdaptedTrip trip = new JsonAdaptedTrip(VALID_NAME, VALID_PHONE, VALID_EMAIL, VALID_ADDRESS,
                 VALID_TAGS, "not-a-date", VALID_END_DATE);
         assertThrows(IllegalValueException.class, trip::toModelType);
@@ -115,6 +125,7 @@ public class JsonAdaptedTripTest {
 
     @Test
     public void toModelType_invalidEndDate_throwsIllegalValueException() {
+        // BVA: date value at logical maximum but formatted incorrectly for the parser
         JsonAdaptedTrip trip = new JsonAdaptedTrip(VALID_NAME, VALID_PHONE, VALID_EMAIL, VALID_ADDRESS,
                 VALID_TAGS, VALID_START_DATE, "2026-99-99");
         assertThrows(IllegalValueException.class, trip::toModelType);
@@ -122,6 +133,7 @@ public class JsonAdaptedTripTest {
 
     @Test
     public void toModelType_nullOptionalFields_modelSetsNull() throws Exception {
+        // EP: all optional fields are missing (null)
         JsonAdaptedTrip tripWithNulls =
                 new JsonAdaptedTrip(VALID_NAME, null, null, null, VALID_TAGS,
                         null, null);
