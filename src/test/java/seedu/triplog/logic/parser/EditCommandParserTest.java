@@ -24,7 +24,9 @@ import static seedu.triplog.logic.commands.CommandTestUtil.VALID_TAG_FRIEND;
 import static seedu.triplog.logic.commands.CommandTestUtil.VALID_TAG_HUSBAND;
 import static seedu.triplog.logic.parser.CliSyntax.PREFIX_ADDRESS;
 import static seedu.triplog.logic.parser.CliSyntax.PREFIX_EMAIL;
+import static seedu.triplog.logic.parser.CliSyntax.PREFIX_END_DATE;
 import static seedu.triplog.logic.parser.CliSyntax.PREFIX_PHONE;
+import static seedu.triplog.logic.parser.CliSyntax.PREFIX_START_DATE;
 import static seedu.triplog.logic.parser.CliSyntax.PREFIX_TAG;
 import static seedu.triplog.logic.parser.CommandParserTestUtil.assertParseFailure;
 import static seedu.triplog.logic.parser.CommandParserTestUtil.assertParseSuccess;
@@ -48,7 +50,8 @@ import seedu.triplog.testutil.EditTripDescriptorBuilder;
 public class EditCommandParserTest {
 
     private static final String TAG_EMPTY = " " + PREFIX_TAG;
-
+    private static final String START_DATE_DESC_AMY = " " + PREFIX_START_DATE + "2026-03-01";
+    private static final String END_DATE_DESC_AMY = " " + PREFIX_END_DATE + "2026-03-10";
     private static final String MESSAGE_INVALID_FORMAT =
             String.format(MESSAGE_INVALID_COMMAND_FORMAT, EditCommand.MESSAGE_USAGE);
 
@@ -193,6 +196,31 @@ public class EditCommandParserTest {
 
         assertParseFailure(parser, userInput,
                 Messages.getErrorMessageForDuplicatePrefixes(PREFIX_PHONE, PREFIX_EMAIL, PREFIX_ADDRESS));
+    }
+
+    @Test
+    public void parse_duplicateStartDatePrefix_failure() {
+        String userInput = "1" + START_DATE_DESC_AMY + START_DATE_DESC_AMY;
+
+        assertParseFailure(parser, userInput,
+                Messages.getErrorMessageForDuplicatePrefixes(PREFIX_START_DATE));
+    }
+
+    @Test
+    public void parse_duplicateEndDatePrefix_failure() {
+        String userInput = "1" + END_DATE_DESC_AMY + END_DATE_DESC_AMY;
+
+        assertParseFailure(parser, userInput,
+                Messages.getErrorMessageForDuplicatePrefixes(PREFIX_END_DATE));
+    }
+
+    @Test
+    public void parse_duplicateStartAndEndDatePrefixes_failure() {
+        String userInput = "1" + START_DATE_DESC_AMY + START_DATE_DESC_AMY
+                + END_DATE_DESC_AMY + END_DATE_DESC_AMY;
+
+        assertParseFailure(parser, userInput,
+                Messages.getErrorMessageForDuplicatePrefixes(PREFIX_START_DATE, PREFIX_END_DATE));
     }
 
     @Test
