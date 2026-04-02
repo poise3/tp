@@ -178,6 +178,10 @@ The following sequence diagram shows the logic for deleting a trip:
 
 ### Tagging Trips: Tag Command
 
+The `tag` command allows users to add a single tag to trips for easier organisation and filtering. It only supports tagging by index.
+
+The parsing of the command is handled by `TagCommandParser`, which parses the required arguments and constructs the corresponding `TagCommand`.
+
 The following sequence diagram illustrates the process of tagging a trip:
 
 <puml src="diagrams/TagSequenceDiagram.puml" alt="Tag Command Sequence Diagram" />
