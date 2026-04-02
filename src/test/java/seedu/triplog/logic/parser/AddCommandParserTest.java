@@ -33,7 +33,9 @@ import static seedu.triplog.logic.parser.CliSyntax.PREFIX_PHONE;
 import static seedu.triplog.logic.parser.CliSyntax.PREFIX_START_DATE;
 import static seedu.triplog.logic.parser.CommandParserTestUtil.assertParseFailure;
 import static seedu.triplog.logic.parser.CommandParserTestUtil.assertParseSuccess;
+import static seedu.triplog.model.trip.Trip.MAX_NAME_LENGTH;
 import static seedu.triplog.model.trip.Trip.MESSAGE_INVALID_DATE_ORDER;
+import static seedu.triplog.model.trip.Trip.MESSAGE_INVALID_NAME_LENGTH;
 import static seedu.triplog.testutil.TypicalTrips.AMY;
 import static seedu.triplog.testutil.TypicalTrips.BOB;
 
@@ -47,6 +49,7 @@ import seedu.triplog.model.trip.Email;
 import seedu.triplog.model.trip.Name;
 import seedu.triplog.model.trip.Phone;
 import seedu.triplog.model.trip.Trip;
+import seedu.triplog.model.trip.TripDate;
 import seedu.triplog.testutil.TripBuilder;
 
 public class AddCommandParserTest {
@@ -200,5 +203,17 @@ public class AddCommandParserTest {
         assertParseFailure(parser,
                 NAME_DESC_BOB + startDateLater + endDateLater,
                 MESSAGE_INVALID_DATE_ORDER);
+    }
+
+    @Test
+    public void parse_addCommandNameTooLong_throwsParseException() {
+        assertParseFailure(parser, " " + PREFIX_NAME + "a".repeat(MAX_NAME_LENGTH + 1),
+                MESSAGE_INVALID_NAME_LENGTH);
+    }
+
+    @Test
+    public void parse_addCommandInvalidDate_throwsParseException() {
+        String invalidStartDate = " " + PREFIX_START_DATE + "0000-12-31";
+        assertParseFailure(parser, NAME_DESC_BOB + invalidStartDate, TripDate.MESSAGE_CONSTRAINTS);
     }
 }

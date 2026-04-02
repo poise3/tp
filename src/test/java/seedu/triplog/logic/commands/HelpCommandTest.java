@@ -17,18 +17,21 @@ public class HelpCommandTest {
     private Model model = new ModelManager();
     private Model expectedModel = new ModelManager();
 
+    // EP: no argument triggers help window mode
     @Test
     public void execute_noArgument_opensHelpWindow() {
         CommandResult expectedCommandResult = new CommandResult(SHOWING_HELP_MESSAGE, true, false);
         assertCommandSuccess(new HelpCommand(), model, expectedCommandResult, expectedModel);
     }
 
+    // EP: empty string argument is treated the same as no argument
     @Test
     public void execute_emptyStringArgument_opensHelpWindow() {
         CommandResult expectedCommandResult = new CommandResult(SHOWING_HELP_MESSAGE, true, false);
         assertCommandSuccess(new HelpCommand(""), model, expectedCommandResult, expectedModel);
     }
 
+    // EP: known command arguments return inline usage without opening the help window
     @Test
     public void execute_addArgument_showsInlineUsage() throws CommandException {
         CommandResult result = new HelpCommand("add").execute(model);
@@ -99,28 +102,33 @@ public class HelpCommandTest {
         assertFalse(result.isShowHelp());
     }
 
+    // EP: unknown command argument throws CommandException
     @Test
     public void execute_unknownArgument_showsErrorMessage() {
         assertThrows(CommandException.class, () -> new HelpCommand("foobar").execute(model));
     }
 
+    // EP: whitespace-padded argument is trimmed before lookup
     @Test
     public void execute_argumentWithWhitespace_trims() throws CommandException {
         CommandResult result = new HelpCommand("  add  ").execute(model);
         assertTrue(result.getFeedbackToUser().startsWith("add "));
     }
 
+    // EP: ADD_USAGE contains both date prefixes
     @Test
     public void addUsage_containsDateOptions() {
         assertTrue(CommandUsage.ADD_USAGE.contains("sd/"));
         assertTrue(CommandUsage.ADD_USAGE.contains("ed/"));
     }
 
+    // EP: DELETE_USAGE contains the index placeholder
     @Test
     public void deleteUsage_containsIndexPlaceholder() {
         assertTrue(CommandUsage.DELETE_USAGE.contains("<INDEX>"));
     }
 
+    // EP: TAG_USAGE contains both index and tag-name placeholders
     @Test
     public void tagUsage_containsIndexAndTagNamePlaceholders() {
         assertTrue(CommandUsage.TAG_USAGE.contains("<INDEX>"));

@@ -19,7 +19,10 @@ import seedu.triplog.model.tag.Tag;
  */
 public class Trip {
 
+    public static final int MAX_NAME_LENGTH = 85; // longest place name in the world is 85 letters
     public static final String MESSAGE_INVALID_DATE_ORDER = "Start date cannot be after end date.";
+    public static final String MESSAGE_INVALID_NAME_LENGTH = "Trip name must be at most "
+                                                              + MAX_NAME_LENGTH + " characters.";
 
     /**
      * Comparison logic for trips:
@@ -66,6 +69,9 @@ public class Trip {
                 TripDate startDate, TripDate endDate) {
         requireAllNonNull(name, tags);
 
+        checkArgument(name.toString().length() <= MAX_NAME_LENGTH,
+                MESSAGE_INVALID_NAME_LENGTH);
+
         if (startDate != null && endDate != null) {
             checkArgument(!startDate.value.isAfter(endDate.value), MESSAGE_INVALID_DATE_ORDER);
         }
@@ -92,6 +98,49 @@ public class Trip {
         this.endDate = trip.endDate;
         this.tags.addAll(trip.tags);
         this.tags.add(tag);
+    }
+
+    /**
+     * Returns true if both trips have overlapping date ranges.
+     */
+    private static boolean datesOverlap(TripDate start1, TripDate end1, TripDate start2, TripDate end2) {
+        boolean hasFullRange1 = start1 != null && end1 != null;
+        boolean hasFullRange2 = start2 != null && end2 != null;
+
+        if (hasFullRange1 && hasFullRange2) {
+            return !end1.value.isBefore(start2.value)
+                    && !start1.value.isAfter(end2.value);
+        }
+
+        if (start1 != null && end1 == null && start2 != null && end2 == null) {
+            return start1.value.equals(start2.value);
+        }
+
+        if (start1 == null && end1 != null && start2 == null && end2 != null) {
+            return end1.value.equals(end2.value);
+        }
+
+        // one full range, other has only a single date
+        if (hasFullRange1 && start2 != null) {
+            return isDateWithinRange(start2, start1, end1);
+        }
+        if (hasFullRange1 && end2 != null) {
+            return isDateWithinRange(end2, start1, end1);
+        }
+        if (hasFullRange2 && start1 != null) {
+            return isDateWithinRange(start1, start2, end2);
+        }
+        if (hasFullRange2 && end1 != null) {
+            return isDateWithinRange(end1, start2, end2);
+        }
+
+        return false;
+    }
+
+    private static boolean isDateWithinRange(TripDate date, TripDate rangeStart,
+                                             TripDate rangeEnd) {
+        return !date.value.isBefore(rangeStart.value)
+                && !date.value.isAfter(rangeEnd.value);
     }
 
     public Name getName() {
@@ -174,8 +223,15 @@ public class Trip {
             return true;
         }
 
-        return otherTrip != null
-                && otherTrip.getName().equals(getName());
+        if (otherTrip == null) {
+            return false;
+        }
+
+        boolean sameName = this.getNameLowerCase().equals(otherTrip.getNameLowerCase());
+        boolean overlappingDates = datesOverlap(this.startDate, this.endDate,
+                                                otherTrip.startDate, otherTrip.endDate);
+
+        return sameName && overlappingDates;
     }
 
     /**

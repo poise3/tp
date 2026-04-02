@@ -2,6 +2,7 @@ package seedu.triplog.logic.commands;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static seedu.triplog.logic.commands.CommandTestUtil.assertCommandFailure;
 import static seedu.triplog.logic.commands.CommandTestUtil.assertCommandSuccess;
@@ -18,6 +19,7 @@ import java.util.Set;
 import org.junit.jupiter.api.Test;
 
 import seedu.triplog.commons.core.index.Index;
+import seedu.triplog.logic.commands.exceptions.CommandException;
 import seedu.triplog.model.Model;
 import seedu.triplog.model.ModelManager;
 import seedu.triplog.model.UserPrefs;
@@ -207,6 +209,24 @@ public class DeleteCommandTest {
     }
 
     @Test
+    public void buildPreviewMessage_tripWithNoDates_usesNoDatePlaceholders() {
+        Trip tripWithNoDates = new Trip(
+                new Name("No Date Trip"),
+                null,
+                null,
+                null,
+                Set.of(),
+                null,
+                null);
+
+        DeleteCommand deleteCommand = new DeleteCommand(INDEX_FIRST_TRIP);
+        String message = deleteCommand.buildPreviewMessage(java.util.List.of(tripWithNoDates));
+
+        assertTrue(message.contains("No date"));
+        assertTrue(message.contains("No Date Trip"));
+    }
+
+    @Test
     public void equals() {
         DeleteCommand deleteFirstCommand = new DeleteCommand(INDEX_FIRST_TRIP);
         DeleteCommand deleteSecondCommand = new DeleteCommand(INDEX_SECOND_TRIP);
@@ -309,9 +329,8 @@ public class DeleteCommandTest {
     }
 
     @Test
-    public void executeDeleteByDateRange_noMatchThrowsException() {
+    public void execute_deleteByDateRangeNoMatch_throwsCommandException() {
         Model model = new ModelManager(getTypicalTripLog(), new UserPrefs());
-
         DeleteCommand deleteCommand = new DeleteCommand(
                 new TripMatchesDeletePredicate(
                         null, null, null, null,
@@ -320,22 +339,6 @@ public class DeleteCommandTest {
                         Set.of()));
 
         assertCommandFailure(deleteCommand, model, DeleteCommand.MESSAGE_NO_MATCHING_TRIPS);
-    }
-
-    @Test
-    public void execute_validSingleElementRange_success() {
-        Model model = new ModelManager(getTypicalTripLog(), new UserPrefs());
-        Model expectedModel = new ModelManager(getTypicalTripLog(), new UserPrefs());
-
-        DeleteCommand deleteCommand = new DeleteCommand(Index.fromOneBased(2), Index.fromOneBased(2));
-
-        Trip tripToDelete = expectedModel.getFilteredTripList().get(1);
-        expectedModel.deleteTrip(tripToDelete);
-
-        String expectedSummary = TripSummaryUtil.calculateSummary(expectedModel.getFilteredTripList());
-        String expectedMessage = String.format(DeleteCommand.MESSAGE_DELETE_TRIP_SUCCESS, 1, expectedSummary);
-
-        assertCommandSuccess(deleteCommand, model, expectedMessage, expectedModel);
     }
 
     @Test
@@ -377,7 +380,41 @@ public class DeleteCommandTest {
                 Index.fromOneBased(1),
                 Index.fromOneBased(model.getFilteredTripList().size() + 1));
 
-        assertCommandFailure(deleteCommand, model, DeleteCommand.MESSAGE_RANGE_OUT_OF_RANGE);
+        CommandException exception = assertThrows(
+                CommandException.class, () -> deleteCommand.getTripsToDelete(model));
+        assertEquals(DeleteCommand.MESSAGE_RANGE_OUT_OF_RANGE, exception.getMessage());
+    }
+
+    @Test
+    public void getTripsToDelete_rangeExactBoundary_success() throws Exception {
+        int size = model.getFilteredTripList().size();
+
+        DeleteCommand deleteCommand = new DeleteCommand(
+                Index.fromOneBased(1),
+                Index.fromOneBased(size));
+
+        assertEquals(size, deleteCommand.getTripsToDelete(model).size());
+    }
+
+    @Test
+    public void getTripsToDelete_rangeEmptyList_throwsCommandException() {
+        showNoTrip(model);
+
+        DeleteCommand deleteCommand = new DeleteCommand(
+                Index.fromOneBased(1), Index.fromOneBased(1));
+
+        assertThrows(
+                CommandException.class, () -> deleteCommand.getTripsToDelete(model));
+    }
+
+    @Test
+    public void getTripsToDelete_singleIndexOutOfRange_throwsCommandException() {
+        DeleteCommand deleteCommand = new DeleteCommand(
+                Index.fromOneBased(model.getFilteredTripList().size() + 1));
+
+        CommandException exception = assertThrows(
+                CommandException.class, () -> deleteCommand.getTripsToDelete(model));
+        assertEquals(DeleteCommand.MESSAGE_INDEX_OUT_OF_RANGE, exception.getMessage());
     }
 
     @Test
@@ -387,7 +424,19 @@ public class DeleteCommandTest {
                         new Name("Nonexistent"),
                         null, null, null, null, null, Set.of()));
 
-        assertCommandFailure(deleteCommand, model, DeleteCommand.MESSAGE_NO_MATCHING_TRIPS);
+        CommandException exception = assertThrows(
+                CommandException.class, () -> deleteCommand.getTripsToDelete(model));
+        assertEquals(DeleteCommand.MESSAGE_NO_MATCHING_TRIPS, exception.getMessage());
+    }
+
+    @Test
+    public void getTripsToDelete_rangeFilteredList_returnsTrips() throws Exception {
+        showTripAtIndex(model, INDEX_FIRST_TRIP);
+
+        DeleteCommand deleteCommand = new DeleteCommand(Index.fromOneBased(1), Index.fromOneBased(1));
+
+        assertEquals(1, deleteCommand.getTripsToDelete(model).size());
+        assertEquals(model.getFilteredTripList().get(0), deleteCommand.getTripsToDelete(model).get(0));
     }
 
     @Test
@@ -405,6 +454,31 @@ public class DeleteCommandTest {
 
         assertTrue(deleteFilterCommand1.equals(deleteFilterCommand2));
         assertFalse(deleteFilterCommand1.equals(deleteFilterCommand3));
+    }
+
+    @Test
+    public void equals_rangeModeDifferentStartIndex_returnsFalse() {
+        DeleteCommand firstRange = new DeleteCommand(Index.fromOneBased(1), Index.fromOneBased(2));
+        DeleteCommand secondRange = new DeleteCommand(Index.fromOneBased(2), Index.fromOneBased(2));
+
+        assertFalse(firstRange.equals(secondRange));
+    }
+
+    @Test
+    public void equals_rangeModeDifferentEndIndex_returnsFalse() {
+        DeleteCommand firstRange = new DeleteCommand(Index.fromOneBased(1), Index.fromOneBased(2));
+        DeleteCommand secondRange = new DeleteCommand(Index.fromOneBased(1), Index.fromOneBased(3));
+
+        assertFalse(firstRange.equals(secondRange));
+    }
+
+    @Test
+    public void equals_filterModeSameObject_returnsTrue() {
+        TripMatchesDeletePredicate predicate = new TripMatchesDeletePredicate(
+                new Name("Alice Pauline"), null, null, null, null, null, Set.of());
+        DeleteCommand deleteCommand = new DeleteCommand(predicate);
+
+        assertTrue(deleteCommand.equals(deleteCommand));
     }
 
     @Test

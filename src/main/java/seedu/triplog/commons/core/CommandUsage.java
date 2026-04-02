@@ -5,11 +5,16 @@ package seedu.triplog.commons.core;
  */
 public class CommandUsage {
 
+    public static final String HELP_USAGE =
+            "help [COMMAND]\n"
+                    + "  Opens the command syntax guide, or shows usage for a specific command.\n"
+                    + "  e.g. help, help add, help delete";
+
     public static final String ADD_USAGE =
             "add n/<destination> [p/<phone>] [e/<email>] [a/<address>] "
                     + "[sd/<start-date>] [ed/<end-date>] [t/<tag>]...\n"
                     + "  Records a new trip. Items in [square brackets] are optional. Dates must be YYYY-MM-DD.\n"
-                    + "  e.g. add n/Tokyo sd/2026-03-01 t/food";
+                    + "  e.g. add n/Tokyo sd/2026-06-01 t/food";
 
     public static final String EDIT_USAGE =
             "edit <INDEX> [n/<destination>] [p/<phone>] [e/<email>] [a/<address>] "
@@ -30,7 +35,7 @@ public class CommandUsage {
                     + "        delete 1-3\n"
                     + "        delete n/Tokyo\n"
                     + "        delete t/family\n"
-                    + "        delete sd/2026-03-01 ed/2026-05-10";
+                    + "        delete sd/2026-06-01 ed/2026-08-10";
 
     public static final String TAG_USAGE =
             "tag <INDEX> <tag-name>\n"
@@ -46,7 +51,7 @@ public class CommandUsage {
     public static final String FILTER_USAGE =
             "filter sd/<start-date> ed/<end-date>\n"
                     + "  Filters trips occurring within the specified date range.\n"
-                    + "  e.g. filter sd/2026-01-01 ed/2026-03-31";
+                    + "  e.g. filter sd/2026-05-01 ed/2026-07-31";
 
     public static final String LIST_USAGE =
             "list [sort/<key>]\n"

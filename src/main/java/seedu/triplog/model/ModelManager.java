@@ -25,13 +25,12 @@ public class ModelManager implements Model {
     private final UserPrefs userPrefs;
     private final FilteredList<Trip> filteredTrips;
     private final SortedList<Trip> sortedTrips;
-    private String lastSortDescription = "start date";
 
     /**
-     * Initializes a ModelManager with the given tripLog and userPrefs.
+     * Initializes a ModelManager with the given tripLog, userPrefs and initial comparator.
      */
-    public ModelManager(ReadOnlyTripLog tripLog, ReadOnlyUserPrefs userPrefs) {
-        requireAllNonNull(tripLog, userPrefs);
+    public ModelManager(ReadOnlyTripLog tripLog, ReadOnlyUserPrefs userPrefs, Comparator<Trip> initialComparator) {
+        requireAllNonNull(tripLog, userPrefs, initialComparator);
 
         logger.fine("Initializing with trip log: " + tripLog + " and user prefs " + userPrefs);
 
@@ -40,11 +39,18 @@ public class ModelManager implements Model {
         filteredTrips = new FilteredList<>(this.tripLog.getTripList());
         sortedTrips = new SortedList<>(filteredTrips);
 
-        sortedTrips.setComparator(Trip.CHRONOLOGICAL_COMPARATOR);
+        sortedTrips.setComparator(initialComparator);
+    }
+
+    /**
+     * Legacy constructor for backward compatibility in tests.
+     */
+    public ModelManager(ReadOnlyTripLog tripLog, ReadOnlyUserPrefs userPrefs) {
+        this(tripLog, userPrefs, Trip.CHRONOLOGICAL_COMPARATOR);
     }
 
     public ModelManager() {
-        this(new TripLog(), new UserPrefs());
+        this(new TripLog(), new UserPrefs(), Trip.CHRONOLOGICAL_COMPARATOR);
     }
 
     //=========== UserPrefs ==================================================================================
@@ -101,6 +107,14 @@ public class ModelManager implements Model {
     }
 
     @Override
+    public boolean hasTripExcluding(Trip trip, Trip excludedTrip) {
+        requireNonNull(trip);
+        return tripLog.getTripList().stream()
+                .filter(t -> !t.equals(excludedTrip))
+                .anyMatch(t -> t.isSameTrip(trip));
+    }
+
+    @Override
     public void deleteTrip(Trip target) {
         tripLog.removeTrip(target);
     }
@@ -147,13 +161,13 @@ public class ModelManager implements Model {
 
     @Override
     public String getLastSortDescription() {
-        return lastSortDescription;
+        return userPrefs.getLastSortDescription();
     }
 
     @Override
     public void setLastSortDescription(String description) {
         requireNonNull(description);
-        this.lastSortDescription = description;
+        userPrefs.setLastSortDescription(description);
     }
 
     @Override

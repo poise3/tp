@@ -47,6 +47,7 @@ public class CommandBoxTest {
 
     @Test
     public void handleCommandEntered_success_styleApplied() throws Exception {
+        // EP: successfully executed command
         Platform.runLater(() -> commandTextField.setText("success"));
         WaitForAsyncUtils.waitForFxEvents();
 
@@ -61,6 +62,7 @@ public class CommandBoxTest {
 
     @Test
     public void handleCommandEntered_failure_styleAppliedAndResets() throws Exception {
+        // EP: command that fails parsing or execution
         // 1. Trigger Failure
         Platform.runLater(() -> commandTextField.setText("fail"));
         WaitForAsyncUtils.waitForFxEvents();
@@ -71,6 +73,7 @@ public class CommandBoxTest {
         assertTrue(commandTextField.getStyle().contains("#ff4d4d"),
                 "Style should contain error color: " + commandTextField.getStyle());
 
+        // EP: user modifies text after an error (resets style)
         // 2. Simulate typing to fix
         Platform.runLater(() -> commandTextField.setText("fai"));
         WaitForAsyncUtils.waitForFxEvents();
@@ -83,6 +86,7 @@ public class CommandBoxTest {
 
     @Test
     public void handleCommandEntered_deleteFirstEnter_previewShownTextNotCleared() throws Exception {
+        // EP: delete command (first enter - preview phase)
         AtomicInteger previewCount = new AtomicInteger(0);
 
         CommandBox deleteBox = new CommandBox(commandText -> {
@@ -114,6 +118,7 @@ public class CommandBoxTest {
 
     @Test
     public void handleCommandEntered_deleteSecondEnter_confirmsAndClearsText() throws Exception {
+        // EP: delete command (second enter - confirmation phase)
         AtomicInteger previewCount = new AtomicInteger(0);
         AtomicInteger deleteCount = new AtomicInteger(0);
 
@@ -155,6 +160,7 @@ public class CommandBoxTest {
 
     @Test
     public void handleCommandEntered_deleteEditAfterPreview_cancelsConfirmation() throws Exception {
+        // EP: delete command edited after preview (cancels pending confirmation)
         AtomicInteger previewOneCount = new AtomicInteger(0);
         AtomicInteger previewTwoCount = new AtomicInteger(0);
         AtomicInteger deleteCount = new AtomicInteger(0);
@@ -205,6 +211,7 @@ public class CommandBoxTest {
 
     @Test
     public void handleCommandEntered_emptyCommand_noExecution() throws Exception {
+        // EP: empty string input
         AtomicInteger executeCount = new AtomicInteger(0);
 
         CommandBox box = new CommandBox(commandText -> {
@@ -226,6 +233,7 @@ public class CommandBoxTest {
 
     @Test
     public void handleCommandEntered_deleteOnly_previewShownTextNotCleared() throws Exception {
+        // EP: delete command without arguments (preview only)
         AtomicInteger previewCount = new AtomicInteger(0);
 
         CommandBox deleteBox = new CommandBox(commandText -> {

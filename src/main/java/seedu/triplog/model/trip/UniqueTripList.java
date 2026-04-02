@@ -61,7 +61,7 @@ public class UniqueTripList implements Iterable<Trip> {
             throw new TripNotFoundException();
         }
 
-        if (!target.isSameTrip(editedTrip) && contains(editedTrip)) {
+        if (containsExcluding(editedTrip, target)) {
             throw new DuplicateTripException();
         }
 
@@ -147,5 +147,14 @@ public class UniqueTripList implements Iterable<Trip> {
             }
         }
         return true;
+    }
+
+    /**
+     * Returns true if {@code toCheck} contains excluded trip.
+     */
+    private boolean containsExcluding(Trip toCheck, Trip excluded) {
+        return internalList.stream()
+                .filter(trip -> !trip.equals(excluded))
+                .anyMatch(trip -> trip.isSameTrip(toCheck));
     }
 }

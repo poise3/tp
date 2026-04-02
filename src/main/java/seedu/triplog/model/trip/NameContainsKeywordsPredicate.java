@@ -3,7 +3,6 @@ package seedu.triplog.model.trip;
 import java.util.List;
 import java.util.function.Predicate;
 
-import seedu.triplog.commons.util.StringUtil;
 import seedu.triplog.commons.util.ToStringBuilder;
 
 /**
@@ -19,7 +18,8 @@ public class NameContainsKeywordsPredicate implements Predicate<Trip> {
     @Override
     public boolean test(Trip trip) {
         return keywords.stream()
-                .anyMatch(keyword -> StringUtil.containsWordIgnoreCase(trip.getName().fullName, keyword));
+                .anyMatch(keyword -> trip.getName().fullName.toLowerCase()
+                        .contains(keyword.toLowerCase()));
     }
 
     @Override

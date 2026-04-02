@@ -53,7 +53,8 @@ public class EditCommand extends Command {
     public static final String MESSAGE_EDIT_TRIP_SUCCESS = "Edited Trip: %1$s\n%2$s";
     public static final String MESSAGE_NOT_EDITED = "At least one field to edit must be provided.";
     public static final String MESSAGE_DUPLICATE_TRIP = "This trip already exists in the trip log.";
-
+    public static final String MESSAGE_NO_CHANGES =
+            "Edited fields are the same as the original.";
     private final Index index;
     private final EditTripDescriptor editTripDescriptor;
 
@@ -81,7 +82,11 @@ public class EditCommand extends Command {
         Trip tripToEdit = lastShownList.get(index.getZeroBased());
         Trip editedTrip = createEditedTrip(tripToEdit, editTripDescriptor);
 
-        if (!tripToEdit.isSameTrip(editedTrip) && model.hasTrip(editedTrip)) {
+        if (tripToEdit.equals(editedTrip)) {
+            throw new CommandException(MESSAGE_NO_CHANGES);
+        }
+
+        if (model.hasTripExcluding(editedTrip, tripToEdit)) {
             throw new CommandException(MESSAGE_DUPLICATE_TRIP);
         }
 

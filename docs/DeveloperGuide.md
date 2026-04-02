@@ -35,7 +35,7 @@ Given below is a quick overview of main components and how they interact with ea
 
 **Main components of the architecture**
 
-**`Main`** (consisting of classes [`Main`](https://github.com/se-edu/addressbook-level3/tree/master/src/main/java/seedu/address/Main.java) and [`MainApp`](https://github.com/se-edu/addressbook-level3/tree/master/src/main/java/seedu/address/MainApp.java)) is in charge of the app launch and shut down.
+**`Main`** (consisting of classes [`Main`](https://github.com/AY2526S2-CS2103-F13-2/tp/tree/master/src/main/java/seedu/triplog/Main.java) and [`MainApp`](https://github.com/AY2526S2-CS2103-F13-2/tp/tree/master/src/main/java/seedu/triplog/MainApp.java)) is in charge of the app launch and shut down.
 * At app launch, it initializes the other components in the correct sequence, and connects them up with each other.
 * At shut down, it shuts down the other components and invokes cleanup methods where necessary.
 
@@ -67,13 +67,15 @@ The sections below give more details of each component.
 
 ### UI component
 
-The **API** of this component is specified in [`Ui.java`](https://github.com/se-edu/addressbook-level3/tree/master/src/main/java/seedu/address/ui/Ui.java)
+The **API** of this component is specified in [`Ui.java`](https://github.com/AY2526S2-CS2103-F13-2/tp/tree/master/src/main/java/seedu/triplog/ui/Ui.java)
 
 <puml src="diagrams/UiClassDiagram.puml" alt="Structure of the UI Component"/>
 
-The UI consists of a `MainWindow` that is made up of parts e.g.`CommandBox`, `ResultDisplay`, `PersonListPanel`, `StatusBarFooter` etc. All these, including the `MainWindow`, inherit from the abstract `UiPart` class which captures the commonalities between classes that represent parts of the visible GUI.
+The UI consists of a `MainWindow` that is made up of parts e.g.`CommandBox`, `ResultDisplay`, `TripListPanel`, `StatusBarFooter` etc. All these, including the `MainWindow`, inherit from the abstract `UiPart` class which captures the commonalities between classes that represent parts of the visible GUI.
 
-The `UI` component uses the JavaFx UI framework. The layout of these UI parts are defined in matching `.fxml` files that are in the `src/main/resources/view` folder. For example, the layout of the [`MainWindow`](https://github.com/se-edu/addressbook-level3/tree/master/src/main/java/seedu/address/ui/MainWindow.java) is specified in [`MainWindow.fxml`](https://github.com/se-edu/addressbook-level3/tree/master/src/main/resources/view/MainWindow.fxml)
+The `UI` component uses the JavaFx UI framework. The layout of these UI parts are defined in matching `.fxml` files that are in the `src/main/resources/view` folder. For example, the layout of the [`MainWindow`](https://github.com/AY2526S2-CS2103-F13-2/tp/tree/master/src/main/java/seedu/triplog/ui/MainWindow.java) is specified in [`MainWindow.fxml`](https://github.com/AY2526S2-CS2103-F13-2/tp/tree/master/src/main/resources/view/MainWindow.fxml).
+
+To support a dynamic layout, the `MainWindow` implements a `SplitPane` with a vertical orientation to house the `TripListPanel` and `ResultDisplay`. This allows the user to manually adjust the relative height of these components.
 
 The `UI` component,
 
@@ -84,7 +86,7 @@ The `UI` component,
 
 ### Logic component
 
-**API** : [`Logic.java`](https://github.com/se-edu/addressbook-level3/tree/master/src/main/java/seedu/address/logic/Logic.java)
+**API** : [`Logic.java`](https://github.com/AY2526S2-CS2103-F13-2/tp/tree/master/src/main/java/seedu/triplog/logic/Logic.java)
 
 Here's a (partial) class diagram of the `Logic` component:
 
@@ -116,7 +118,7 @@ How the parsing works:
 * All `XYZCommandParser` classes (e.g., `AddCommandParser`, `DeleteCommandParser`, ...) inherit from the `Parser` interface so that they can be treated similarly where possible e.g, during testing.
 
 ### Model component
-**API** : [`Model.java`](https://github.com/se-edu/addressbook-level3/tree/master/src/main/java/seedu/address/model/Model.java)
+**API** : [`Model.java`](https://github.com/AY2526S2-CS2103-F13-2/tp/tree/master/src/main/java/seedu/triplog/model/Model.java)
 
 <puml src="diagrams/ModelClassDiagram.puml" width="450" />
 
@@ -132,7 +134,7 @@ The `Model` component,
 
 ### Storage component
 
-**API** : [`Storage.java`](https://github.com/se-edu/addressbook-level3/tree/master/src/main/java/seedu/address/storage/Storage.java)
+**API** : [`Storage.java`](https://github.com/AY2526S2-CS2103-F13-2/tp/tree/master/src/main/java/seedu/triplog/storage/Storage.java)
 
 <puml src="diagrams/StorageClassDiagram.puml" width="550" />
 
@@ -156,6 +158,19 @@ The following sequence diagram shows how the `add` command is parsed and execute
 <puml src="diagrams/AddSequenceDiagram.puml" alt="Add Command Sequence Diagram" />
 
 ### Trip Deletion: Delete Command
+The `delete` command supports multiple deletion modes, including:
+- deletion by index,
+- deletion by index range,
+- deletion by field (e.g. name or tag),
+- deletion by date range.
+
+The parsing of the command is handled by `DeleteCommandParser`, which determines the deletion mode based on the input format and constructs the corresponding `DeleteCommand`.
+
+To prevent accidental data loss, the delete operation follows a **two-step confirmation flow**:
+1. The first execution generates a preview of the trips to be deleted.
+2. The user must confirm the pending deletion by pressing Enter again; otherwise, editing the command cancels the operation.
+
+Invalid combinations of delete modes (e.g. mixing index and field deletion) are rejected during parsing.
 
 The following sequence diagram shows the logic for deleting a trip:
 
@@ -224,6 +239,8 @@ The mode is determined in `HelpCommand#execute()`:
 
 The usage strings (e.g., `ADD_USAGE`, `DELETE_USAGE`) are defined as constants in `CommandUsage` and reused by both `HelpCommand` and `HelpWindow` to keep the content consistent between inline help and the popup window.
 
+The `HelpWindow` is resizable. The `ScrollPane` (which is the scene root) grows to fill the window as the user resizes it, showing a vertical scrollbar only when the content exceeds the window height. A minimum size of 400×300 px is enforced on the `Stage` to prevent the window from being dragged to an unusably small size.
+
 The `TripLogParser` routes `help` to `HelpCommand`:
 
 * `help` → `new HelpCommand()`
@@ -240,67 +257,6 @@ The `TripLogParser` routes `help` to `HelpCommand`:
 * **Alternative 2:** Always open a `HelpWindow`, filtered to the requested command.
     * Pros: Consistent UI; more space for content.
     * Cons: More disruptive; requires an extra window management step.
-
---------------------------------------------------------------------------------------------------------------------
-
-### \[Proposed\] Undo/redo feature
-
-#### Proposed Implementation
-
-The proposed undo/redo mechanism is facilitated by `VersionedTripLog`. It extends `TripLog` with an undo/redo history, stored internally as an `tripLogStateList` and `currentStatePointer`. Additionally, it implements the following operations:
-
-* `VersionedTripLog#commit()` — Saves the current trip log state in its history.
-* `VersionedTripLog#undo()` — Restores the previous trip log state from its history.
-* `VersionedTripLog#redo()` — Restores a previously undone trip log state from its history.
-
-These operations are exposed in the `Model` interface as `Model#commitTripLog()`, `Model#undoTripLog()` and `Model#redoTripLog()` respectively.
-
-The following sequence diagrams illustrate the logic behind undoing a command:
-
-<puml src="diagrams/UndoSequenceDiagram-Logic.puml" alt="Undo Sequence Diagram Logic" />
-
-<puml src="diagrams/UndoSequenceDiagram-Model.puml" alt="Undo Sequence Diagram Model" />
-
-Given below is an example usage scenario and how the undo/redo mechanism behaves at each step.
-
-Step 1. The user launches the application for the first time. The `VersionedTripLog` will be initialized with the initial trip log state, and the `currentStatePointer` pointing to that single trip log state.
-
-<puml src="diagrams/UndoRedoState0.puml" alt="Undo Redo State 0" />
-
-Step 2. The user executes `delete 5` command to delete the 5th trip in the trip log. The `delete` command calls `Model#commitTripLog()`, causing the modified state of the trip log after the `delete 5` command executes to be saved in the `tripLogStateList`, and the `currentStatePointer` is shifted to the newly inserted trip log state.
-
-<puml src="diagrams/UndoRedoState1.puml" alt="Undo Redo State 1" />
-
-Step 3. The user executes `add n/David …​` to add a new trip. The `add` command also calls `Model#commitTripLog()`, causing another modified trip log state to be saved into the `tripLogStateList`.
-
-<puml src="diagrams/UndoRedoState2.puml" alt="Undo Redo State 2" />
-
-<box type="info" seamless>
-
-**Note:** If a command fails its execution, it will not call `Model#commitTripLog()`, so the trip log state will not be saved into the `tripLogStateList`.
-
-</box>
-
-Step 4. The user now decides that adding the trip was a mistake, and decides to undo that action by executing the `undo` command. The `undo` command will call `Model#undoTripLog()`, which will shift the `currentStatePointer` once to the left, pointing it to the previous trip log state, and restores the trip log to that state.
-
-<puml src="diagrams/UndoRedoState3.puml" alt="Undo Redo State 3" />
-
-<box type="info" seamless>
-
-**Note:** If the `currentStatePointer` is at index 0, pointing to the initial TripLog state, then there are no previous TripLog states to restore. The `undo` command uses `Model#canUndoTripLog()` to check if this is the case. If so, it will return an error to the user rather
-than attempting to perform the undo.
-
-</box>
-
-The `redo` command does the opposite — it calls `Model#redoTripLog()`, which shifts the `currentStatePointer` once to the right, pointing to the previously undone state, and restores the trip log to that state.
-
-Step 5. The user then decides to execute the command `list`. Commands that do not modify the trip log, such as `list`, will usually not call `Model#commitTripLog()`, `Model#undoTripLog()` or `Model#redoTripLog()`. Thus, the `tripLogStateList` remains unchanged.
-
-Step 6. The user executes `clear`, which calls `Model#commitTripLog()`. Since the `currentStatePointer` is not pointing at the end of the `tripLogStateList`, all trip log states after the `currentStatePointer` will be purged. Reason: It no longer makes sense to redo the `add n/David …​` command. This is the behavior that most modern desktop applications follow.
-
-<puml src="diagrams/UndoRedoState4.puml" alt="Undo Redo State 4" />
-
-<puml src="diagrams/CommitActivityDiagram.puml" alt="Commit Activity Diagram" />
 
 --------------------------------------------------------------------------------------------------------------------
 
@@ -381,6 +337,31 @@ Priorities: Essential (must have) MVP, High (expected to have) - `* * *`, Medium
 
 --------------------------------------------------------------------------------------------------------------------
 
+## **Appendix: Effort**
+
+While TripLog originated from AB3, the transition to a travel-specific manager required significant architectural changes:
+
+* **Temporal Logic Implementation**: Unlike static contact data, `Trip` objects are time-dependent. We implemented logic to handle overlapping dates for duplicate detection and created `TripSummaryUtil` to recalculate trip statuses relative to the system clock (`LocalDate.now()`).
+* **Complex Command Parsing**: The `delete` command was overhauled to support four distinct modes (Index, Range, Field-Match, and Date-Range). This required a sophisticated `DeleteCommandParser` and custom state-management logic in the UI for the "two-step confirmation" process without modifying the core `Logic` interface.
+* **State Persistence**: We expanded `UserPrefs` to include the last-used `sort order`. This required coordination between `Logic` and `Storage` to ensure the app launches exactly as the user left it.
+* **Dynamic UI Layout**: We replaced the static vertical stacking of the Trip List and Result Display with a vertically-oriented `SplitPane`. This allows users to manually adjust the height of the feedback area, which is critical for viewing large results (e.g., help commands) without obstructing the primary list.
+* **Enhanced UI Feedback**: We integrated dynamic icons and success/error styling in the `ResultDisplay` and `CommandBox`, moving away from AB3's purely text-based feedback.
+
+--------------------------------------------------------------------------------------------------------------------
+
+## **Appendix: Planned Enhancements**
+
+**Team size: 6**
+
+1. **Improve Error Message for Invalid Indices**: Currently, when an index is out of bounds or not a positive integer, the app shows a generic error. We plan to specify the valid range based on the current list size (e.g., "Index must be between 1 and 5").
+2. **Support for Non-English Characters**: We plan to allow Unicode characters in the destination `NAME` field to support international travel records (e.g., Tokyo / 東京).
+3. **Multi-Field Substring Search**: The `find` command currently only searches the Name field. We plan to expand substring matching to include Address and Tags fields simultaneously.
+4. **Refine Phone and Email Validation**: Currently, the validation for phone numbers and emails follows a strict alphanumeric format. We plan to allow more flexible symbols (e.g., "+" for country codes in phone numbers) to support international contact details.
+5. **Clearer Duplicate Detection Feedback**: When a duplicate trip is rejected, we plan to specify which existing entry it overlaps with (e.g., "Overlaps with trip at index 2") in the feedback box.5. **Clearer Duplicate Detection Feedback**: When a duplicate trip is rejected, we plan to specify which existing entry it overlaps with (e.g., "Overlaps with trip at index 2") in the feedback box.
+6. **Custom Icons Toggle**: Provide a setting in `preferences.json` to allow users to toggle off the custom `[OK]` and `[!!]` icons for a minimalist UI.
+
+--------------------------------------------------------------------------------------------------------------------
+
 ## **Appendix: Instructions for manual testing**
 
 Given below are instructions to test the app manually.
@@ -407,6 +388,17 @@ testers are expected to do more *exploratory* testing.
     1. Re-launch the app by double-clicking the jar file.<br>
        Expected: The most recent window size and location is retained.
 
+### Command Word Case-Insensitivity
+
+1. Testing command word variations
+    1. Prerequisites: App launched with sample data.
+    2. Test case: `ADD n/Paris`
+       Expected: Trip to Paris is added (case-insensitive for command word).
+    3. Test case: `lIsT`
+       Expected: Trip list is displayed normally.
+    4. Test case: `EXIT`
+       Expected: Application shuts down.
+
 ### Listing, Sorting, and Statistics
 
 1. Initial setup (Assume Today is 2026-03-24)
@@ -428,20 +420,72 @@ testers are expected to do more *exploratory* testing.
     1. Test case: Execute `list sort/name`, then `add n/B-Destination`.
        Expected: The new trip is added and automatically positioned in alphabetical order.
 
+4. Testing Startup Summary and Persistence
+    1. Prerequisites: App contains trips with various dates.
+    2. Test case: Open the application.
+       Expected: The Result Display immediately shows a summary dashboard and the last used sort order without entering any commands.
+    3. Test case: Sort the list using `list sort/name`, exit the application, and re-launch.
+       Expected: The summary dashboard and the list itself remain sorted by name alphabetically.
+
+### UI Interaction: Vertical Resizing
+
+1. Testing Result Display resizing
+    1. Prerequisites: App launched with sample data.
+    2. Test case: Hover mouse over the boundary between Result Display and Trip List.
+       Expected: Cursor changes to vertical resize icon.
+    3. Test case: Click and drag upward.
+       Expected: Result Display height increases; Trip List height decreases.
+    4. Test case: Click and drag downward as far as possible.
+       Expected: Result Display height decreases but stops at a minimum height of 100px.
+
+### Locating trips by name
+
+1. Testing partial word matching
+    1. Prerequisites: App launched with sample data (e.g., "Tokyo Japan").
+    2. Test case: `find Tok`<br>
+       Expected: "Tokyo Japan" is found (partial match).
+    3. Test case: `find tokyo`<br>
+       Expected: "Tokyo Japan" is found (case-insensitive).
+    4. Test case: `find Tok Jap`<br>
+       Expected: "Tokyo Japan" is found (multiple partial keywords).
+
 ### Deleting a trip
 
-1. Deleting a trip while all trips are being shown
+1. Deleting a trip using index
 
     1. Prerequisites: List all trips using the `list` command. Multiple trips in the list.
 
-    1. Test case: `delete 1`<br>
-       Expected: First trip is deleted from the list. Details of the deleted trip shown in the status message. Timestamp in the status bar is updated.
+    2. Test case: `delete 1`  
+       Expected: A preview of the first trip is shown. No trip is deleted yet.
 
-    1. Test case: `delete 0`<br>
-       Expected: No trip is deleted. Error details shown in the status message. Status bar remains the same.
+    3. Test case: Press Enter again with `delete 1`  
+       Expected: First trip is deleted from the list. Details of the deleted trip shown in the status message.
 
-    1. Other incorrect delete commands to try: `delete`, `delete x`, `...` (where x is larger than the list size)<br>
-       Expected: Similar to previous.
+2. Cancelling deletion
+
+    1. Test case: `delete 1`, then modify the command instead of confirming  
+       Expected: No trip is deleted.
+
+3. Invalid index
+
+    1. Test case: `delete 0`  
+       Expected: No trip is deleted. Error message shown.
+
+4. Deleting a range of trips
+
+    1. Test case: `delete 1-3`  
+       Expected: Preview of trips 1 to 3 is shown.  
+       After confirmation, all three trips are deleted.
+
+5. Deleting by field
+
+    1. Test case: `delete n/Tokyo`  
+       Expected: All trips with name "Tokyo" are previewed, then deleted after confirmation.
+
+6. Deleting by date range
+
+    1. Test case: `delete sd/2026-01-01 ed/2026-12-31`  
+       Expected: Trips matching the specified date range are previewed, then deleted after confirmation.
 
 ### Saving data
 
@@ -450,6 +494,6 @@ testers are expected to do more *exploratory* testing.
     1. To simulate a missing file, simply delete the `triplog.json` file from the `data/` folder while the app is closed.
     2. Expected: Upon re-launching, TripLog should initialize with a clean set of sample data.
     3. To simulate a corrupted file, open `triplog.json` in a text editor and delete a necessary bracket or comma to break the JSON structure.
-    4. Expected: Upon re-launching, TripLog should detect the invalid format, discard the data, and start with an empty trip log.
+    4. Expected: Upon re-launching, TripLog should detect the invalid format, discard the data, and show the message `[!!] Data file error: Corrupted entry detected. Starting fresh.`
 
 --------------------------------------------------------------------------------------------------------------------

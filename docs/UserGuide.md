@@ -1,7 +1,7 @@
 ---
-  layout: default.md
-    title: "User Guide"
-    pageNav: 3
+layout: default.md
+title: "User Guide"
+pageNav: 3
 ---
 
 # TripLog User Guide
@@ -17,18 +17,17 @@ TripLog is a **desktop app for managing trips, optimized for use via a Command L
 1. Ensure you have Java `17` or above installed in your Computer.<br>
    **Mac users:** Ensure you have the precise JDK version prescribed [here](https://se-education.org/guides/tutorials/javaInstallationMac.html).
 
-1. Download the latest `.jar` file from [here](https://github.com/se-edu/triplog/releases).
+1. Download the latest `.jar` file from [here](https://github.com/AY2526S2-CS2103-F13-2/tp/releases).
 
 1. Copy the file to the folder you want to use as the _home folder_ for your TripLog.
 
 1. Open a command terminal, `cd` into the folder you put the jar file in, and use the `java -jar triplog.jar` command to run the application.<br>
-   A GUI similar to the below should appear in a few seconds. Note how the app contains some sample data.<br>
-   ![Ui](images/Ui.png)
+   A GUI similar to the below should appear in a few seconds. **Upon startup, TripLog automatically displays a summary dashboard and your last used sort order.**
 
 1. Type the command in the command box and press Enter to execute it. e.g. typing **`help`** and pressing Enter will open the help window.<br>
    Some example commands you can try:
     - `list` : Lists all trips and shows a status summary.
-    * `add n/Tokyo, Japan sd/2026-03-10 ed/2026-03-20` : Adds a trip to Tokyo.
+    * `add n/Tokyo Japan sd/2026-03-10 ed/2026-03-20` : Adds a trip to Tokyo.
     * `delete 3` : Deletes the 3rd trip shown in the current list.
     * `clear` : Deletes all entries.
     - `exit` : Exits the app.
@@ -43,8 +42,11 @@ TripLog is a **desktop app for managing trips, optimized for use via a Command L
 
 **Notes about the command format:**<br>
 
+- **Command words are case-insensitive.**<br>
+  e.g. `ADD`, `Add`, and `add` are all recognized as the same command.
+
 - Words in `UPPER_CASE` are the parameters to be supplied by the user.<br>
-  e.g. in `add n/NAME`, `NAME` is a parameter which can be used as `add n/John Doe`.
+  e.g. in `add n/NAME`, `NAME` is a parameter which can be used as `add n/National Museum`.
 
 - Values with spaces do not need quotes — the parser reads up to the next prefix.<br>
   e.g. `n/New York` and `a/123 Main St` are both valid.
@@ -52,14 +54,19 @@ TripLog is a **desktop app for managing trips, optimized for use via a Command L
 - Items in square brackets are optional.<br>
   e.g `n/NAME [sd/DATE]` can be used as `n/Tokyo sd/2026-01-01` or as `n/Tokyo`.
 
-- Items with `…`​ after them can be used multiple times including zero times.<br>
+- Items with `…​` after them can be used multiple times including zero times.<br>
   e.g. `[t/TAG]…​` can be used as ` ` (i.e. 0 times), `t/nature`, `t/nature t/photo` etc.
 
 - Parameters can be in any order.<br>
   e.g. if the command specifies `n/NAME p/PHONE`, `p/PHONE n/NAME` is also acceptable.
 
-- For commands that do not take parameters (such as `help`, `exit` and `clear`), extraneous parameters will be ignored.
+- For commands that do not take parameters (such as `exit` and `clear`), extraneous parameters will be ignored.
   </box>
+
+### UI Interaction: Resizing the Result Display
+
+The **Result Display** (the box where command feedback is shown) is vertically resizable to help you view longer messages, such as help instructions or deletion previews.
+* **To resize**: Hover your mouse over the boundary between the Result Display and the trip list until the cursor changes to a resize icon. Click and drag up or down to adjust the height.
 
 ### Viewing help : `help`
 
@@ -77,13 +84,26 @@ Examples:
 - `help add` — shows the usage for the `add` command inline.
 - `help delete` — shows the usage for the `delete` command inline.
 
-- The help window (opened by `help` with no arguments) can be closed by clicking the 'x' button, or by pressing **Q** or **ESCAPE** while the window is focused.
+- The help window can also be opened by pressing **F1** or using the Help menu.
+- The help window can be closed by clicking the 'x' button, or by pressing **Q** or **ESCAPE** while the window is focused.
+- The help window is resizable — drag any edge or corner to adjust its size.
 
 ### Adding a trip: `add`
 
 Adds a trip to the log.
 
+<box type="info" seamless>
+
+**Duplicate detection:** A trip is considered a duplicate if it has the same name and
+overlapping dates as an existing trip. Trips with the same name but non-overlapping date
+ranges are allowed. For example, you can have two trips named "Tokyo", one from
+2026-01-01 to 2026-01-10 and another from 2026-03-01 to 2026-03-10.
+</box>
+
 Format: `add n/NAME [p/PHONE] [e/EMAIL] [a/ADDRESS] [sd/START_DATE] [ed/END_DATE] [t/TAG]…​`
+
+- Dates must be in `YYYY-MM-DD` format.
+- `START_DATE` must be earlier than or equal to `END_DATE`.
 
 <box type="tip" seamless>
 
@@ -99,6 +119,8 @@ Examples:
 
 Shows a list of all trips currently in the log and displays a **Summary Dashboard** in the result box. The list can be optionally sorted by a specific key.
 
+![Summary Dashboard](images/listSummary.png)
+
 The **Summary Dashboard** categorizes your trips based on the current date:
 * **Upcoming**: Trips starting after today.
 * **Ongoing**: Trips currently in progress (today is between start and end).
@@ -110,7 +132,7 @@ Format: `list [sort/KEY]`
 - By default, trips are sorted by **start date** in ascending order (earliest first).
 - **Tie-breaker**: If multiple trips share the same date or length, they are automatically sorted alphabetically by name.
 - Trips with no start date are shown last.
-- The sort order is **persistent**: adding or editing trips will maintain the last chosen sort order.
+- The sort order is **persistent**: adding or editing trips will maintain the last chosen sort order, **even after restarting the application.**
 
 Supported `KEY` values:
 - `name`: Sorts alphabetically by destination name.
@@ -127,6 +149,12 @@ Examples:
 
 Edits an existing trip in the trip log.
 
+<box type="info" seamless>
+
+**Duplicate detection:** Editing a trip will be rejected if it violates the duplicate logic as mentioned
+in `Adding a trip` (same name and overlapping dates as another existing trip).
+</box>
+
 Format: `edit INDEX [n/NAME] [p/PHONE] [e/EMAIL] [a/ADDRESS] [sd/DATE] [ed/DATE] [t/TAG]…​`
 
 - Edits the trip at the specified `INDEX`. The index refers to the index number shown in the displayed trip list. The index **must be a positive integer** 1, 2, 3, …​
@@ -142,7 +170,7 @@ Examples:
 
 ### Tagging a trip : `tag`
 
-Tags an existing trip in the address book with the given keyword.
+Tags an existing trip in the TripLog with the given keyword.
 
 Format: `tag INDEX TAG`
 
@@ -157,20 +185,20 @@ Examples:
 
 ### Locating trips by name: `find`
 
-Finds trips whose names contain any of the given keywords.
+Finds trips whose names contain any of the given keywords as substrings.
 
 Format: `find KEYWORD [MORE_KEYWORDS]`
 
-- The search is case-insensitive. e.g `hans` will match `Hans`
-- The order of the keywords does not matter. e.g. `Hans Bo` will match `Bo Hans`
+- The search is case-insensitive. e.g. `tok` will match `Tokyo`
+- The order of the keywords does not matter. e.g. `Japan Tokyo` will match `Tokyo Japan`
 - Only the name is searched.
-- Only full words will be matched e.g. `Han` will not match `Hans`
+- **Partial words will be matched.** e.g. `Tok` will match `Tokyo`
 - Trips matching at least one keyword will be returned (i.e. `OR` search).
-  e.g. `Hans Bo` will return `Hans Gruber`, `Bo Yang`
+  e.g. `Tok Osaka` will return `Tokyo Japan`, `Osaka`
 
 Examples:
 
-- `find John` returns `john` and `John Doe`
+- `find Tok` returns `Tokyo Japan`
 - `find alex david` returns `Alex Yeoh`, `David Li`<br>
   ![result for 'find alex david'](images/findAlexDavidResult.png)
 
@@ -192,6 +220,7 @@ Format:
 `delete PREFIX/VALUE`
 `delete sd/START_DATE ed/END_DATE`
 
+- Only one delete mode may be used at a time (e.g. `delete 1 t/family` is invalid).
 - The command operates on the currently displayed trip list.
 
 #### Delete by index
@@ -219,8 +248,10 @@ Examples:
 
 #### Delete by field
 
-- Deletes all trips that match a specified field.
+- Deletes all trips whose specified field **exactly matches** the given value.
 - Only **one field** can be used at a time.
+- Field matching is **exact (not partial)**.  
+  For example, `delete n/Tokyo` matches `Tokyo`, but not `Tokyo Japan`.
 
 Supported prefixes:
 
@@ -240,7 +271,7 @@ Examples:
 
 #### Delete by date range
 
-- Deletes all trips whose dates fall within the specified range.
+- Deletes all trips whose start and end dates match the specified range using both `sd/` and `ed/`.
 - Both `sd/START_DATE` and `ed/END_DATE` must be provided.
 - Dates must be in `YYYY-MM-DD` format.
 
@@ -281,7 +312,7 @@ Format: `exit`
 
 ### Saving the data
 
-TripLog data are saved in the hard disk automatically after any command that changes the data. There is no need to save manually.
+TripLog data and user preferences (such as your last used sort order) are saved in the hard disk automatically after any command that changes the data or state. There is no need to save manually.
 
 ### Editing the data file
 
@@ -290,7 +321,7 @@ TripLog data are saved automatically as a JSON file `[JAR file location]/data/tr
 <box type="warning" seamless>
 
 **Caution:**
-If your changes to the data file makes its format invalid, TripLog will discard all data and start with an empty data file at the next run. Hence, it is recommended to take a backup of the file before editing it.<br>
+If your changes to the data file makes its format invalid, TripLog will show an error message `[!!] Data file error: Corrupted entry detected. Starting fresh.` and start with an empty data file at the next run. This alerts you that your local edits contained errors. Hence, it is recommended to take a backup of the file before editing it.<br>
 Furthermore, certain edits can cause the TripLog to behave in unexpected ways (e.g., if a value entered is outside the acceptable range). Therefore, edit the data file only if you are confident that you can update it correctly.
 </box>
 
@@ -309,8 +340,8 @@ _Details coming soon ..._
 
 ## Known issues
 
-1. **When using multiple screens**, if you move the application to a secondary screen, and later switch to using only the primary screen, the GUI will open off-screen. The remedy is to delete the `preferences.json` file created by the application before running the application again.
-2. **If you minimize the Help Window** and then run the `help` command (or use the `Help` menu, or the keyboard shortcut `F1`) again, the original Help Window will remain minimized, and no new Help Window will appear. The remedy is to manually restore the minimized Help Window.
+1. **Launching the application**: On some systems, double-clicking the `.jar` file may fail to launch the application. If this occurs, please open a command terminal and use the `java -jar triplog.jar` command to run the application.
+2. **Write-protected folders**: TripLog requires write permissions to save your data and preferences. Avoid placing the application in system-protected folders (e.g., `C:\Program Files`) if you do not have administrative privileges.
 
 ---
 
@@ -322,5 +353,6 @@ _Details coming soon ..._
 | **Clear** | `clear`                                                                                                                                   |
 | **Delete** | `delete INDEX`<br>`delete START-END`<br>`delete PREFIX/VALUE`<br>`delete sd/START_DATE ed/END_DATE`<br> e.g., `delete 3`, `delete 1-3`, `delete t/family`, `delete sd/2026-03-01 ed/2026-05-10` || **Edit** | `edit INDEX [n/NAME] [p/PHONE] [e/EMAIL] [a/ADDRESS] [sd/DATE] [ed/DATE] [t/TAG]…​`<br> e.g.,`edit 2 n/James Lee e/jameslee@example.com` |
 | **Find** | `find KEYWORD [MORE_KEYWORDS]`<br> e.g., `find Tokyo Osaka`                                                                                                              |
+| **Find** | `find KEYWORD [MORE_KEYWORDS]`<br> e.g., `find Tok Osaka`                                                                                                              |
 | **List** | `list [sort/KEY]` <br> e.g., `list sort/name`                                                                                                                            |                                                                                                                                                                 |
 | **Help** | `help [COMMAND]`<br> e.g., `help add`                                                                                                                                    |

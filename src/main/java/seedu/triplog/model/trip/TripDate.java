@@ -12,10 +12,13 @@ import java.time.format.DateTimeParseException;
  * Guarantees: immutable; is valid as declared in {@link #isValidDate(String)}.
  */
 public class TripDate {
-    public static final String MESSAGE_CONSTRAINTS =
-            "Dates should be in YYYY-MM-DD format";
+    private static final int MIN_YEAR = 1900;
+    private static final int MAX_YEAR = 2100;
 
-    public static final String VALIDATION_REGEX = "\\d{4}-\\d{2}-\\d{2}";
+    public static final String MESSAGE_CONSTRAINTS =
+            "Dates should be in YYYY-MM-DD format and between " + MIN_YEAR
+                    + "-01-01 and " + MAX_YEAR + "-12-31";
+
     private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ISO_LOCAL_DATE;
 
     public final LocalDate value;
@@ -36,8 +39,9 @@ public class TripDate {
      */
     public static boolean isValidDate(String test) {
         try {
-            LocalDate.parse(test, FORMATTER);
-            return true;
+            LocalDate parsed = LocalDate.parse(test, FORMATTER);
+            int year = parsed.getYear();
+            return year >= MIN_YEAR && year <= MAX_YEAR;
         } catch (DateTimeParseException e) {
             return false;
         }

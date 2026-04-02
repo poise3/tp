@@ -10,20 +10,22 @@
 /* Left bubble (File) */
 .menu-bubble-left {
     -fx-background-color: rgba(255,165,0,0.85); /* Orange */
-    -fx-background-radius: 20 0 0 20;
+    -fx-background-radius: 15 0 0 15;
     -fx-padding: 0 5 0 5;
 }
 
 /* Right bubble (Help) */
 .menu-bubble-right {
     -fx-background-color: rgba(100,180,255,0.85); /* Blue */
-    -fx-background-radius: 0 20 20 0;
+    -fx-background-radius: 0 15 15 0;
     -fx-padding: 0 5 0 5;
 }
 
 /* Make sure the menus inside don't have their own grey backgrounds */
 .menu-bubble-left .menu, .menu-bubble-right .menu {
     -fx-background-color: transparent;
+    -fx-border-width: 0;
+    -fx-border-color: transparent;
 }
 
 .menu-bubble-left .menu .label, .menu-bubble-right .menu .label {

@@ -59,6 +59,12 @@ public interface Model {
     boolean hasTrip(Trip trip);
 
     /**
+     * Returns true if a trip with the same identity as {@code trip} exists in the trip log,
+     * excluding {@code excludedTrip}.
+     */
+    boolean hasTripExcluding(Trip trip, Trip excludedTrip);
+
+    /**
      * Deletes the given trip.
      * The trip must exist in the trip log.
      */

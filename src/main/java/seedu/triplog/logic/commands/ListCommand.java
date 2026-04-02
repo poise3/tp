@@ -29,6 +29,11 @@ public class ListCommand extends Command {
     public static final String MESSAGE_INVALID_SORT_KEY = "Invalid sort key! "
             + "Supported keys: name, start, end, len";
 
+    public static final String SORT_DESC_START = "start date";
+    public static final String SORT_DESC_NAME = "name (alphabetical)";
+    public static final String SORT_DESC_END = "end date";
+    public static final String SORT_DESC_LEN = "duration (longest first)";
+
     private final String sortKey;
 
     /**
@@ -88,6 +93,32 @@ public class ListCommand extends Command {
         }
     }
 
+    /**
+     * Returns a comparator based on the human-readable description string.
+     * Used for application initialization from persisted preferences.
+     */
+    public static Comparator<Trip> getComparatorFromDescription(String description) {
+        if (description == null) {
+            return Trip.CHRONOLOGICAL_COMPARATOR;
+        }
+
+        switch (description) {
+        case SORT_DESC_NAME:
+            return Comparator.comparing(Trip::getNameLowerCase);
+        case SORT_DESC_END:
+            return Comparator.comparing(Trip::getEndDateDisplay,
+                            Comparator.nullsLast(Comparator.naturalOrder()))
+                    .thenComparing(Trip::getNameLowerCase);
+        case SORT_DESC_LEN:
+            Comparator<Trip> lenComparator = (t1, t2) -> Long.compare(t2.getDurationInDays(),
+                    t1.getDurationInDays());
+            return lenComparator.thenComparing(Trip::getNameLowerCase);
+        case SORT_DESC_START:
+        default:
+            return Trip.CHRONOLOGICAL_COMPARATOR;
+        }
+    }
+
     private Comparator<Trip> getNameComparator() {
         return Comparator.comparing(Trip::getNameLowerCase);
     }
@@ -116,14 +147,14 @@ public class ListCommand extends Command {
     private String getSortDescription(String key) {
         switch (key) {
         case "name":
-            return "name (alphabetical)";
+            return SORT_DESC_NAME;
         case "end":
-            return "end date";
+            return SORT_DESC_END;
         case "len":
-            return "duration (longest first)";
+            return SORT_DESC_LEN;
         case "start":
         default:
-            return "start date";
+            return SORT_DESC_START;
         }
     }
 

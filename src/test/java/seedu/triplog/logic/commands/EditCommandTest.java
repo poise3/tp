@@ -2,6 +2,7 @@ package seedu.triplog.logic.commands;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static seedu.triplog.logic.commands.CommandTestUtil.DESC_AMY;
 import static seedu.triplog.logic.commands.CommandTestUtil.DESC_BOB;
@@ -12,7 +13,9 @@ import static seedu.triplog.logic.commands.CommandTestUtil.assertCommandFailure;
 import static seedu.triplog.logic.commands.CommandTestUtil.assertCommandSuccess;
 import static seedu.triplog.logic.commands.CommandTestUtil.showTripAtIndex;
 import static seedu.triplog.logic.commands.EditCommand.MESSAGE_EDIT_TRIP_SUCCESS;
+import static seedu.triplog.model.trip.Trip.MAX_NAME_LENGTH;
 import static seedu.triplog.model.trip.Trip.MESSAGE_INVALID_DATE_ORDER;
+import static seedu.triplog.model.trip.Trip.MESSAGE_INVALID_NAME_LENGTH;
 import static seedu.triplog.testutil.TypicalIndexes.INDEX_FIRST_TRIP;
 import static seedu.triplog.testutil.TypicalIndexes.INDEX_SECOND_TRIP;
 import static seedu.triplog.testutil.TypicalTrips.getTypicalTripLog;
@@ -27,6 +30,7 @@ import seedu.triplog.model.ModelManager;
 import seedu.triplog.model.TripLog;
 import seedu.triplog.model.UserPrefs;
 import seedu.triplog.model.trip.Trip;
+import seedu.triplog.model.trip.TripDate;
 import seedu.triplog.testutil.EditTripDescriptorBuilder;
 import seedu.triplog.testutil.TripBuilder;
 
@@ -75,16 +79,16 @@ public class EditCommandTest {
     }
 
     @Test
-    public void execute_noFieldSpecifiedUnfilteredList_success() {
-        EditCommand editCommand = new EditCommand(INDEX_FIRST_TRIP, new EditTripDescriptor());
-        Trip editedTrip = model.getFilteredTripList().get(INDEX_FIRST_TRIP.getZeroBased());
+    public void execute_sameFieldValueUnfilteredList_failure() {
+        Trip tripToEdit = model.getFilteredTripList().get(INDEX_FIRST_TRIP.getZeroBased());
 
-        Model expectedModel = new ModelManager(new TripLog(model.getTripLog()), new UserPrefs());
+        EditTripDescriptor descriptor = new EditTripDescriptorBuilder()
+                .withStart(tripToEdit.getStartDate().value.toString())
+                .build();
 
-        String expectedSummary = TripSummaryUtil.calculateSummary(expectedModel.getFilteredTripList());
-        String expectedMessage = String.format(MESSAGE_EDIT_TRIP_SUCCESS, Messages.format(editedTrip), expectedSummary);
+        EditCommand editCommand = new EditCommand(INDEX_FIRST_TRIP, descriptor);
 
-        assertCommandSuccess(editCommand, model, expectedMessage, expectedModel);
+        assertCommandFailure(editCommand, model, EditCommand.MESSAGE_NO_CHANGES);
     }
 
     @Test
@@ -128,15 +132,13 @@ public class EditCommandTest {
 
     @Test
     public void execute_invalidDateOrder_failure() {
-        // create descriptor with invalid date order
         EditTripDescriptor descriptor = new EditTripDescriptorBuilder()
                 .withStart("2026-03-20")
-                .withEnd("2026-03-10") // start > end
+                .withEnd("2026-03-10")
                 .build();
 
         EditCommand editCommand = new EditCommand(INDEX_FIRST_TRIP, descriptor);
 
-        // should fail due to invalid date order
         assertCommandFailure(editCommand, model, MESSAGE_INVALID_DATE_ORDER);
     }
 
@@ -165,6 +167,36 @@ public class EditCommandTest {
         );
 
         assertCommandSuccess(editCommand, model, expectedMessage, expectedModel);
+    }
+
+    @Test
+    public void execute_invalidStartDateYear_failure() {
+        IllegalArgumentException thrown = assertThrows(IllegalArgumentException.class, () ->
+                new EditTripDescriptorBuilder().withStart("0000-01-01").build()
+        );
+
+        assertEquals(TripDate.MESSAGE_CONSTRAINTS, thrown.getMessage());
+    }
+
+    @Test
+    public void execute_invalidEndDateYear_failure() {
+        IllegalArgumentException thrown = assertThrows(IllegalArgumentException.class, () ->
+                new EditTripDescriptorBuilder().withEnd("9999-12-31").build()
+        );
+
+        assertEquals(TripDate.MESSAGE_CONSTRAINTS, thrown.getMessage());
+    }
+
+    @Test
+    public void execute_nameTooLong_failure() {
+        String longName = "A".repeat(MAX_NAME_LENGTH + 1);
+        EditTripDescriptor descriptor = new EditTripDescriptorBuilder()
+                .withName(longName)
+                .build();
+
+        EditCommand editCommand = new EditCommand(INDEX_FIRST_TRIP, descriptor);
+
+        assertCommandFailure(editCommand, model, MESSAGE_INVALID_NAME_LENGTH);
     }
 
     @Test

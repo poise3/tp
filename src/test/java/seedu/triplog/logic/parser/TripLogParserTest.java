@@ -110,4 +110,22 @@ public class TripLogParserTest {
 
         assertTrue(command instanceof PreviewDeleteCommand);
     }
+
+    @Test
+    public void parseCommand_caseInsensitiveCommandWord_returnsCommand() throws ParseException {
+        // 1. Test uppercase 'LIST'
+        assertTrue(parser.parseCommand("LIST") instanceof ListCommand);
+
+        // 2. Test mixed case 'HeLp'
+        assertTrue(parser.parseCommand("HeLp") instanceof HelpCommand);
+
+        // 3. Test uppercase 'EXIT'
+        assertTrue(parser.parseCommand("EXIT") instanceof ExitCommand);
+
+        // 4. Test uppercase 'CLEAR'
+        assertTrue(parser.parseCommand("CLEAR") instanceof ClearCommand);
+
+        // 5. Test uppercase 'DELETE'
+        assertTrue(parser.parseCommand("DELETE 1") instanceof DeleteCommand);
+    }
 }

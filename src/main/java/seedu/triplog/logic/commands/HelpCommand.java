@@ -5,17 +5,15 @@ import seedu.triplog.logic.commands.exceptions.CommandException;
 import seedu.triplog.model.Model;
 
 /**
- * Format full help instructions for every command for display.
+ * Displays help for TripLog commands.
+ * Without arguments, opens the help window showing syntax for all commands.
+ * With a command name argument, displays the usage for that command inline.
  */
 public class HelpCommand extends Command {
 
     public static final String COMMAND_WORD = "help";
 
-    public static final String MESSAGE_USAGE = COMMAND_WORD
-            + ": Opens the TripLog command syntax guide, or shows usage for a specific command.\n"
-            + "Format: " + COMMAND_WORD + " [COMMAND]\n"
-            + "Example: " + COMMAND_WORD + "\n"
-            + "Example: " + COMMAND_WORD + " add";
+    public static final String MESSAGE_USAGE = CommandUsage.HELP_USAGE;
     public static final String SHOWING_HELP_MESSAGE = "Opened help window.";
     public static final String MESSAGE_UNKNOWN_HELP_COMMAND =
             "Unknown command: '%s'. Type 'help' to open the full command guide.";
@@ -39,7 +37,7 @@ public class HelpCommand extends Command {
     }
 
     private static String getUsageForCommand(String commandWord) throws CommandException {
-        switch (commandWord) {
+        switch (commandWord.toLowerCase()) {
         case COMMAND_WORD:
             return MESSAGE_USAGE;
         case AddCommand.COMMAND_WORD:

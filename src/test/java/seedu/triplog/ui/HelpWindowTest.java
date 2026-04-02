@@ -131,6 +131,7 @@ public class HelpWindowTest {
     // EP: every CommandUsage string contains its respective command keyword
     @Test
     public void commandUsage_allStrings_containCommandKeyword() {
+        assertTrue(CommandUsage.HELP_USAGE.contains("help"));
         assertTrue(CommandUsage.ADD_USAGE.contains("add"));
         assertTrue(CommandUsage.EDIT_USAGE.contains("edit"));
         assertTrue(CommandUsage.DELETE_USAGE.contains("delete"));

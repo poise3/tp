@@ -9,6 +9,7 @@ import static seedu.triplog.logic.parser.CliSyntax.PREFIX_PHONE;
 import static seedu.triplog.logic.parser.CliSyntax.PREFIX_START_DATE;
 import static seedu.triplog.logic.parser.CliSyntax.PREFIX_TAG;
 
+import java.util.Optional;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -107,81 +108,18 @@ public class DeleteCommandParser implements Parser<DeleteCommand> {
     }
 
     private DeleteCommand parseCriteriaDelete(ArgumentMultimap argMultimap) throws ParseException {
-        String preamble = argMultimap.getPreamble().trim();
-        if (!preamble.isEmpty()) {
-            throw new ParseException(String.format(MESSAGE_INVALID_COMMAND_FORMAT, DeleteCommand.MESSAGE_USAGE));
-        }
+        ensureNoPreamble(argMultimap);
+        validateDeleteFieldCombination(argMultimap);
 
-        int prefixCount = countPresentPrefixes(argMultimap);
+        Name name = parseOptionalName(argMultimap);
+        Phone phone = parseOptionalPhone(argMultimap);
+        Email email = parseOptionalEmail(argMultimap);
+        Address address = parseOptionalAddress(argMultimap);
+        TripDate startDate = parseOptionalTripDate(argMultimap, PREFIX_START_DATE);
+        TripDate endDate = parseOptionalTripDate(argMultimap, PREFIX_END_DATE);
+        Set<Tag> tags = parseOptionalTags(argMultimap);
 
-        boolean hasStartDate = argMultimap.getValue(PREFIX_START_DATE).isPresent();
-        boolean hasEndDate = argMultimap.getValue(PREFIX_END_DATE).isPresent();
-        boolean isDateRangeDelete = hasStartDate && hasEndDate && prefixCount == 2;
-
-        if (prefixCount != 1 && !isDateRangeDelete) {
-            throw new ParseException(MESSAGE_MULTIPLE_DELETE_FIELDS);
-        }
-
-        Name name = null;
-        Phone phone = null;
-        Email email = null;
-        Address address = null;
-        TripDate startDate = null;
-        TripDate endDate = null;
-        Set<Tag> tags = Set.of();
-
-        if (argMultimap.getValue(PREFIX_NAME).isPresent()) {
-            if (argMultimap.getAllValues(PREFIX_NAME).size() > 1) {
-                throw new ParseException(MESSAGE_MULTIPLE_DELETE_FIELDS);
-            }
-            name = ParserUtil.parseName(argMultimap.getValue(PREFIX_NAME).get());
-        }
-
-        if (argMultimap.getValue(PREFIX_PHONE).isPresent()) {
-            if (argMultimap.getAllValues(PREFIX_PHONE).size() > 1) {
-                throw new ParseException(MESSAGE_MULTIPLE_DELETE_FIELDS);
-            }
-            phone = ParserUtil.parsePhone(argMultimap.getValue(PREFIX_PHONE).get());
-        }
-
-        if (argMultimap.getValue(PREFIX_EMAIL).isPresent()) {
-            if (argMultimap.getAllValues(PREFIX_EMAIL).size() > 1) {
-                throw new ParseException(MESSAGE_MULTIPLE_DELETE_FIELDS);
-            }
-            email = ParserUtil.parseEmail(argMultimap.getValue(PREFIX_EMAIL).get());
-        }
-
-        if (argMultimap.getValue(PREFIX_ADDRESS).isPresent()) {
-            if (argMultimap.getAllValues(PREFIX_ADDRESS).size() > 1) {
-                throw new ParseException(MESSAGE_MULTIPLE_DELETE_FIELDS);
-            }
-            address = ParserUtil.parseAddress(argMultimap.getValue(PREFIX_ADDRESS).get());
-        }
-
-        if (argMultimap.getValue(PREFIX_START_DATE).isPresent()) {
-            if (argMultimap.getAllValues(PREFIX_START_DATE).size() > 1) {
-                throw new ParseException(MESSAGE_MULTIPLE_DELETE_FIELDS);
-            }
-            startDate = ParserUtil.parseTripDate(argMultimap.getValue(PREFIX_START_DATE).get());
-        }
-
-        if (argMultimap.getValue(PREFIX_END_DATE).isPresent()) {
-            if (argMultimap.getAllValues(PREFIX_END_DATE).size() > 1) {
-                throw new ParseException(MESSAGE_MULTIPLE_DELETE_FIELDS);
-            }
-            endDate = ParserUtil.parseTripDate(argMultimap.getValue(PREFIX_END_DATE).get());
-        }
-
-        if (startDate != null && endDate != null && startDate.value.isAfter(endDate.value)) {
-            throw new ParseException(MESSAGE_INVALID_DATE_RANGE);
-        }
-
-        if (!argMultimap.getAllValues(PREFIX_TAG).isEmpty()) {
-            if (argMultimap.getAllValues(PREFIX_TAG).size() > 1) {
-                throw new ParseException(MESSAGE_MULTIPLE_DELETE_FIELDS);
-            }
-            tags = ParserUtil.parseTags(argMultimap.getAllValues(PREFIX_TAG));
-        }
+        validateDateRange(startDate, endDate);
 
         return new DeleteCommand(new TripMatchesDeletePredicate(
                 name, phone, email, address, startDate, endDate, tags));
@@ -254,5 +192,74 @@ public class DeleteCommandParser implements Parser<DeleteCommand> {
 
         return count;
     }
-}
 
+    private void ensureNoPreamble(ArgumentMultimap argMultimap) throws ParseException {
+        String preamble = argMultimap.getPreamble().trim();
+        if (!preamble.isEmpty()) {
+            throw new ParseException(String.format(MESSAGE_INVALID_COMMAND_FORMAT, DeleteCommand.MESSAGE_USAGE));
+        }
+    }
+
+    private void validateDeleteFieldCombination(ArgumentMultimap argMultimap) throws ParseException {
+        int prefixCount = countPresentPrefixes(argMultimap);
+
+        boolean hasStartDate = argMultimap.getValue(PREFIX_START_DATE).isPresent();
+        boolean hasEndDate = argMultimap.getValue(PREFIX_END_DATE).isPresent();
+        boolean isDateRangeDelete = hasStartDate && hasEndDate && prefixCount == 2;
+
+        if (prefixCount != 1 && !isDateRangeDelete) {
+            throw new ParseException(MESSAGE_MULTIPLE_DELETE_FIELDS);
+        }
+    }
+
+    private Name parseOptionalName(ArgumentMultimap argMultimap) throws ParseException {
+        Optional<String> value = getSingleValue(argMultimap, PREFIX_NAME);
+        return value.isPresent() ? ParserUtil.parseName(value.get()) : null;
+    }
+
+    private Phone parseOptionalPhone(ArgumentMultimap argMultimap) throws ParseException {
+        Optional<String> value = getSingleValue(argMultimap, PREFIX_PHONE);
+        return value.isPresent() ? ParserUtil.parsePhone(value.get()) : null;
+    }
+
+    private Email parseOptionalEmail(ArgumentMultimap argMultimap) throws ParseException {
+        Optional<String> value = getSingleValue(argMultimap, PREFIX_EMAIL);
+        return value.isPresent() ? ParserUtil.parseEmail(value.get()) : null;
+    }
+
+    private Address parseOptionalAddress(ArgumentMultimap argMultimap) throws ParseException {
+        Optional<String> value = getSingleValue(argMultimap, PREFIX_ADDRESS);
+        return value.isPresent() ? ParserUtil.parseAddress(value.get()) : null;
+    }
+
+    private TripDate parseOptionalTripDate(ArgumentMultimap argMultimap, Prefix prefix) throws ParseException {
+        Optional<String> value = getSingleValue(argMultimap, prefix);
+        return value.isPresent() ? ParserUtil.parseTripDate(value.get()) : null;
+    }
+
+    private Set<Tag> parseOptionalTags(ArgumentMultimap argMultimap) throws ParseException {
+        if (argMultimap.getAllValues(PREFIX_TAG).isEmpty()) {
+            return Set.of();
+        }
+
+        if (argMultimap.getAllValues(PREFIX_TAG).size() > 1) {
+            throw new ParseException(MESSAGE_MULTIPLE_DELETE_FIELDS);
+        }
+
+        return ParserUtil.parseTags(argMultimap.getAllValues(PREFIX_TAG));
+    }
+
+    private Optional<String> getSingleValue(ArgumentMultimap argMultimap, Prefix prefix) throws ParseException {
+        if (argMultimap.getAllValues(prefix).size() > 1) {
+            throw new ParseException(MESSAGE_MULTIPLE_DELETE_FIELDS);
+        }
+
+        return argMultimap.getValue(prefix);
+    }
+
+    private void validateDateRange(TripDate startDate, TripDate endDate) throws ParseException {
+        if (startDate != null && endDate != null && startDate.value.isAfter(endDate.value)) {
+            throw new ParseException(MESSAGE_INVALID_DATE_RANGE);
+        }
+    }
+}

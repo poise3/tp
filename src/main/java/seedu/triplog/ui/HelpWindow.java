@@ -18,7 +18,7 @@ public class HelpWindow extends UiPart<Stage> {
     public static final String PREFIX_NOTE =
             "Options use the prefix/ format — a short prefix followed immediately by a slash.\n"
                     + "Values with spaces do not need quotes (e.g., n/New York is valid).\n"
-                    + "e.g.  sd/2026-03-01   ed/2026-03-10";
+                    + "e.g.  sd/2026-06-01   ed/2026-06-10";
 
     public static final String EXIT_NOTE =
             "To exit the help window, press Q or ESCAPE, or click the close button.";
@@ -28,6 +28,9 @@ public class HelpWindow extends UiPart<Stage> {
 
     @FXML
     private Label prefixNote;
+
+    @FXML
+    private Label helpUsage;
 
     @FXML
     private Label addUsage;
@@ -68,6 +71,7 @@ public class HelpWindow extends UiPart<Stage> {
         super(FXML, requireNonNullRoot(root));
         logger.fine("Creating a new HelpWindow with provided root stage.");
         prefixNote.setText(PREFIX_NOTE);
+        helpUsage.setText(CommandUsage.HELP_USAGE);
         addUsage.setText(CommandUsage.ADD_USAGE);
         editUsage.setText(CommandUsage.EDIT_USAGE);
         deleteUsage.setText(CommandUsage.DELETE_USAGE);
@@ -78,6 +82,8 @@ public class HelpWindow extends UiPart<Stage> {
         clearUsage.setText(CommandUsage.CLEAR_USAGE);
         exitUsage.setText(CommandUsage.EXIT_USAGE);
         exitNote.setText(EXIT_NOTE);
+        root.setMinWidth(400);
+        root.setMinHeight(300);
         root.addEventFilter(KeyEvent.KEY_PRESSED, event -> {
             if (isCloseKey(event.getCode())) {
                 hide();
@@ -91,7 +97,6 @@ public class HelpWindow extends UiPart<Stage> {
      */
     public HelpWindow() {
         this(new Stage());
-        logger.fine("Initializing help page about the application.");
     }
 
     /**

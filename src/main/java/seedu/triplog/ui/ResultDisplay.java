@@ -93,14 +93,22 @@ public class ResultDisplay extends UiPart<Region> {
 
     /**
      * Returns true if the message indicates a command failure.
+     * Checks for error keywords while ensuring usage help is not marked as an error.
      *
      * @param message The feedback message to check.
      * @return True if the message contains error-related keywords.
      */
     private boolean isError(String message) {
         String lower = message.toLowerCase();
+
+        if (lower.contains("parameters:") || lower.contains("example:") || lower.contains("e.g.")
+                || lower.contains("usage:")) {
+            return false;
+        }
+
         return Stream.of("invalid", "unknown", "error", "cannot", "failed", "exception",
-                        "must", "no such", "not allowed", "insufficient", "duplicate")
+                        "must", "no such", "not allowed", "insufficient", "duplicate", "should not",
+                        "should be", "out of range", "less than or equal", "accepts exactly one")
                 .anyMatch(lower::contains);
     }
 }

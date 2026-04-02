@@ -10,6 +10,8 @@ import seedu.triplog.commons.core.GuiSettings;
 import seedu.triplog.commons.core.LogsCenter;
 import seedu.triplog.logic.commands.Command;
 import seedu.triplog.logic.commands.CommandResult;
+import seedu.triplog.logic.commands.ListCommand;
+import seedu.triplog.logic.commands.TripSummaryUtil;
 import seedu.triplog.logic.commands.exceptions.CommandException;
 import seedu.triplog.logic.parser.TripLogParser;
 import seedu.triplog.logic.parser.exceptions.ParseException;
@@ -31,13 +33,22 @@ public class LogicManager implements Logic {
     private final Model model;
     private final Storage storage;
     private final TripLogParser tripLogParser;
+    private final String initialDataLoadError;
 
     /**
      * Constructs a {@code LogicManager} with the given {@code Model} and {@code Storage}.
      */
     public LogicManager(Model model, Storage storage) {
+        this(model, storage, null);
+    }
+
+    /**
+     * Constructs a {@code LogicManager} with the given {@code Model}, {@code Storage}, and an initialization error.
+     */
+    public LogicManager(Model model, Storage storage, String initialDataLoadError) {
         this.model = model;
         this.storage = storage;
+        this.initialDataLoadError = initialDataLoadError;
         tripLogParser = new TripLogParser();
     }
 
@@ -88,5 +99,22 @@ public class LogicManager implements Logic {
     @Override
     public void setGuiSettings(GuiSettings guiSettings) {
         model.setGuiSettings(guiSettings);
+    }
+
+    @Override
+    public String getInitialDataLoadError() {
+        return initialDataLoadError;
+    }
+
+    @Override
+    public String getSummary() {
+        String summary = TripSummaryUtil.calculateSummary(model.getFilteredTripList());
+        String sortDescription = model.getLastSortDescription();
+
+        if (sortDescription == null) {
+            sortDescription = ListCommand.SORT_DESC_START;
+        }
+
+        return String.format(ListCommand.MESSAGE_SUCCESS, sortDescription, summary);
     }
 }

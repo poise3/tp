@@ -13,4 +13,9 @@ public interface ReadOnlyUserPrefs {
 
     Path getTripLogFilePath();
 
+    /**
+     * Returns the last sort description used by the user.
+     */
+    String getLastSortDescription();
+
 }

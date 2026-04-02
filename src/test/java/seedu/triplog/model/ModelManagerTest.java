@@ -16,11 +16,15 @@ import java.util.Collections;
 import org.junit.jupiter.api.Test;
 
 import seedu.triplog.commons.core.GuiSettings;
+import seedu.triplog.logic.commands.ListCommand;
 import seedu.triplog.model.trip.Name;
 import seedu.triplog.model.trip.NameContainsKeywordsPredicate;
 import seedu.triplog.model.trip.Trip;
 import seedu.triplog.model.trip.TripDate;
 
+/**
+ * Contains unit tests for ModelManager.
+ */
 public class ModelManagerTest {
 
     private ModelManager modelManager = new ModelManager();
@@ -30,6 +34,13 @@ public class ModelManagerTest {
         assertEquals(new UserPrefs(), modelManager.getUserPrefs());
         assertEquals(new GuiSettings(), modelManager.getGuiSettings());
         assertEquals(new TripLog(), new TripLog(modelManager.getTripLog()));
+    }
+
+    @Test
+    public void constructor_initializesCorrectComparator() {
+        UserPrefs namePrefs = new UserPrefs();
+        ModelManager model = new ModelManager(new TripLog(), namePrefs, Trip.CHRONOLOGICAL_COMPARATOR);
+        assertEquals(new UserPrefs(), model.getUserPrefs());
     }
 
     @Test
@@ -82,11 +93,13 @@ public class ModelManagerTest {
 
     @Test
     public void hasTrip_tripNotInTripLog_returnsFalse() {
+        // EP: trip not present in the model
         assertFalse(modelManager.hasTrip(ALICE));
     }
 
     @Test
     public void hasTrip_tripInTripLog_returnsTrue() {
+        // EP: trip present in the model
         modelManager.addTrip(ALICE);
         assertTrue(modelManager.hasTrip(ALICE));
     }
@@ -98,6 +111,7 @@ public class ModelManagerTest {
 
     @Test
     public void getFilteredTripList_isSortedChronologically() {
+        // EP: list containing trips with early and late dates
         Trip laterTrip = new Trip(new Name("Later"), null, null, null, Collections.emptySet(),
                 new TripDate("2026-12-01"), null);
         Trip earlierTrip = new Trip(new Name("Earlier"), null, null, null, Collections.emptySet(),
@@ -117,24 +131,24 @@ public class ModelManagerTest {
         TripLog differentTripLog = new TripLog();
         UserPrefs userPrefs = new UserPrefs();
 
-        // same values -> returns true
+        // EP: same values
         modelManager = new ModelManager(tripLog, userPrefs);
         ModelManager modelManagerCopy = new ModelManager(tripLog, userPrefs);
         assertTrue(modelManager.equals(modelManagerCopy));
 
-        // same object -> returns true
+        // EP: same object
         assertTrue(modelManager.equals(modelManager));
 
-        // null -> returns false
+        // EP: null
         assertFalse(modelManager.equals(null));
 
-        // different types -> returns false
+        // EP: different types
         assertFalse(modelManager.equals(5));
 
-        // different tripLog -> returns false
+        // EP: different internal trip logs
         assertFalse(modelManager.equals(new ModelManager(differentTripLog, userPrefs)));
 
-        // different filteredList -> returns false
+        // EP: different filtered list states
         String[] keywords = ALICE.getName().fullName.split("\\s+");
         modelManager.updateFilteredTripList(new NameContainsKeywordsPredicate(Arrays.asList(keywords)));
         assertFalse(modelManager.equals(new ModelManager(tripLog, userPrefs)));
@@ -142,9 +156,14 @@ public class ModelManagerTest {
         // resets modelManager to initial state for upcoming tests
         modelManager.updateFilteredTripList(PREDICATE_SHOW_ALL_TRIPS);
 
-        // different userPrefs -> returns false
+        // EP: different file paths in user prefs
         UserPrefs differentUserPrefs = new UserPrefs();
         differentUserPrefs.setTripLogFilePath(Paths.get("differentFilePath"));
         assertFalse(modelManager.equals(new ModelManager(tripLog, differentUserPrefs)));
+
+        // EP: different last sort descriptions
+        UserPrefs diffSortPrefs = new UserPrefs();
+        diffSortPrefs.setLastSortDescription(ListCommand.SORT_DESC_NAME);
+        assertFalse(modelManager.equals(new ModelManager(tripLog, diffSortPrefs)));
     }
 }

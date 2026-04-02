@@ -5,6 +5,7 @@ import static java.util.Objects.requireNonNull;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Predicate;
+import java.util.logging.Logger;
 
 import seedu.triplog.commons.core.index.Index;
 import seedu.triplog.commons.util.ToStringBuilder;
@@ -18,7 +19,6 @@ import seedu.triplog.model.trip.Trip;
  * or matching criteria from the currently displayed trip list.
  */
 public class DeleteCommand extends Command {
-
     public static final String COMMAND_WORD = "delete";
 
     public static final String MESSAGE_USAGE = COMMAND_WORD
@@ -53,7 +53,7 @@ public class DeleteCommand extends Command {
         RANGE,
         FILTER
     }
-
+    private static final Logger logger = Logger.getLogger(DeleteCommand.class.getName());
     private final DeleteMode mode;
     private final Index targetIndex;
     private final Index startIndex;
@@ -102,25 +102,14 @@ public class DeleteCommand extends Command {
     @Override
     public CommandResult execute(Model model) throws CommandException {
         requireNonNull(model);
+        assertExactlyOneDeleteModeIsActive();
+        logger.info("Executing delete command in mode: " + mode);
 
-        int activeModes = 0;
-        activeModes += targetIndex != null ? 1 : 0;
-        activeModes += startIndex != null && endIndex != null ? 1 : 0;
-        activeModes += predicate != null ? 1 : 0;
+        List<Trip> tripsToDelete = getTripsToDelete(model);
+        deleteTrips(model, tripsToDelete);
 
-        assert activeModes == 1 : "Exactly one delete mode should be active";
-        List<Trip> lastShownList = model.getFilteredTripList();
-
-        switch (mode) {
-        case SINGLE:
-            return executeSingleDelete(model, lastShownList);
-        case RANGE:
-            return executeRangeDelete(model, lastShownList);
-        case FILTER:
-            return executeFilterDelete(model, lastShownList);
-        default:
-            throw new AssertionError("Unknown delete mode");
-        }
+        String summary = TripSummaryUtil.calculateSummary(model.getFilteredTripList());
+        return new CommandResult(formatDeleteSuccessMessage(tripsToDelete.size(), summary));
     }
 
     /**
@@ -136,29 +125,11 @@ public class DeleteCommand extends Command {
 
         switch (mode) {
         case SINGLE:
-            if (targetIndex.getZeroBased() >= lastShownList.size()) {
-                throw new CommandException(MESSAGE_INDEX_OUT_OF_RANGE);
-            }
-            return List.of(lastShownList.get(targetIndex.getZeroBased()));
-
+            return getSingleTripToDelete(lastShownList);
         case RANGE:
-            if (startIndex.getZeroBased() >= lastShownList.size()
-                    || endIndex.getZeroBased() >= lastShownList.size()) {
-                throw new CommandException(MESSAGE_RANGE_OUT_OF_RANGE);
-            }
-            return new ArrayList<>(
-                    lastShownList.subList(startIndex.getZeroBased(), endIndex.getZeroBased() + 1));
-
+            return getRangeTripsToDelete(lastShownList);
         case FILTER:
-            List<Trip> tripsToDelete = lastShownList.stream()
-                    .filter(predicate)
-                    .toList();
-
-            if (tripsToDelete.isEmpty()) {
-                throw new CommandException(MESSAGE_NO_MATCHING_TRIPS);
-            }
-            return tripsToDelete;
-
+            return getFilteredTripsToDelete(lastShownList);
         default:
             throw new AssertionError("Unknown delete mode");
         }
@@ -181,12 +152,21 @@ public class DeleteCommand extends Command {
 
         for (int i = 0; i < tripsToDelete.size(); i++) {
             Trip trip = tripsToDelete.get(i);
+
+            String start = trip.getStartDate() == null
+                    ? "No date"
+                    : trip.getStartDate().toString();
+
+            String end = trip.getEndDate() == null
+                    ? "No date"
+                    : trip.getEndDate().toString();
+
             sb.append(i + 1).append(". ")
                     .append(trip.getName())
                     .append(" (")
-                    .append(trip.getStartDate())
+                    .append(start)
                     .append(" to ")
-                    .append(trip.getEndDate())
+                    .append(end)
                     .append(")\n");
         }
 
@@ -194,39 +174,34 @@ public class DeleteCommand extends Command {
         return sb.toString().trim();
     }
 
-    private CommandResult executeSingleDelete(Model model, List<Trip> lastShownList) throws CommandException {
+    private void assertExactlyOneDeleteModeIsActive() {
+        int activeModes = 0;
+        activeModes += targetIndex != null ? 1 : 0;
+        activeModes += startIndex != null && endIndex != null ? 1 : 0;
+        activeModes += predicate != null ? 1 : 0;
+
+        assert activeModes == 1 : "Exactly one delete mode should be active";
+    }
+
+    private List<Trip> getSingleTripToDelete(List<Trip> lastShownList) throws CommandException {
         if (targetIndex.getZeroBased() >= lastShownList.size()) {
             throw new CommandException(MESSAGE_INDEX_OUT_OF_RANGE);
         }
 
-        Trip tripToDelete = lastShownList.get(targetIndex.getZeroBased());
-        model.deleteTrip(tripToDelete);
-
-        String summary = TripSummaryUtil.calculateSummary(model.getFilteredTripList());
-        return new CommandResult(String.format(MESSAGE_DELETE_TRIP_SUCCESS, 1, summary));
+        return List.of(lastShownList.get(targetIndex.getZeroBased()));
     }
 
-    private CommandResult executeRangeDelete(Model model, List<Trip> lastShownList) throws CommandException {
-        if (startIndex.getZeroBased() >= lastShownList.size() || endIndex.getZeroBased() >= lastShownList.size()) {
+    private List<Trip> getRangeTripsToDelete(List<Trip> lastShownList) throws CommandException {
+        if (startIndex.getZeroBased() >= lastShownList.size()
+                || endIndex.getZeroBased() >= lastShownList.size()) {
             throw new CommandException(MESSAGE_RANGE_OUT_OF_RANGE);
         }
 
-        List<Trip> tripsToDelete = new ArrayList<>(
+        return new ArrayList<>(
                 lastShownList.subList(startIndex.getZeroBased(), endIndex.getZeroBased() + 1));
-
-        for (Trip trip : tripsToDelete) {
-            model.deleteTrip(trip);
-        }
-
-        String summary = TripSummaryUtil.calculateSummary(model.getFilteredTripList());
-        if (tripsToDelete.size() == 1) {
-            return new CommandResult(String.format(MESSAGE_DELETE_TRIP_SUCCESS, 1, summary));
-        }
-
-        return new CommandResult(String.format(MESSAGE_DELETE_TRIPS_SUCCESS, tripsToDelete.size(), summary));
     }
 
-    private CommandResult executeFilterDelete(Model model, List<Trip> lastShownList) throws CommandException {
+    private List<Trip> getFilteredTripsToDelete(List<Trip> lastShownList) throws CommandException {
         List<Trip> tripsToDelete = lastShownList.stream()
                 .filter(predicate)
                 .toList();
@@ -235,16 +210,21 @@ public class DeleteCommand extends Command {
             throw new CommandException(MESSAGE_NO_MATCHING_TRIPS);
         }
 
+        return tripsToDelete;
+    }
+
+    private void deleteTrips(Model model, List<Trip> tripsToDelete) {
         for (Trip trip : tripsToDelete) {
             model.deleteTrip(trip);
         }
+    }
 
-        String summary = TripSummaryUtil.calculateSummary(model.getFilteredTripList());
-        if (tripsToDelete.size() == 1) {
-            return new CommandResult(String.format(MESSAGE_DELETE_TRIP_SUCCESS, 1, summary));
+    private String formatDeleteSuccessMessage(int numberOfTripsDeleted, String summary) {
+        if (numberOfTripsDeleted == 1) {
+            return String.format(MESSAGE_DELETE_TRIP_SUCCESS, 1, summary);
         }
 
-        return new CommandResult(String.format(MESSAGE_DELETE_TRIPS_SUCCESS, tripsToDelete.size(), summary));
+        return String.format(MESSAGE_DELETE_TRIPS_SUCCESS, numberOfTripsDeleted, summary);
     }
 
     @Override

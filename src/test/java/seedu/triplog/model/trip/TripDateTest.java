@@ -20,6 +20,12 @@ public class TripDateTest {
     }
 
     @Test
+    public void constructor_yearTooSmallOrTooLarge_throwsIllegalArgumentException() {
+        assertThrows(IllegalArgumentException.class, () -> new TripDate("0000-01-01"));
+        assertThrows(IllegalArgumentException.class, () -> new TripDate("9999-12-31"));
+    }
+
+    @Test
     public void constructor_invalidDate_throwsIllegalArgumentException() {
         // invalid calendar date (Feb 30 does not exist)
         assertThrows(IllegalArgumentException.class, () -> new TripDate("2026-02-30"));

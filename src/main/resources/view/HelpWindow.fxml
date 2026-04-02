@@ -4,55 +4,62 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.Scene?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.stage.Stage?>
 
-<fx:root resizable="false" title="TripLog - Command Syntax Guide" type="javafx.stage.Stage" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1">
-    <icons>
-        <Image url="@/images/help_icon.png" />
-    </icons>
-    <scene>
-        <Scene>
-            <stylesheets>
-                <URL value="@HelpWindow.css" />
-            </stylesheets>
+<fx:root resizable="true" title="TripLog - Command Syntax Guide" type="javafx.stage.Stage" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1">
+  <icons>
+    <Image url="@/images/help_icon.png" />
+  </icons>
+  <scene>
+    <Scene>
+      <stylesheets>
+        <URL value="@HelpWindow.css" />
+      </stylesheets>
 
-            <VBox spacing="8.0">
-                <padding>
-                    <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
-                </padding>
+      <ScrollPane fitToWidth="true" hbarPolicy="NEVER" vbarPolicy="AS_NEEDED">
+        <content>
+          <VBox spacing="8.0">
+            <padding>
+              <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
+            </padding>
 
-                <Label text="TripLog – Command Syntax Guide"
-                       style="-fx-font-weight: bold; -fx-font-size: 14;" />
+            <Label text="TripLog – Command Syntax Guide"
+                   style="-fx-font-weight: bold; -fx-font-size: 14;" />
 
-                <Label fx:id="prefixNote"
-                       wrapText="true"
-                       style="-fx-font-style: italic;" />
+            <Label fx:id="prefixNote"
+                   wrapText="true"
+                   style="-fx-font-style: italic;" />
 
-                <Separator />
+            <Separator />
 
-                <Label fx:id="addUsage"    wrapText="true" />
-                <Separator />
-                <Label fx:id="editUsage"   wrapText="true" />
-                <Separator />
-                <Label fx:id="deleteUsage" wrapText="true" />
-                <Separator />
-                <Label fx:id="tagUsage"    wrapText="true" />
-                <Separator />
-                <Label fx:id="findUsage"   wrapText="true" />
-                <Separator />
-                <Label fx:id="filterUsage" wrapText="true" />
-                <Separator />
-                <Label fx:id="listUsage"   wrapText="true" />
-                <Separator />
-                <Label fx:id="clearUsage"  wrapText="true" />
-                <Separator />
-                <Label fx:id="exitUsage"   wrapText="true" />
-
-                <Label fx:id="exitNote" wrapText="true" style="-fx-font-style: italic;" />
-            </VBox>
-        </Scene>
-    </scene>
+            <Label fx:id="helpUsage"   wrapText="true" />
+            <Separator />
+            <Label fx:id="addUsage"    wrapText="true" />
+            <Separator />
+            <Label fx:id="editUsage"   wrapText="true" />
+            <Separator />
+            <Label fx:id="deleteUsage" wrapText="true" />
+            <Separator />
+            <Label fx:id="tagUsage"    wrapText="true" />
+            <Separator />
+            <Label fx:id="findUsage"   wrapText="true" />
+            <Separator />
+            <Label fx:id="filterUsage" wrapText="true" />
+            <Separator />
+            <Label fx:id="listUsage"   wrapText="true" />
+            <Separator />
+            <Label fx:id="clearUsage"  wrapText="true" />
+            <Separator />
+            <Label fx:id="exitUsage"   wrapText="true" />
+            <Separator />
+            <Label fx:id="exitNote" wrapText="true" style="-fx-font-style: italic;" />
+          </VBox>
+        </content>
+      </ScrollPane>
+    </Scene>
+  </scene>
 </fx:root>

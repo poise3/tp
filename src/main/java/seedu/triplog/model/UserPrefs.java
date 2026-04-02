@@ -14,7 +14,8 @@ import seedu.triplog.commons.core.GuiSettings;
 public class UserPrefs implements ReadOnlyUserPrefs {
 
     private GuiSettings guiSettings = new GuiSettings();
-    private Path tripLogFilePath = Paths.get("data" , "triplog.json");
+    private Path tripLogFilePath = Paths.get("data", "triplog.json");
+    private String lastSortDescription = "start date";
 
     /**
      * Creates a {@code UserPrefs} with default values.
@@ -36,6 +37,7 @@ public class UserPrefs implements ReadOnlyUserPrefs {
         requireNonNull(newUserPrefs);
         setGuiSettings(newUserPrefs.getGuiSettings());
         setTripLogFilePath(newUserPrefs.getTripLogFilePath());
+        setLastSortDescription(newUserPrefs.getLastSortDescription());
     }
 
     @Override
@@ -59,6 +61,16 @@ public class UserPrefs implements ReadOnlyUserPrefs {
     }
 
     @Override
+    public String getLastSortDescription() {
+        return lastSortDescription;
+    }
+
+    public void setLastSortDescription(String lastSortDescription) {
+        requireNonNull(lastSortDescription);
+        this.lastSortDescription = lastSortDescription;
+    }
+
+    @Override
     public boolean equals(Object other) {
         if (other == this) {
             return true;
@@ -71,12 +83,13 @@ public class UserPrefs implements ReadOnlyUserPrefs {
 
         UserPrefs otherUserPrefs = (UserPrefs) other;
         return guiSettings.equals(otherUserPrefs.guiSettings)
-                && tripLogFilePath.equals(otherUserPrefs.tripLogFilePath);
+                && tripLogFilePath.equals(otherUserPrefs.tripLogFilePath)
+                && lastSortDescription.equals(otherUserPrefs.lastSortDescription);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(guiSettings, tripLogFilePath);
+        return Objects.hash(guiSettings, tripLogFilePath, lastSortDescription);
     }
 
     @Override
@@ -84,6 +97,7 @@ public class UserPrefs implements ReadOnlyUserPrefs {
         StringBuilder sb = new StringBuilder();
         sb.append("Gui Settings : " + guiSettings);
         sb.append("\nLocal data file location : " + tripLogFilePath);
+        sb.append("\nLast sort description : " + lastSortDescription);
         return sb.toString();
     }
 
