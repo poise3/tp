@@ -73,7 +73,9 @@ The **API** of this component is specified in [`Ui.java`](https://github.com/AY2
 
 The UI consists of a `MainWindow` that is made up of parts e.g.`CommandBox`, `ResultDisplay`, `TripListPanel`, `StatusBarFooter` etc. All these, including the `MainWindow`, inherit from the abstract `UiPart` class which captures the commonalities between classes that represent parts of the visible GUI.
 
-The `UI` component uses the JavaFx UI framework. The layout of these UI parts are defined in matching `.fxml` files that are in the `src/main/resources/view` folder. For example, the layout of the [`MainWindow`](https://github.com/AY2526S2-CS2103-F13-2/tp/tree/master/src/main/java/seedu/triplog/ui/MainWindow.java) is specified in [`MainWindow.fxml`](https://github.com/AY2526S2-CS2103-F13-2/tp/tree/master/src/main/resources/view/MainWindow.fxml)
+The `UI` component uses the JavaFx UI framework. The layout of these UI parts are defined in matching `.fxml` files that are in the `src/main/resources/view` folder. For example, the layout of the [`MainWindow`](https://github.com/AY2526S2-CS2103-F13-2/tp/tree/master/src/main/java/seedu/triplog/ui/MainWindow.java) is specified in [`MainWindow.fxml`](https://github.com/AY2526S2-CS2103-F13-2/tp/tree/master/src/main/resources/view/MainWindow.fxml).
+
+To support a dynamic layout, the `MainWindow` implements a `SplitPane` with a vertical orientation to house the `TripListPanel` and `ResultDisplay`. This allows the user to manually adjust the relative height of these components.
 
 The `UI` component,
 
@@ -342,6 +344,7 @@ While TripLog originated from AB3, the transition to a travel-specific manager r
 * **Temporal Logic Implementation**: Unlike static contact data, `Trip` objects are time-dependent. We implemented logic to handle overlapping dates for duplicate detection and created `TripSummaryUtil` to recalculate trip statuses relative to the system clock (`LocalDate.now()`).
 * **Complex Command Parsing**: The `delete` command was overhauled to support four distinct modes (Index, Range, Field-Match, and Date-Range). This required a sophisticated `DeleteCommandParser` and custom state-management logic in the UI for the "two-step confirmation" process without modifying the core `Logic` interface.
 * **State Persistence**: We expanded `UserPrefs` to include the last-used `sort order`. This required coordination between `Logic` and `Storage` to ensure the app launches exactly as the user left it.
+* **Dynamic UI Layout**: We replaced the static vertical stacking of the Trip List and Result Display with a vertically-oriented `SplitPane`. This allows users to manually adjust the height of the feedback area, which is critical for viewing large results (e.g., help commands) without obstructing the primary list.
 * **Enhanced UI Feedback**: We integrated dynamic icons and success/error styling in the `ResultDisplay` and `CommandBox`, moving away from AB3's purely text-based feedback.
 
 --------------------------------------------------------------------------------------------------------------------
@@ -423,6 +426,17 @@ testers are expected to do more *exploratory* testing.
        Expected: The Result Display immediately shows a summary dashboard and the last used sort order without entering any commands.
     3. Test case: Sort the list using `list sort/name`, exit the application, and re-launch.
        Expected: The summary dashboard and the list itself remain sorted by name alphabetically.
+
+### UI Interaction: Vertical Resizing
+
+1. Testing Result Display resizing
+    1. Prerequisites: App launched with sample data.
+    2. Test case: Hover mouse over the boundary between Result Display and Trip List.
+       Expected: Cursor changes to vertical resize icon.
+    3. Test case: Click and drag upward.
+       Expected: Result Display height increases; Trip List height decreases.
+    4. Test case: Click and drag downward as far as possible.
+       Expected: Result Display height decreases but stops at a minimum height of 100px.
 
 ### Locating trips by name
 

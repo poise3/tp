@@ -54,7 +54,7 @@ TripLog is a **desktop app for managing trips, optimized for use via a Command L
 - Items in square brackets are optional.<br>
   e.g `n/NAME [sd/DATE]` can be used as `n/Tokyo sd/2026-01-01` or as `n/Tokyo`.
 
-- Items with `…`​ after them can be used multiple times including zero times.<br>
+- Items with `…​` after them can be used multiple times including zero times.<br>
   e.g. `[t/TAG]…​` can be used as ` ` (i.e. 0 times), `t/nature`, `t/nature t/photo` etc.
 
 - Parameters can be in any order.<br>
@@ -62,6 +62,11 @@ TripLog is a **desktop app for managing trips, optimized for use via a Command L
 
 - For commands that do not take parameters (such as `exit` and `clear`), extraneous parameters will be ignored.
   </box>
+
+### UI Interaction: Resizing the Result Display
+
+The **Result Display** (the box where command feedback is shown) is vertically resizable to help you view longer messages, such as help instructions or deletion previews.
+* **To resize**: Hover your mouse over the boundary between the Result Display and the trip list until the cursor changes to a resize icon. Click and drag up or down to adjust the height.
 
 ### Viewing help : `help`
 

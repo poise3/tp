@@ -2,6 +2,7 @@ package seedu.triplog.ui;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.lang.reflect.Field;
 import java.nio.file.Path;
 
 import org.junit.jupiter.api.Test;
@@ -75,7 +76,7 @@ public class MainWindowTest {
 
         @Override
         public String getSummary() {
-            return "Listed all trips sorted by start date.\nSummary: 0 Upcoming, 0 Ongoing, 0 Completed, 0 Planning";
+            return "Summary: 0 Upcoming, 0 Ongoing, 0 Completed, 0 Planning";
         }
     }
 
@@ -91,7 +92,18 @@ public class MainWindowTest {
             mainWindow.fillInnerParts();
         });
 
-        TextArea resultDisplay = (TextArea) mainWindow.getRoot().getScene().lookup("#resultDisplay");
-        assertTrue(resultDisplay.getText().contains(error));
+        try {
+            Field resultDisplayField = MainWindow.class.getDeclaredField("resultDisplay");
+            resultDisplayField.setAccessible(true);
+            ResultDisplay rd = (ResultDisplay) resultDisplayField.get(mainWindow);
+
+            Field textAreaField = ResultDisplay.class.getDeclaredField("resultDisplay");
+            textAreaField.setAccessible(true);
+            TextArea textArea = (TextArea) textAreaField.get(rd);
+
+            assertTrue(textArea.getText().contains(error), "Result display should contain the load error.");
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            throw new AssertionError("Reflection failed to access UI components", e);
+        }
     }
 }
