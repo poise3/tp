@@ -122,7 +122,6 @@ public class ModelManager implements Model {
     @Override
     public void addTrip(Trip trip) {
         tripLog.addTrip(trip);
-        updateFilteredTripList(PREDICATE_SHOW_ALL_TRIPS);
     }
 
     @Override

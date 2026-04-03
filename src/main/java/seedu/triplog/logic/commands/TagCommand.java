@@ -1,7 +1,6 @@
 package seedu.triplog.logic.commands;
 
 import static java.util.Objects.requireNonNull;
-import static seedu.triplog.model.Model.PREDICATE_SHOW_ALL_TRIPS;
 
 import java.util.List;
 
@@ -59,7 +58,6 @@ public class TagCommand extends Command {
         Trip tripWithUpdatedTag = new Trip(tripToTag, this.tag);
 
         model.setTrip(tripToTag, tripWithUpdatedTag);
-        model.updateFilteredTripList(PREDICATE_SHOW_ALL_TRIPS);
         return new CommandResult(
                 String.format(
                         MESSAGE_TAG_TRIP_SUCCESS,
