@@ -112,6 +112,8 @@ Examples:
 - `add n/Tokyo sd/2026-03-10 ed/2026-03-20`
 - `add n/New York a/123 5th Ave t/business t/high priority`
 
+![Add Result](images/addResult.png)
+
 ### Listing all trips : `list`
 
 Shows a list of all trips currently in the log and displays a **Summary Dashboard** in the result box. The list can be optionally sorted by a specific key.
