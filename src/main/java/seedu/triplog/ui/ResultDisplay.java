@@ -39,29 +39,32 @@ public class ResultDisplay extends UiPart<Region> {
     public void setFeedbackToUser(String feedbackToUser) {
         requireNonNull(feedbackToUser);
 
-        String formattedMessage = formatFeedback(feedbackToUser);
+        String formattedMessage = formatFeedback(feedbackToUser, isError(feedbackToUser));
+        resultDisplay.setText(formattedMessage);
+        resultDisplay.setScrollTop(0.0);
+    }
+
+    /**
+     * Sets the feedback to the user and explicitly forces the error icon.
+     */
+    public void setFeedbackToUser(String feedbackToUser, boolean isError) {
+        requireNonNull(feedbackToUser);
+        String formattedMessage = formatFeedback(feedbackToUser, isError);
         resultDisplay.setText(formattedMessage);
         resultDisplay.setScrollTop(0.0);
     }
 
     /**
      * Formats the raw feedback string into a structured dashboard.
-     * Enforces SLAP by delegating sub-tasks to helper methods.
      *
      * @param feedback The raw feedback string.
+     * @param isError Explicit flag to determine icon.
      * @return A formatted string with icons and dividers.
      */
-    private String formatFeedback(String feedback) {
-        String icon = getIcon(feedback);
+    private String formatFeedback(String feedback, boolean isError) {
+        String icon = isError ? ERROR_ICON : SUCCESS_ICON;
         String body = hasSummary(feedback) ? formatSummaryBlock(feedback) : feedback;
         return icon + body;
-    }
-
-    /**
-     * Determines the appropriate status icon based on the feedback content.
-     */
-    private String getIcon(String feedback) {
-        return isError(feedback) ? ERROR_ICON : SUCCESS_ICON;
     }
 
     /**
@@ -93,10 +96,6 @@ public class ResultDisplay extends UiPart<Region> {
 
     /**
      * Returns true if the message indicates a command failure.
-     * Checks for error keywords while ensuring usage help is not marked as an error.
-     *
-     * @param message The feedback message to check.
-     * @return True if the message contains error-related keywords.
      */
     private boolean isError(String message) {
         String lower = message.toLowerCase();
@@ -108,7 +107,8 @@ public class ResultDisplay extends UiPart<Region> {
 
         return Stream.of("invalid", "unknown", "error", "cannot", "failed", "exception",
                         "must", "no such", "not allowed", "insufficient", "duplicate", "should not",
-                        "should be", "out of range", "less than or equal", "accepts exactly one")
+                        "should be", "out of range", "less than or equal", "accepts exactly one",
+                        "not found", "wrong", "missing")
                 .anyMatch(lower::contains);
     }
 }
