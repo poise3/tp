@@ -1,0 +1,25 @@
+@startuml
+!include style.puml
+skinparam arrowThickness 1.1
+skinparam arrowColor LOGIC_COLOR_T4
+skinparam classBackgroundColor LOGIC_COLOR
+
+package Logic {
+    Class ListCommand
+    Class ListCommandParser
+}
+
+package Model {
+    Class Trip
+}
+
+Class "<<interface>>\nComparator" as Comparator <<Java Library>> {
+    +compare(t1: Trip, t2: Trip): int
+}
+
+ListCommandParser .down.> ListCommand : <<create>>
+ListCommand .down.> Comparator : <<use>>
+
+ListCommand -[hidden]right-> Trip
+Comparator .right.> Trip : <<compares>>
+@enduml

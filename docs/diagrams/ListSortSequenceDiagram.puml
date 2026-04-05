@@ -25,7 +25,7 @@ activate Model
 Model --> ListCommand
 deactivate Model
 
-ListCommand -> Model : getFilteredTripList()
+ListCommand -> Model : getSortedTripList()
 activate Model
 Model --> ListCommand : lastShownList
 deactivate Model

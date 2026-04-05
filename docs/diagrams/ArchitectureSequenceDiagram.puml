@@ -20,6 +20,9 @@ activate model MODEL_COLOR
 model -[MODEL_COLOR]-> logic
 deactivate model
 
+ui <[MODEL_COLOR]-- model : <<notify>>
+note right: UI observes Model changes
+
 logic -[LOGIC_COLOR]> storage : saveTripLog(tripLog)
 activate storage STORAGE_COLOR
 

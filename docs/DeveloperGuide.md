@@ -75,7 +75,7 @@ The UI consists of a `MainWindow` that is made up of parts e.g.`CommandBox`, `Re
 
 The `UI` component uses the JavaFx UI framework. The layout of these UI parts are defined in matching `.fxml` files that are in the `src/main/resources/view` folder. For example, the layout of the [`MainWindow`](https://github.com/AY2526S2-CS2103-F13-2/tp/tree/master/src/main/java/seedu/triplog/ui/MainWindow.java) is specified in [`MainWindow.fxml`](https://github.com/AY2526S2-CS2103-F13-2/tp/tree/master/src/main/resources/view/MainWindow.fxml).
 
-To support a dynamic layout, the `MainWindow` implements a `SplitPane` with a vertical orientation to house the `TripListPanel` and `ResultDisplay`. This allows the user to manually adjust the relative height of these components.
+To support a dynamic layout, the `MainWindow` implements a `SplitPane` with a vertical orientation. This `SplitPane` contains two `StackPane` placeholders which house the `TripListPanel` and `ResultDisplay` respectively. This allows the user to manually adjust the relative height of these components while maintaining a consistent internal layout.
 
 The `UI` component,
 
@@ -197,14 +197,16 @@ The following sequence diagram illustrates the process of filtering a trip:
 
 <puml src="diagrams/FilterSequenceDiagram.puml" alt="Filter Command Sequence Diagram" />
 
-### Trip Statistics and Multi-Key Sorting
+### Trip Listing and Sorting: List Command
+
+The `list` command has been enhanced to provide analytical feedback and dynamic reordering of the trip log. This implementation bridges the `Logic` and `Model` layers to transform a simple list view into a temporal dashboard.
 
 #### Implementation
 
-The `ListCommand` has been enhanced to provide analytical feedback and dynamic reordering of the trip log. This implementation bridges the `Logic` and `Model` layers to transform a simple list view into a temporal dashboard.
-
 **Sorting Mechanism & Tie-Breaking:**
-The sorting is implemented using a **Comparator Factory** pattern within `ListCommand`. The application supports dynamic reordering based on four primary sort keys: `name`, `start`, `end`, and `len`.
+The sorting is implemented using a **Comparator Factory** pattern within `ListCommand`. The selection logic is encapsulated in `getComparator(key)`, which returns a specific comparator that often chains a primary key with a name-based fallback using `.thenComparing()`.
+
+<puml src="diagrams/ListComparatorClassDiagram.puml" width="450" />
 
 The following sequence diagram illustrates the interactions within the `Logic` and `Model` components when a user executes a sort command:
 
@@ -220,17 +222,17 @@ To ensure a stable and deterministic user experience, a **Multi-Level Tie-Breake
 3. **Persistent Sorting**: The sort order is maintained in the `ModelManager` via a `SortedList` wrapper. Any subsequent operations (adding or editing trips) automatically re-apply the last used comparator through `Model#updateSortedTripList(Comparator<Trip>)`.
 
 **Temporal Dashboard:**
-The trip statistics dashboard provides a temporal analysis of trips relative to `LocalDate.now()`.
+The trip statistics dashboard provides a temporal analysis of trips relative to `LocalDate.now()`. Categorization logic is centralized in `TripSummaryUtil`, using a sequential date-check flow to ensure mutually exclusive trip statuses.
 
-<puml src="diagrams/LogicClassDiagram.puml" width="550" alt="Logic Class Diagram showing Summary Utility" />
+<puml src="diagrams/TripSummaryActivityDiagram.puml" width="300" />
 
 * **Centralized Logic**: The calculation logic is centralized in `TripSummaryUtil#calculateSummary(ObservableList<Trip>)`.
 * **Live Updates**: The `ListCommand` retrieves the current filtered list via `Model#getFilteredTripList()` and passes it to the utility to generate the dashboard summary.
 * **Status Determination**:
     1. **Planning**: `startDate == null`
-    2. **Upcoming**: `today < startDate`
-    3. **Completed**: `today > endDate`
-    4. **Ongoing**: `startDate <= today <= endDate`
+    2. **Upcoming**: `today is before start date`
+    3. **Completed**: `today is after end date`
+    4. **Ongoing**: `else`
 
 ### Help command
 

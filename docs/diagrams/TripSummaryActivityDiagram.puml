@@ -1,0 +1,20 @@
+@startuml
+skin rose
+skinparam ActivityFontSize 15
+skinparam ArrowFontSize 12
+
+start
+:Receive Trip object;
+
+if () then ([start date is null])
+    :Categorize as **Planning**;
+elseif () then ([today is before start date])
+    :Categorize as **Upcoming**;
+elseif () then ([today is after end date])
+    :Categorize as **Completed**;
+else ([else])
+    :Categorize as **Ongoing**;
+endif
+
+stop
+@enduml
