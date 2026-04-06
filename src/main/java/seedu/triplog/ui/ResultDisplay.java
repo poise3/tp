@@ -46,6 +46,9 @@ public class ResultDisplay extends UiPart<Region> {
 
     /**
      * Sets the feedback to the user and explicitly forces the error icon.
+     *
+     * @param feedbackToUser The raw feedback string from the command execution.
+     * @param isError True if the feedback represents an error state.
      */
     public void setFeedbackToUser(String feedbackToUser, boolean isError) {
         requireNonNull(feedbackToUser);
