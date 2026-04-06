@@ -77,7 +77,8 @@ public class MainWindow extends UiPart<Stage> {
         resultDisplay.setFeedbackToUser(logic.getSummary());
 
         if (logic.getInitialDataLoadError() != null) {
-            resultDisplay.setFeedbackToUser(logic.getInitialDataLoadError());
+            final boolean isError = true;
+            resultDisplay.setFeedbackToUser(logic.getInitialDataLoadError(), isError);
         }
 
         Platform.runLater(() -> commandBox.requestFocus());
@@ -163,7 +164,8 @@ public class MainWindow extends UiPart<Stage> {
             return commandResult;
         } catch (CommandException | ParseException e) {
             logger.info("An error occurred while executing command: " + commandText);
-            resultDisplay.setFeedbackToUser(e.getMessage());
+            final boolean isError = true;
+            resultDisplay.setFeedbackToUser(e.getMessage(), isError);
             throw e;
         }
     }

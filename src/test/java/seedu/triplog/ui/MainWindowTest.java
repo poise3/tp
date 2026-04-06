@@ -3,6 +3,7 @@ package seedu.triplog.ui;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.nio.file.Path;
 
 import org.junit.jupiter.api.Test;
@@ -18,11 +19,18 @@ import javafx.stage.Stage;
 import seedu.triplog.commons.core.GuiSettings;
 import seedu.triplog.logic.Logic;
 import seedu.triplog.logic.commands.CommandResult;
+import seedu.triplog.logic.parser.exceptions.ParseException;
 import seedu.triplog.model.ReadOnlyTripLog;
 import seedu.triplog.model.trip.Trip;
 
+/**
+ * UI tests for MainWindow focusing on component initialization and error handling.
+ */
 @ExtendWith(ApplicationExtension.class)
 public class MainWindowTest {
+
+    /** Matches the ERROR_ICON prefix defined in ResultDisplay */
+    private static final String ERROR_ICON_PREFIX = "[!!]";
 
     private MainWindow mainWindow;
     private Stage stage;
@@ -30,14 +38,22 @@ public class MainWindowTest {
 
     private class LogicStub implements Logic {
         private String errorToReturn;
+        private boolean shouldThrowException = false;
 
         LogicStub(String errorToReturn) {
             this.errorToReturn = errorToReturn;
         }
 
+        LogicStub(boolean shouldThrowException) {
+            this.shouldThrowException = shouldThrowException;
+        }
+
         @Override
-        public CommandResult execute(String cmd) {
-            return null;
+        public CommandResult execute(String cmd) throws ParseException {
+            if (shouldThrowException) {
+                throw new ParseException("Unknown command");
+            }
+            return new CommandResult("Success");
         }
 
         @Override
@@ -85,6 +101,9 @@ public class MainWindowTest {
         this.stage = stage;
     }
 
+    /**
+     * Verifies that the ResultDisplay correctly reflects initial data load errors with the error icon.
+     */
     @Test
     public void fillInnerParts_withError_updatesResultDisplay(FxRobot robot) {
         robot.interact(() -> {
@@ -92,6 +111,42 @@ public class MainWindowTest {
             mainWindow.fillInnerParts();
         });
 
+        assertResultDisplayContains(error);
+        assertResultDisplayContains(ERROR_ICON_PREFIX);
+    }
+
+    /**
+     * Verifies that the executeCommand catch block correctly handles exceptions and shows the error icon.
+     * This ensures coverage for the catch block in MainWindow#executeCommand.
+     */
+    @Test
+    public void executeCommand_withException_updatesResultDisplay(FxRobot robot) throws Exception {
+        LogicStub logicStub = new LogicStub(true);
+        robot.interact(() -> {
+            mainWindow = new MainWindow(stage, logicStub);
+            mainWindow.fillInnerParts();
+        });
+
+        // Use reflection to invoke the private executeCommand method
+        Method executeCommandMethod = MainWindow.class.getDeclaredMethod("executeCommand", String.class);
+        executeCommandMethod.setAccessible(true);
+
+        robot.interact(() -> {
+            try {
+                executeCommandMethod.invoke(mainWindow, "invalidCommand");
+            } catch (Exception e) {
+                // Expected exception from reflection wrapper
+            }
+        });
+
+        assertResultDisplayContains("Unknown command");
+        assertResultDisplayContains(ERROR_ICON_PREFIX);
+    }
+
+    /**
+     * Helper method to access the private ResultDisplay and verify its content.
+     */
+    private void assertResultDisplayContains(String expectedContent) {
         try {
             Field resultDisplayField = MainWindow.class.getDeclaredField("resultDisplay");
             resultDisplayField.setAccessible(true);
@@ -101,8 +156,10 @@ public class MainWindowTest {
             textAreaField.setAccessible(true);
             TextArea textArea = (TextArea) textAreaField.get(rd);
 
-            assertTrue(textArea.getText().contains(error), "Result display should contain the load error.");
-        } catch (NoSuchFieldException | IllegalAccessException e) {
+            String displayedText = textArea.getText();
+            assertTrue(displayedText.contains(expectedContent),
+                    "Result display should contain: " + expectedContent);
+        } catch (Exception e) {
             throw new AssertionError("Reflection failed to access UI components", e);
         }
     }
