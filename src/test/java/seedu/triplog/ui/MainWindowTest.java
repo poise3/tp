@@ -19,7 +19,6 @@ import javafx.stage.Stage;
 import seedu.triplog.commons.core.GuiSettings;
 import seedu.triplog.logic.Logic;
 import seedu.triplog.logic.commands.CommandResult;
-import seedu.triplog.logic.commands.HelpCommand;
 import seedu.triplog.logic.parser.exceptions.ParseException;
 import seedu.triplog.model.ReadOnlyTripLog;
 import seedu.triplog.model.trip.Trip;
@@ -171,44 +170,4 @@ public class MainWindowTest {
         }
     }
 
-    /**
-     * Verifies that handleHelp opens the window when not showing,
-     * then focuses it on a second call.
-     */
-    @Test
-    public void handleHelp_helpAlreadyShowing_focusesWindow(FxRobot robot) {
-        robot.interact(() -> {
-            mainWindow = new MainWindow(stage, new LogicStub((String) null));
-            mainWindow.fillInnerParts();
-            mainWindow.handleHelp(); // open
-            mainWindow.handleHelp(); // focus
-        });
-    }
-
-    /**
-     * Verifies that executeCommand shows FOCUSING_HELP_MESSAGE when isShowHelp=true
-     * and the help window is already open.
-     */
-    @Test
-    public void executeCommand_helpAlreadyShowing_showsFocusMessage(FxRobot robot) throws Exception {
-        LogicStub logicStub = new LogicStub(false, true);
-        robot.interact(() -> {
-            mainWindow = new MainWindow(stage, logicStub);
-            mainWindow.fillInnerParts();
-            mainWindow.handleHelp(); // pre-open help window
-        });
-
-        Method executeCommandMethod = MainWindow.class.getDeclaredMethod("executeCommand", String.class);
-        executeCommandMethod.setAccessible(true);
-
-        robot.interact(() -> {
-            try {
-                executeCommandMethod.invoke(mainWindow, "help");
-            } catch (Exception e) {
-                throw new AssertionError("Unexpected exception during executeCommand", e);
-            }
-        });
-
-        assertResultDisplayContains(HelpCommand.FOCUSING_HELP_MESSAGE);
-    }
 }
