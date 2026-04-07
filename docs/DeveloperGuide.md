@@ -470,20 +470,24 @@ testers are expected to do more *exploratory* testing.
        Expected: Start date updated to Jan 5th. End date remains Jan 10th.
 
 4. Editing dates (invalid range)
-    1. Prerequisites: Trip 1 has start date 2026-01-01.
+    1. Prerequisites: Trip 1 has start date 2026-01-01 and end date 2026-01-10.
     2. Test case: `edit 1 ed/2025-12-31`
        Expected: Error message indicating start date cannot be after end date. No changes made.
 
-5. Creating a duplicate via edit
+5. No changes from original values
+    1. Test case: `edit 1 n/Original Name` (where trip 1 already has "Original Name")
+       Expected: Error message indicating edited fields are the same as the original. No changes made.
+
+6. Creating a duplicate via edit
     1. Prerequisites: Trip 1 is "Tokyo" (2026-01-01 to 2026-01-10). Trip 2 is "Osaka" (same dates).
     2. Test case: `edit 2 n/Tokyo`
        Expected: Error message indicating the trip already exists (duplicate). No changes made.
 
-6. Clearing tags
+7. Clearing tags
     1. Test case: `edit 1 t/`
        Expected: All tags are removed from the first trip.
 
-7. No fields provided
+8. No fields provided
     1. Test case: `edit 1`
        Expected: Error message indicating at least one field must be provided.
 
