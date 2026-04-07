@@ -121,10 +121,8 @@ public class MainWindow extends UiPart<Stage> {
     @FXML
     public void handleHelp() {
         if (!helpWindow.isShowing()) {
-            logger.info("Opening help window.");
             helpWindow.show();
         } else {
-            logger.info("Help window already open — focusing existing window.");
             helpWindow.focus();
         }
     }
