@@ -177,19 +177,27 @@ The `edit` command allows for partial updates to an existing trip. The trip to b
 The `edit` command utilizes `Model#hasTripExcluding(Trip, Trip)`. This ensures that if a user changes a trip's name to match another entry, the command is only rejected if the dates also overlap with that other entry.
 
 ### Trip Deletion: Delete Command
-The `delete` command supports multiple deletion modes, including:
-- deletion by index,
-- deletion by index range,
-- deletion by field (e.g. name or tag),
-- deletion by date range.
 
-The parsing of the command is handled by `DeleteCommandParser`, which determines the deletion mode based on the input format and constructs the corresponding `DeleteCommand`.
+The `delete` command removes trip(s) from the currently displayed trip list. It supports three deletion modes:
 
-To prevent accidental data loss, the delete operation follows a **two-step confirmation flow**:
-1. The first execution generates a preview of the trips to be deleted.
-2. The user must confirm the pending deletion by pressing Enter again; otherwise, editing the command cancels the operation.
+* **Single deletion**: deletes a trip at a given index (e.g. `delete 2`)
+* **Range deletion**: deletes trips within an index range (e.g. `delete 1-3`)
+* **Criteria-based deletion**: deletes trips matching a field (e.g. `delete n/Tokyo`, `delete t/family`, `delete sd/2026-01-01 ed/2026-12-31`)
 
-Invalid combinations of delete modes (e.g. mixing index and field deletion) are rejected during parsing.
+The parsing of the command is handled by `DeleteCommandParser`, which determines the deletion mode based on input format and validates that only one mode is used.
+
+Deletion is performed by `DeleteCommand`, which operates on the **currently displayed trip list**. For criteria-based deletion, a `TripMatchesDeletePredicate` is used, where:
+* different fields are combined using AND logic
+* tags are matched using OR logic
+* date ranges (`sd/` and `ed/`) match trips within the specified period
+
+To prevent accidental deletion, a **two-step confirmation flow** is implemented in `CommandBox`:
+
+1. The first execution transforms the command into `deletepreview`, which shows the trips that would be deleted.
+2. The second execution of the same command performs the actual deletion.
+3. Editing the command cancels the pending deletion.
+
+The preview is generated using `PreviewDeleteCommand`, which reuses the same parsing and selection logic as `DeleteCommand` to ensure consistency.
 
 The following sequence diagram shows the logic for deleting a trip:
 
