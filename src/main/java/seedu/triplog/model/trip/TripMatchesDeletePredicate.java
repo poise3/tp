@@ -27,6 +27,14 @@ public class TripMatchesDeletePredicate implements Predicate<Trip> {
 
     /**
      * Creates a predicate with the given delete criteria.
+     *
+     * @param name The name criterion.
+     * @param phone The phone criterion.
+     * @param email The email criterion.
+     * @param address The address criterion.
+     * @param startDate The start date criterion.
+     * @param endDate The end date criterion.
+     * @param tags The tag criteria.
      */
     public TripMatchesDeletePredicate(Name name, Phone phone, Email email, Address address,
                                       TripDate startDate, TripDate endDate, Set<Tag> tags) {
@@ -39,50 +47,133 @@ public class TripMatchesDeletePredicate implements Predicate<Trip> {
         this.tags = tags == null ? new HashSet<>() : new HashSet<>(tags);
     }
 
+    /**
+     * Evaluates whether the given {@code Trip} matches the criteria.
+     *
+     * @param trip The trip to test.
+     * @return true if the trip matches all criteria, false otherwise.
+     */
     @Override
     public boolean test(Trip trip) {
         requireNonNull(trip);
+        return matchesName(trip)
+                && matchesPhone(trip)
+                && matchesEmail(trip)
+                && matchesAddress(trip)
+                && matchesDateCriteria(trip)
+                && matchesTags(trip);
+    }
 
-        if (name != null && !name.equals(trip.getName())) {
-            return false;
-        }
-        if (phone != null && !Objects.equals(phone, trip.getPhone())) {
-            return false;
-        }
-        if (email != null && !Objects.equals(email, trip.getEmail())) {
-            return false;
-        }
-        if (address != null && !Objects.equals(address, trip.getAddress())) {
-            return false;
-        }
+    /**
+     * Returns true if the trip matches the name criterion.
+     *
+     * @param trip The trip to check.
+     * @return true if the name matches.
+     */
+    private boolean matchesName(Trip trip) {
+        return name == null || name.fullName.equalsIgnoreCase(trip.getName().fullName);
+    }
+
+    /**
+     * Returns true if the trip matches the phone criterion.
+     *
+     * @param trip The trip to check.
+     * @return true if the phone matches.
+     */
+    private boolean matchesPhone(Trip trip) {
+        return phone == null || Objects.equals(phone, trip.getPhone());
+    }
+
+    /**
+     * Returns true if the trip matches the email criterion.
+     *
+     * @param trip The trip to check.
+     * @return true if the email matches.
+     */
+    private boolean matchesEmail(Trip trip) {
+        return email == null
+                || (trip.getEmail() != null
+                && email.value.equalsIgnoreCase(trip.getEmail().value));
+    }
+
+    /**
+     * Returns true if the trip matches the address criterion.
+     *
+     * @param trip The trip to check.
+     * @return true if the address matches.
+     */
+    private boolean matchesAddress(Trip trip) {
+        return address == null
+                || (trip.getAddress() != null
+                && address.value.equalsIgnoreCase(trip.getAddress().value));
+    }
+
+    /**
+     * Returns true if the trip matches the date criterion.
+     * If both startDate and endDate are provided, the trip must fall within the range.
+     * Otherwise, individual dates are matched exactly.
+     *
+     * @param trip The trip to check.
+     * @return true if the date criteria match.
+     */
+    private boolean matchesDateCriteria(Trip trip) {
         if (startDate != null && endDate != null) {
-            if (trip.getStartDate() == null || trip.getEndDate() == null) {
-                return false;
-            }
-            if (trip.getStartDate().value.isBefore(startDate.value)) {
-                return false;
-            }
-            if (trip.getEndDate().value.isAfter(endDate.value)) {
-                return false;
-            }
-        } else {
-            if (startDate != null && !Objects.equals(startDate, trip.getStartDate())) {
-                return false;
-            }
-            if (endDate != null && !Objects.equals(endDate, trip.getEndDate())) {
-                return false;
-            }
+            return matchesDateRange(trip);
         }
-        if (!tags.isEmpty() && trip.getTags().stream().noneMatch(tags::contains)) {
+        return matchesExactStartDate(trip) && matchesExactEndDate(trip);
+    }
+
+    /**
+     * Returns true if the trip falls within the specified date range.
+     *
+     * @param trip The trip to check.
+     * @return true if within the date range.
+     */
+    private boolean matchesDateRange(Trip trip) {
+        if (trip.getStartDate() == null || trip.getEndDate() == null) {
             return false;
         }
+        if (startDate.value.equals(endDate.value)) {
+            return !trip.getEndDate().value.isBefore(startDate.value)
+                    && !trip.getStartDate().value.isAfter(endDate.value);
+        }
+        return !trip.getStartDate().value.isBefore(startDate.value)
+                && !trip.getEndDate().value.isAfter(endDate.value);
+    }
 
-        return true;
+    /**
+     * Returns true if the trip matches the exact start date criterion.
+     *
+     * @param trip The trip to check.
+     * @return true if the start date matches.
+     */
+    private boolean matchesExactStartDate(Trip trip) {
+        return startDate == null || Objects.equals(startDate, trip.getStartDate());
+    }
+
+    /**
+     * Returns true if the trip matches the exact end date criterion.
+     *
+     * @param trip The trip to check.
+     * @return true if the end date matches.
+     */
+    private boolean matchesExactEndDate(Trip trip) {
+        return endDate == null || Objects.equals(endDate, trip.getEndDate());
+    }
+
+    /**
+     * Returns true if the trip matches the tag criterion.
+     *
+     * @param trip The trip to check.
+     * @return true if any tag matches.
+     */
+    private boolean matchesTags(Trip trip) {
+        return tags.isEmpty() || trip.getTags().stream().anyMatch(tags::contains);
     }
 
     @Override
     public boolean equals(Object other) {
-        if (other == this) {
+        if (this == other) {
             return true;
         }
         if (!(other instanceof TripMatchesDeletePredicate)) {
@@ -117,3 +208,4 @@ public class TripMatchesDeletePredicate implements Predicate<Trip> {
                 + '}';
     }
 }
+
