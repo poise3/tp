@@ -18,7 +18,7 @@ public class Email {
             + "2. This is followed by a '@' and then a domain name. The domain name is made up of domain labels "
             + "separated by periods.\n"
             + "The domain name must:\n"
-            + "    - end with a domain label at least 2 characters long\n"
+            + "    - end with a domain label at least 1 character long\n"
             + "    - have each domain label start and end with alphanumeric characters\n"
             + "    - have each domain label consist of alphanumeric characters, separated only by hyphens, if any.";
 
@@ -55,17 +55,6 @@ public class Email {
      * Returns if a given string is a valid email.
      */
     public static boolean isValidEmail(String test) {
-        // Additional check for the TLD length if a period is present, as per test expectations
-        if (test.contains(".")) {
-            String[] parts = test.split("@");
-            if (parts.length == 2) {
-                String domain = parts[1];
-                int lastPeriod = domain.lastIndexOf(".");
-                if (lastPeriod != -1 && (domain.length() - lastPeriod - 1) < 2) {
-                    return false;
-                }
-            }
-        }
         return test.matches(VALIDATION_REGEX);
     }
 
