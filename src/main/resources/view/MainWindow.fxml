@@ -71,7 +71,7 @@
               </padding>
             </StackPane>
 
-            <VBox fx:id="tripList" styleClass="pane-with-border" minWidth="0">
+            <VBox fx:id="tripList" styleClass="pane-with-border" minWidth="0" minHeight="100">
               <padding>
                 <Insets top="10" right="10" bottom="10" left="10" />
               </padding>
