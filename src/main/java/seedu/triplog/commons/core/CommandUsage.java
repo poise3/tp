@@ -11,19 +11,19 @@ public class CommandUsage {
                     + "  e.g. help, help add, help delete";
 
     public static final String ADD_USAGE =
-            "add n/<destination> [p/<phone>] [e/<email>] [a/<address>] "
-                    + "[sd/<start-date>] [ed/<end-date>] [t/<tag>]...\n"
+            "add n/<DESTINATION> [p/<PHONE>] [e/<EMAIL>] [a/<ADDRESS>] "
+                    + "[sd/<START-DATE>] [ed/<END-DATE>] [t/<TAG>]...\n"
                     + "  Records a new trip. Items in [square brackets] are optional. Dates must be YYYY-MM-DD.\n"
                     + "  e.g. add n/Tokyo sd/2026-06-01 t/food";
 
     public static final String EDIT_USAGE =
-            "edit <INDEX> [n/<destination>] [p/<phone>] [e/<email>] [a/<address>] "
-                    + "[sd/<start-date>] [ed/<end-date>] [t/<tag>]...\n"
+            "edit <INDEX> [n/<DESTINATION>] [p/<PHONE>] [e/<EMAIL>] [a/<ADDRESS>] "
+                    + "[sd/<START-DATE>] [ed/<END-DATE>] [t/<TAG>]...\n"
                     + "  Edits the trip at the specified index. At least one field must be provided.\n"
                     + "  e.g. edit 1 n/Paris sd/2026-05-01";
 
     public static final String DELETE_USAGE =
-            "delete <INDEX> | <START-END> | <PREFIX/VALUE> | sd/<start-date> ed/<end-date>\n"
+            "delete <INDEX> | <START-END> | <PREFIX/VALUE> | sd/<START-DATE> ed/<END-DATE>\n"
                     + "  Removes trip(s) from the currently displayed list.\n"
                     + "  All delete operations first show a preview before confirmation.\n"
                     + "  Press Enter again to confirm deletion.\n"
@@ -38,9 +38,9 @@ public class CommandUsage {
                     + "        delete sd/2026-06-01 ed/2026-08-10";
 
     public static final String TAG_USAGE =
-            "tag <INDEX> <tag-name>\n"
+            "tag <INDEX> <TAG-NAME>\n"
                     + "  Adds a keyword tag to an existing trip.\n"
-                    + "  tag-name must be alphanumeric and may contain spaces.\n"
+                    + "  TAG-NAME must be alphanumeric and may contain spaces.\n"
                     + "  e.g.  tag 1 adventure    or    tag 1 night market";
 
     public static final String FIND_USAGE =
@@ -49,12 +49,12 @@ public class CommandUsage {
                     + "  e.g. find Tokyo Osaka";
 
     public static final String FILTER_USAGE =
-            "filter sd/<start-date> ed/<end-date>\n"
+            "filter sd/<START-DATE> ed/<END-DATE>\n"
                     + "  Filters trips occurring within the specified date range.\n"
                     + "  e.g. filter sd/2026-05-01 ed/2026-07-31";
 
     public static final String LIST_USAGE =
-            "list [sort/<key>]\n"
+            "list [sort/<KEY>]\n"
                     + "  Displays all trips with a summary (Upcoming, Ongoing, Completed, Planning).\n"
                     + "  Optional sort keys: name, start, end, len.\n"
                     + "  e.g. list, list sort/name, list sort/len";
