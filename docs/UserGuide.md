@@ -74,7 +74,7 @@ Format: `help [COMMAND]`
 - Without arguments, `help` opens a help window showing syntax for all commands.
 - With a command name, `help COMMAND` displays the usage for that specific command inline in the result display (no window opens).
 
-![help message](images/helpMessage.png)
+<img src="images/helpMessage.png" width="700" />
 
 Examples:
 - `help` — opens the full help window.
