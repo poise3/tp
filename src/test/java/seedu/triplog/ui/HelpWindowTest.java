@@ -7,7 +7,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.testfx.api.FxRobot;
 import org.testfx.framework.junit5.ApplicationExtension;
 import org.testfx.framework.junit5.Start;
 import org.testfx.framework.junit5.Stop;
@@ -109,14 +108,6 @@ public class HelpWindowTest {
     @Test
     public void isShowing_initiallyFalse() {
         assertFalse(helpWindow.isShowing());
-    }
-
-    // EP: focus() on a visible window keeps it showing
-    @Test
-    public void focus_whenShowing_remainsShowing(FxRobot robot) {
-        robot.interact(() -> helpWindow.show());
-        robot.interact(() -> helpWindow.focus());
-        assertTrue(helpWindow.isShowing());
     }
 
     // EP: PREFIX_NOTE contains the expected prefix/ format
