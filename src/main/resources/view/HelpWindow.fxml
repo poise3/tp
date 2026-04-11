@@ -38,25 +38,55 @@
 
             <Separator />
 
-            <Label fx:id="helpUsage"   wrapText="true" />
+            <VBox spacing="2">
+              <Label fx:id="helpCommand"   wrapText="true" style="-fx-font-weight: bold;" />
+              <Label fx:id="helpUsage"     wrapText="true" />
+            </VBox>
             <Separator />
-            <Label fx:id="addUsage"    wrapText="true" />
+            <VBox spacing="2">
+              <Label fx:id="addCommand"    wrapText="true" style="-fx-font-weight: bold;" />
+              <Label fx:id="addUsage"      wrapText="true" />
+            </VBox>
             <Separator />
-            <Label fx:id="editUsage"   wrapText="true" />
+            <VBox spacing="2">
+              <Label fx:id="editCommand"   wrapText="true" style="-fx-font-weight: bold;" />
+              <Label fx:id="editUsage"     wrapText="true" />
+            </VBox>
             <Separator />
-            <Label fx:id="deleteUsage" wrapText="true" />
+            <VBox spacing="2">
+              <Label fx:id="deleteCommand" wrapText="true" style="-fx-font-weight: bold;" />
+              <Label fx:id="deleteUsage"   wrapText="true" />
+            </VBox>
             <Separator />
-            <Label fx:id="tagUsage"    wrapText="true" />
+            <VBox spacing="2">
+              <Label fx:id="tagCommand"    wrapText="true" style="-fx-font-weight: bold;" />
+              <Label fx:id="tagUsage"      wrapText="true" />
+            </VBox>
             <Separator />
-            <Label fx:id="findUsage"   wrapText="true" />
+            <VBox spacing="2">
+              <Label fx:id="findCommand"   wrapText="true" style="-fx-font-weight: bold;" />
+              <Label fx:id="findUsage"     wrapText="true" />
+            </VBox>
             <Separator />
-            <Label fx:id="filterUsage" wrapText="true" />
+            <VBox spacing="2">
+              <Label fx:id="filterCommand" wrapText="true" style="-fx-font-weight: bold;" />
+              <Label fx:id="filterUsage"   wrapText="true" />
+            </VBox>
             <Separator />
-            <Label fx:id="listUsage"   wrapText="true" />
+            <VBox spacing="2">
+              <Label fx:id="listCommand"   wrapText="true" style="-fx-font-weight: bold;" />
+              <Label fx:id="listUsage"     wrapText="true" />
+            </VBox>
             <Separator />
-            <Label fx:id="clearUsage"  wrapText="true" />
+            <VBox spacing="2">
+              <Label fx:id="clearCommand"  wrapText="true" style="-fx-font-weight: bold;" />
+              <Label fx:id="clearUsage"    wrapText="true" />
+            </VBox>
             <Separator />
-            <Label fx:id="exitUsage"   wrapText="true" />
+            <VBox spacing="2">
+              <Label fx:id="exitCommand"   wrapText="true" style="-fx-font-weight: bold;" />
+              <Label fx:id="exitUsage"     wrapText="true" />
+            </VBox>
             <Separator />
             <Label fx:id="exitNote" wrapText="true" style="-fx-font-style: italic;" />
           </VBox>
