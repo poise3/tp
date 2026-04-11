@@ -145,6 +145,10 @@ public class HelpWindow extends UiPart<Stage> {
     /**
      * Splits {@code usage} at the first newline and sets the command line (bold) and
      * description into separate labels.
+     *
+     * @param command     the label to display the command syntax (first line of {@code usage})
+     * @param description the label to display the remaining description (lines after the first)
+     * @param usage       the full usage string, where the first line is the command syntax
      */
     static void setCommandUsage(Label command, Label description, String usage) {
         String[] parts = usage.split("\n", 2);
