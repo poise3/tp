@@ -122,7 +122,7 @@ Shows a list of all trips currently in the log and displays a **Summary Dashboar
 
 The **Summary Dashboard** categorizes your trips based on the current date:
 * **Upcoming**: Trips starting after today.
-* **Ongoing**: Trips currently in progress (today is between start and end).
+* **Ongoing**: Trips currently in progress (today is between start and end, or today is after the start date for trips without an end date).
 * **Completed**: Trips that have already ended.
 * **Planning**: Trips with no start date specified.
 
