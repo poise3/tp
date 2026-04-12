@@ -10,9 +10,10 @@ import static seedu.triplog.commons.util.AppUtil.checkArgument;
 public class Name {
 
     public static final String MESSAGE_CONSTRAINTS =
-            "Names should only contain alphanumeric characters and spaces, and it should not be blank";
+            "Trip names should start with a letter or number, and can only contain alphanumeric characters, "
+                    + "spaces, and common punctuation (- , . ' () !). It cannot be blank.";
 
-    public static final String VALIDATION_REGEX = "[\\p{Alnum}][\\p{Alnum} ]*";
+    public static final String VALIDATION_REGEX = "[\\p{Alnum}][\\p{Alnum} ,.'()!-]*";
 
     public final String fullName;
 
