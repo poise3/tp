@@ -192,6 +192,10 @@ public class HelpWindow extends UiPart<Stage> {
      */
     public void focus() {
         logger.fine("Focusing on help page about the application.");
-        getRoot().requestFocus();
+        Stage root = getRoot();
+        if (root.isIconified()) {
+            root.setIconified(false);
+        }
+        root.requestFocus();
     }
 }
