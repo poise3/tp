@@ -218,9 +218,7 @@ Press **Enter again** to confirm the deletion, or edit the command to cancel.
 Format:<br>
 `delete INDEX`<br>
 `delete START-END`<br>
-`delete PREFIX/VALUE`<br>
-`delete sd/START_DATE`<br>
-`delete ed/END_DATE`<br>
+`delete PREFIX/VALUE` (where `PREFIX` is one of `n/`, `p/`, `e/`, `a/`, `sd/`, `ed/`, or `t/`)<br>
 `delete sd/START_DATE ed/END_DATE`
 
 - Only one delete mode may be used at a time (e.g. `delete 1 t/family` is invalid).
