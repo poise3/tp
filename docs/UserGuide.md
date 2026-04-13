@@ -77,7 +77,7 @@ Format: `help [COMMAND]`
 - Without arguments, `help` opens a help window showing syntax for all commands.
 - With a command name, `help COMMAND` displays the usage for that specific command inline in the result display (no window opens).
 
-Screenshot of the help window below: 
+Screenshot of the help window below:
 
 <img src="images/helpMessage.png" width="850" />
 
@@ -107,6 +107,7 @@ Format: `add n/NAME [p/PHONE] [e/EMAIL] [a/ADDRESS] [sd/START_DATE] [ed/END_DATE
 
 - Dates must be in `YYYY-MM-DD` format.
 - `START_DATE` must be earlier than or equal to `END_DATE`.
+- **Note:** Upon successful addition, any active filters (e.g. from the `filter` command) will be cleared to show the full trip list and update the Summary Dashboard.
 
 <box type="tip" seamless>
 
@@ -167,6 +168,7 @@ Format: `edit INDEX [n/NAME] [p/PHONE] [e/EMAIL] [a/ADDRESS] [sd/START_DATE] [ed
 - **Dates:** If you edit only the `sd/START_DATE` or `ed/END_DATE`, TripLog ensures the new date range remains valid (start date $\le$ end date).
 - **Tags:** When editing tags, the existing tags of the trip will be removed (i.e., replacement, not addition).
 - You can remove all the trip’s tags by typing `t/` without specifying any tags after it.
+- **Note:** Upon successful editing, any active filters will be cleared to show the full trip list and update the Summary Dashboard.
 
 Examples:
 
