@@ -1,6 +1,7 @@
 package seedu.triplog.logic.parser;
 
 import static seedu.triplog.logic.Messages.MESSAGE_INVALID_COMMAND_FORMAT;
+import static seedu.triplog.logic.Messages.MESSAGE_UNKNOWN_PREFIXES;
 import static seedu.triplog.logic.commands.CommandTestUtil.ADDRESS_DESC_AMY;
 import static seedu.triplog.logic.commands.CommandTestUtil.ADDRESS_DESC_BOB;
 import static seedu.triplog.logic.commands.CommandTestUtil.EMAIL_DESC_AMY;
@@ -78,6 +79,17 @@ public class AddCommandParserTest {
                 + START_DATE_DESC_BOB + END_DATE_DESC_BOB
                 + TAG_DESC_HUSBAND + TAG_DESC_FRIEND,
                 new AddCommand(expectedTripMultipleTags));
+    }
+
+    @Test
+    public void parse_unknownPrefix_failure() {
+        String expectedMessage = String.format(MESSAGE_UNKNOWN_PREFIXES);
+
+        // unknown prefix alongside valid prefix
+        assertParseFailure(parser, NAME_DESC_BOB + " s/unknown", expectedMessage);
+
+        // unknown prefix only
+        assertParseFailure(parser, " s/unknown", expectedMessage);
     }
 
     @Test

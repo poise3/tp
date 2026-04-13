@@ -1,6 +1,7 @@
 package seedu.triplog.logic.parser;
 
 import static seedu.triplog.logic.Messages.MESSAGE_INVALID_COMMAND_FORMAT;
+import static seedu.triplog.logic.Messages.MESSAGE_UNKNOWN_PREFIXES;
 import static seedu.triplog.logic.commands.CommandTestUtil.ADDRESS_DESC_AMY;
 import static seedu.triplog.logic.commands.CommandTestUtil.ADDRESS_DESC_BOB;
 import static seedu.triplog.logic.commands.CommandTestUtil.EMAIL_DESC_AMY;
@@ -70,6 +71,17 @@ public class EditCommandParserTest {
     }
 
     @Test
+    public void parse_invalidPrefix_failure() {
+        String expectedMessage = String.format(MESSAGE_UNKNOWN_PREFIXES);
+
+        // unknown prefix alongside valid prefix
+        assertParseFailure(parser, "1" + NAME_DESC_AMY + " s/unknown", expectedMessage);
+
+        // unknown prefix only
+        assertParseFailure(parser, "1 s/unknown", expectedMessage);
+    }
+
+    @Test
     public void parse_invalidPreamble_failure() {
         // negative index
         assertParseFailure(parser, "-5" + NAME_DESC_AMY, MESSAGE_INVALID_FORMAT);
@@ -79,9 +91,6 @@ public class EditCommandParserTest {
 
         // invalid arguments being parsed as preamble
         assertParseFailure(parser, "1 some random string", MESSAGE_INVALID_FORMAT);
-
-        // invalid prefix being parsed as preamble
-        assertParseFailure(parser, "1 i/ string", MESSAGE_INVALID_FORMAT);
     }
 
     @Test

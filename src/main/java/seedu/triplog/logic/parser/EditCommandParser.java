@@ -2,6 +2,7 @@ package seedu.triplog.logic.parser;
 
 import static java.util.Objects.requireNonNull;
 import static seedu.triplog.logic.Messages.MESSAGE_INVALID_COMMAND_FORMAT;
+import static seedu.triplog.logic.Messages.MESSAGE_UNKNOWN_PREFIXES;
 import static seedu.triplog.logic.parser.CliSyntax.PREFIX_ADDRESS;
 import static seedu.triplog.logic.parser.CliSyntax.PREFIX_EMAIL;
 import static seedu.triplog.logic.parser.CliSyntax.PREFIX_END_DATE;
@@ -35,9 +36,15 @@ public class EditCommandParser implements Parser<EditCommand> {
     public EditCommand parse(String args) throws ParseException {
         requireNonNull(args);
         List<String> unknownPrefixes = ArgumentTokenizer.extractUnknownPrefixes(args,
-                PREFIX_NAME, PREFIX_PHONE, PREFIX_EMAIL, PREFIX_ADDRESS, PREFIX_TAG, PREFIX_START_DATE, PREFIX_END_DATE);
+                PREFIX_NAME,
+                PREFIX_PHONE,
+                PREFIX_EMAIL,
+                PREFIX_ADDRESS,
+                PREFIX_TAG,
+                PREFIX_START_DATE,
+                PREFIX_END_DATE);
         if (!unknownPrefixes.isEmpty()) {
-            throw new ParseException(String.format(MESSAGE_INVALID_COMMAND_FORMAT, EditCommand.MESSAGE_USAGE));
+            throw new ParseException(MESSAGE_UNKNOWN_PREFIXES);
         }
 
         ArgumentMultimap argMultimap =
