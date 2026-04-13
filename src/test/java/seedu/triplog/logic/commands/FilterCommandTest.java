@@ -62,9 +62,11 @@ public class FilterCommandTest {
         expectedModel.updateFilteredTripList(trip -> trip.getStartDate() != null
                 && trip.getEndDate() != null
                 && trip.getStartDate().value.isAfter(start.value.minusDays(1))
-                && trip.getEndDate().value.isBefore(end.value.plusDays(1)));
+                && trip.getEndDate().value.isBefore(end.value.plusDays(1)),
+                true);
 
-        assertCommandSuccess(command, model, FilterCommand.MESSAGE_SUCCESS, expectedModel);
+        String expectedMessage = FilterCommand.MESSAGE_SUCCESS + start + " to " + end + ":";
+        assertCommandSuccess(command, model, expectedMessage, expectedModel);
     }
 
     @Test
