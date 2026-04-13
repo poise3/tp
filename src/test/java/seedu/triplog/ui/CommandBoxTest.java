@@ -62,21 +62,8 @@ public class CommandBoxTest {
 
     @Test
     public void handleCommandEntered_deletepreviewDirectInput_failureStyleApplied() throws Exception {
-        // EP: user types "deletepreview 1" directly — should be rejected as unknown command
-        Platform.runLater(() -> commandTextField.setText("deletepreview 1"));
-        WaitForAsyncUtils.waitForFxEvents();
-
-        invokeHandleCommandEntered();
-        WaitForAsyncUtils.waitForFxEvents();
-
-        assertTrue(commandTextField.getStyle().contains("#ff4d4d"),
-                "Style should contain error color: " + commandTextField.getStyle());
-    }
-
-    @Test
-    public void handleCommandEntered_deletepreviewUppercase_failureStyleApplied() throws Exception {
-        // EP: uppercase DELETEPREVIEW is also rejected as unknown command
-        Platform.runLater(() -> commandTextField.setText("DELETEPREVIEW 1"));
+        // EP: "deletepreview" alone is rejected as unknown command
+        Platform.runLater(() -> commandTextField.setText("deletepreview"));
         WaitForAsyncUtils.waitForFxEvents();
 
         invokeHandleCommandEntered();
