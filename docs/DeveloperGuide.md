@@ -502,7 +502,6 @@ Priorities: Essential (must have) MVP, High (expected to have) - `* * *`, Medium
 - **Mainstream OS**: Windows, Linux, Unix, MacOS
 - **Trip**: A travel record identified by a destination name, with optional fields such as start date, end date, address, and tags.
 - **Destination**: Primary location of a trip (e.g "Mount Fuji"), mapped to the Name field
-- **Experience Log**: Descriptive note added to a trip to record activities or reminders
 - **Category Tag**: Label for grouping trips by purpose (e.g work) or region (e.g Japan)
 - **Duration**: The total days between the start and end date of a trip.
 
