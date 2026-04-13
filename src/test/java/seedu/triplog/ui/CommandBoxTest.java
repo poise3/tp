@@ -366,4 +366,54 @@ public class CommandBoxTest {
             }
         });
     }
+
+    @Test
+    public void handleCommandEntered_deletepreviewWithArgs_failureStyleApplied() throws Exception {
+        // EP: "deletepreview 1" with args is rejected — covers startsWith("deletepreview ") branch
+        Platform.runLater(() -> commandTextField.setText("deletepreview 1"));
+        WaitForAsyncUtils.waitForFxEvents();
+
+        invokeHandleCommandEntered();
+        WaitForAsyncUtils.waitForFxEvents();
+
+        assertTrue(commandTextField.getStyle().contains("#ff4d4d"),
+                "Style should contain error color: " + commandTextField.getStyle());
+    }
+
+    @Test
+    public void handleCommandEntered_deletePendingButCommandChanged_noConfirmation() throws Exception {
+        // EP: deletePendingConfirmation true but command text changed — equalsIgnoreCase returns false
+        AtomicInteger deleteCount = new AtomicInteger(0);
+
+        CommandBox deleteBox = new CommandBox(commandText -> {
+            if (commandText.equalsIgnoreCase("deletepreview 1")) {
+                return new CommandResult("Preview: 1 trip will be deleted.");
+            }
+            if (commandText.equalsIgnoreCase("delete 1")) {
+                deleteCount.incrementAndGet();
+                return new CommandResult("Deleted 1 trip.");
+            }
+            throw new ParseException("Failure Message");
+        });
+
+        TextField field = (TextField) deleteBox.getRoot().lookup("#commandTextField");
+
+        Platform.runLater(() -> field.setText("delete 1"));
+        WaitForAsyncUtils.waitForFxEvents();
+
+        // First Enter -> preview, sets deletePendingConfirmation = true
+        invokeHandle(deleteBox);
+        WaitForAsyncUtils.waitForFxEvents();
+
+        // Change command — equalsIgnoreCase returns false on next Enter
+        Platform.runLater(() -> field.setText("delete 2"));
+        WaitForAsyncUtils.waitForFxEvents();
+
+        invokeHandle(deleteBox);
+        WaitForAsyncUtils.waitForFxEvents();
+
+        assertEquals(0, deleteCount.get(),
+                "Delete should not execute when command text has changed.");
+        assertEquals("delete 2", field.getText());
+    }
 }

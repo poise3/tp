@@ -351,18 +351,11 @@ public class TripMatchesDeletePredicateTest {
 
     @Test
     public void constructor_nullTags_treatedAsEmptySet() {
-        // EP: null tags treated as empty set — all trips match
+        // EP: null tags — covers the true branch of the ternary
         TripMatchesDeletePredicate predicate = new TripMatchesDeletePredicate(
                 null, null, null, null, null, null, null);
 
-        Trip trip = new Trip(
-                new Name("Tokyo"),
-                null,
-                null,
-                new Address("Shibuya"),
-                Set.of(),
-                null,
-                null);
+        Trip trip = new TripBuilder(ALICE).build();
 
         assertTrue(predicate.test(trip));
     }
@@ -432,6 +425,20 @@ public class TripMatchesDeletePredicateTest {
         Trip trip = new TripBuilder(ALICE).build();
 
         assertTrue(predicate.test(trip));
+    }
+
+    @Test
+    public void test_singleDayRangeTripStartAfterSingleDay_returnsFalse() {
+        // EP: startDate == endDate, trip starts after the single day
+        TripMatchesDeletePredicate predicate = new TripMatchesDeletePredicate(
+                null, null, null, null,
+                new TripDate("2026-04-05"),
+                new TripDate("2026-04-05"),
+                Set.of());
+
+        Trip trip = new TripBuilder(ALICE).withStart("2026-04-06").withEnd("2026-04-10").build();
+
+        assertFalse(predicate.test(trip));
     }
 
     @Test
