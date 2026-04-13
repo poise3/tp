@@ -27,8 +27,8 @@ import seedu.triplog.model.trip.TripDate;
 class JsonAdaptedTrip {
 
     public static final String MISSING_FIELD_MESSAGE_FORMAT = "Trip's %s field is missing!";
-    public static final String DUPLICATE_TAG_MESSAGE_FORMAT = "Duplicate tag found, data appears to be corrupted, " +
-            "+ \"Please fix or delete the data file and restart the application.\"";
+    public static final String DUPLICATE_TAG_MESSAGE_FORMAT = "Duplicate tag found, data appears to be corrupted, "
+            + "Please fix or delete the data file and restart the application.";
     private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ISO_LOCAL_DATE;
 
     private final String name;
