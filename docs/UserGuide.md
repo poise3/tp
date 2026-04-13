@@ -360,8 +360,8 @@ Furthermore, certain edits can cause the TripLog to behave in unexpected ways (e
 
 ## FAQ
 
-**Q**: How do I transfer my data to another Computer?<br>
-**A**: Install the app in the other computer and overwrite the empty data file it creates with the file that contains the data of your previous TripLog home folder.
+**Q**: How do I transfer my data to another computer?<br>
+**A**: Install the app on the other computer. Then, locate the `triplog.json` file in the `data` folder of your original TripLog directory and use it to overwrite the default `triplog.json` file created on the new computer.
 
 ---
 
