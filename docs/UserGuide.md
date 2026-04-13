@@ -325,8 +325,6 @@ Examples:
 
 ![Filter Preview](images/bef_filter.png)
 
-Before deleting, TripLog will display a preview of the trips that match the command.
-
 #### After filtering date range 2025-06-08 to 2025-06-10
 
 ![Filter Result](images/aft_filter.png)
