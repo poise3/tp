@@ -58,6 +58,7 @@ public class AddCommand extends Command {
         }
 
         model.addTrip(toAdd);
+        model.updateFilteredTripList(Model.PREDICATE_SHOW_ALL_TRIPS);
         String summary = TripSummaryUtil.calculateSummary(model.getFilteredTripList());
         return new CommandResult(String.format(MESSAGE_SUCCESS, Messages.format(toAdd), summary));
     }

@@ -224,6 +224,11 @@ public class AddCommandTest {
         }
 
         @Override
+        public void updateFilteredTripList(Predicate<Trip> predicate) {
+            // No action needed for stub verification
+        }
+
+        @Override
         public ObservableList<Trip> getFilteredTripList() {
             return FXCollections.observableList(personsAdded);
         }

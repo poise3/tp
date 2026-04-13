@@ -49,6 +49,7 @@ public class EditCommandTest {
 
         Model expectedModel = new ModelManager(new TripLog(model.getTripLog()), new UserPrefs());
         expectedModel.setTrip(model.getFilteredTripList().get(0), editedTrip);
+        expectedModel.updateFilteredTripList(Model.PREDICATE_SHOW_ALL_TRIPS);
 
         String expectedSummary = TripSummaryUtil.calculateSummary(expectedModel.getFilteredTripList());
         String expectedMessage = String.format(MESSAGE_EDIT_TRIP_SUCCESS, Messages.format(editedTrip), expectedSummary);
@@ -71,6 +72,7 @@ public class EditCommandTest {
 
         Model expectedModel = new ModelManager(new TripLog(model.getTripLog()), new UserPrefs());
         expectedModel.setTrip(lastTrip, editedTrip);
+        expectedModel.updateFilteredTripList(Model.PREDICATE_SHOW_ALL_TRIPS);
 
         String expectedSummary = TripSummaryUtil.calculateSummary(expectedModel.getFilteredTripList());
         String expectedMessage = String.format(MESSAGE_EDIT_TRIP_SUCCESS, Messages.format(editedTrip), expectedSummary);
@@ -100,6 +102,7 @@ public class EditCommandTest {
 
         Model expectedModel = new ModelManager(new TripLog(model.getTripLog()), new UserPrefs());
         expectedModel.setTrip(model.getFilteredTripList().get(0), editedTrip);
+        expectedModel.updateFilteredTripList(Model.PREDICATE_SHOW_ALL_TRIPS);
 
         String expectedSummary = TripSummaryUtil.calculateSummary(expectedModel.getFilteredTripList());
         String expectedMessage = String.format(MESSAGE_EDIT_TRIP_SUCCESS, Messages.format(editedTrip), expectedSummary);
@@ -156,6 +159,7 @@ public class EditCommandTest {
 
         Model expectedModel = new ModelManager(new TripLog(model.getTripLog()), new UserPrefs());
         expectedModel.setTrip(model.getFilteredTripList().get(INDEX_FIRST_TRIP.getZeroBased()), editedTrip);
+        expectedModel.updateFilteredTripList(Model.PREDICATE_SHOW_ALL_TRIPS);
 
         String expectedSummary = TripSummaryUtil.calculateSummary(expectedModel.getFilteredTripList());
         String expectedMessage = String.format(

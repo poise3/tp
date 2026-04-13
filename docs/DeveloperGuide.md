@@ -603,6 +603,11 @@ testers are expected to do more *exploratory* testing.
     1. Test case: `add sd/2026-06-01 ed/2026-06-10`
        Expected: Error message indicating invalid command format. No trip is added.
 
+8. Adding a trip while list is filtered
+    1. Prerequisites: Use `filter` to hide some existing trips.
+    2. Test case: `add n/New Hidden Trip sd/2021-01-01`
+       Expected: The list and summary automatically reset to show all trips, including the new entry.
+
 ### Editing a trip
 
 1. Prerequisites: List all trips using the `list` command. Multiple trips in the list.
@@ -637,6 +642,11 @@ testers are expected to do more *exploratory* testing.
 8. No fields provided
     1. Test case: `edit 1`
        Expected: Error message indicating at least one field must be provided.
+
+9. Editing a trip while list is filtered
+    1. Prerequisites: Use `filter` to hide some existing trips.
+    2. Test case: `edit 1 n/Renamed Trip`
+       Expected: The list and summary automatically reset to show all trips, including the updated entry.
 
 ### Listing, Sorting, and Statistics
 
