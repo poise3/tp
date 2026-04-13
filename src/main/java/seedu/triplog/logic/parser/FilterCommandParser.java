@@ -48,7 +48,6 @@ public class FilterCommandParser implements Parser<FilterCommand> {
         argMultimap.verifyNoDuplicatePrefixesFor(PREFIX_START_DATE, PREFIX_END_DATE);
 
         TripDate startDate = ParserUtil.parseTripDate(argMultimap.getValue(PREFIX_START_DATE).get());
-        System.out.println(arePrefixesPresent(argMultimap, PREFIX_NAME));
         TripDate endDate = ParserUtil.parseTripDate(argMultimap.getValue(PREFIX_END_DATE).get());
 
         return new FilterCommand(startDate, endDate);
